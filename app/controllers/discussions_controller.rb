@@ -24,7 +24,7 @@ class DiscussionsController < ApplicationController
 
     respond_to do |format|
       if @discussion.save
-        format.html { redirect_to @discussion, notice: "Discussion created" }
+        format.html { redirect_to discussion_path(@discussion), notice: "Discussion created" }
       else
         flash[:error] = format_error_messages(@discussion.errors)
         format.html { render :new, status: :unprocessable_entity }
@@ -39,7 +39,7 @@ class DiscussionsController < ApplicationController
     respond_to do |format|
       if @discussion.update(discussion_params)
         @discussion.broadcast_replace(partial: "discussions/header", locals: { discussion: @discussion })
-        format.html { redirect_to @discussion, notice: "Discussion updated" }
+        format.html { redirect_to discussion_path(@discussion), notice: "Discussion updated" }
       else
         format.html { render :edit, status: :unprocessable_entity }
       end
@@ -77,7 +77,7 @@ class DiscussionsController < ApplicationController
 
   def respond_to_format
     respond_to do |format|
-      format.html { redirect_to request.url }
+      format.html { redirect_to request.fullpath }
       format.turbo_stream
     end
   end
