@@ -1,53 +1,109 @@
-# RubyBattle
+# CodeKata
 
-RubyBattle is an interactive platform crafted for Ruby enthusiasts to code, share insights through posts, and build connections. The application harnesses advanced features like CodeMirror for seamless coding and Hotwire for real-time updates.
+CodeKata is a platform for developers who want to sharpen their Ruby skills through practice, competition, and community. Solve challenges on your own, race a friend head-to-head, or talk through a problem in the discussion forum — it's all here in one place.
 
-## Key Features
+---
 
-- **Real-time Ruby Code**: Implemented using CodeMirror, allowing users to write and execute Ruby code within the application.
-- **Connection Requests**: Users can send connection requests to interact and collaborate with other users.
-- **CRUD Operations for Posts**: Users can create, read, update, and delete their own posts. Additionally, they can view posts created by other users.
-- **Real-time Updates**: Utilized Hotwire to provide real-time updates, enhancing the responsiveness of the application.
+## What it does
 
-## Technologies Used
+**Code challenges** — A growing library of Ruby problems across easy, medium, and hard difficulty. Each challenge runs your code against real test cases and tells you exactly what passed and what didn't.
 
-- **Ruby**: The programming language.
-- **Ruby on Rails**: The web application framework.
-- **PostgreSQL**: The database management system.
-- **Hotwire**: Utilized for real-time updates and improved responsiveness.
-- **CodeMirror**: Integrated for real-time code editing and output display.
+**Head-to-head duels** — Invite a friend to solve the same challenge at the same time. First one to pass all test cases wins. The editor syncs live so you can see each other's output as it happens.
 
-## Installation
+**Collaborative editor** — Share a room link and write code together in real time. Useful for pair programming, walkthroughs, or just getting unstuck.
 
-To get a local copy up and running, follow these simple steps.
+**Discussions** — A community forum for asking questions, sharing solutions, and talking through approaches. Threads are votable so the best answers surface naturally.
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/yourusername/rubybattle.git
-   cd rubybattle
-   ```
-2. **Install dependencies**:
-   ```bash
-   bundle install
-   yarn install
-   ```
-3. **Set up the database:**:
-   ```bash
-   rails db:create
-   rails db:migrate
-   ```
-4. **Start the Rails server**:
-   ```bash
-   rails server
-   ```
-5. **Navigate to http://localhost:3000 in your web browser.**
+**Notifications & connections** — Send connection requests to other users, get notified when someone invites you to a duel or replies to your post.
 
-## Usage
+---
 
-Once the application is running, users can:
+## Tech stack
 
-- Register and log in to their accounts.
-- Edit Ruby code in real-time using the integrated CodeMirror editor.
-- Send and accept connection requests to collaborate with other users.
-- Create, view, update, and delete posts.
-- Receive real-time updates and notifications, enhancing the interactive experience.
+- **Ruby on Rails 7** — backend, routing, models
+- **PostgreSQL** — primary database
+- **Redis** — real-time pub/sub, session storage
+- **Hotwire (Turbo + Stimulus)** — fast, SPA-like navigation without a JS framework
+- **ActionCable** — WebSocket layer powering the live editor and notifications
+- **StimulusReflex** — reactive server-side rendering
+- **CodeMirror 6** — in-browser code editor with Ruby syntax highlighting
+- **Judge0** — sandboxed code execution (no `eval`, no risk)
+- **Tailwind CSS** — styling
+
+---
+
+## Getting started
+
+**Prerequisites:** Ruby 3.2.2, PostgreSQL, Redis, Node.js
+
+```bash
+# Clone the repo
+git clone https://github.com/aniketpatidar/codekata
+cd codekata
+
+# Install dependencies
+bundle install
+yarn install
+
+# Set up environment variables
+cp .env.example .env
+# Add your JUDGE0_API_KEY to .env
+
+# Set up the database
+rails db:create db:migrate db:seed
+
+# Start everything
+bin/dev
+```
+
+Then open `http://localhost:3000`.
+
+---
+
+## Environment variables
+
+| Variable | Description |
+|---|---|
+| `JUDGE0_API_KEY` | Your Judge0 API key for sandboxed code execution |
+| `REDIS_URL` | Redis connection URL (defaults to `redis://localhost:6379`) |
+| `DATABASE_URL` | PostgreSQL connection string (optional, falls back to `database.yml`) |
+
+---
+
+## Project structure
+
+```
+app/
+├── channels/        # ActionCable WebSocket channels
+├── controllers/     # Request handling
+├── javascript/      # Stimulus controllers, CodeMirror, ActionCable config
+├── models/          # Core data models
+├── reflexes/        # StimulusReflex handlers
+├── services/        # Business logic (Judge0 integration, etc.)
+└── views/           # ERB templates
+```
+
+---
+
+## Roadmap
+
+- [x] Ruby code challenges with test case runner
+- [x] Real-time collaborative editor
+- [x] Discussion forum with voting
+- [x] Friend connections and notifications
+- [ ] Head-to-head timed duels
+- [ ] AI-powered hints
+- [ ] Leaderboards and duel history
+- [ ] Multi-language support
+
+---
+
+## Contributing
+
+Pull requests are welcome. For larger changes, open an issue first to discuss what you'd like to change.
+
+---
+
+## License
+
+MIT
