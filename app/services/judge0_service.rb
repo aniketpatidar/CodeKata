@@ -4,6 +4,9 @@ require "json"
 class Judge0Service
   BASE_URL = "https://judge0-ce.p.rapidapi.com"
   LANGUAGE_ID = 71  # Ruby language ID in Judge0
+  RAPIDAPI_HOST = "judge0-ce.p.rapidapi.com"
+  JUDGE0_PROCESSING_STATUS_ID = 2
+  POLL_INTERVAL_SECONDS = 0.5
 
   def run_tests(code, tests, method_name)
     api_key = judge0_api_key
@@ -33,11 +36,17 @@ class Judge0Service
   end
 
   def wrap_code_with_test(code, test, method_name)
+    # method_name is available for future use if needed to generate specific test wrappers
+    test_input = test[:input]
     <<~RUBY
       #{code}
 
-      result = eval("#{test[:input]}")
-      puts result.to_s
+      begin
+        result = #{test_input}
+        puts result.to_s
+      rescue => error
+        puts "ERROR: " + error.message
+      end
     RUBY
   end
 
@@ -48,7 +57,7 @@ class Judge0Service
 
     request = Net::HTTP::Post.new(uri.request_uri)
     request["Content-Type"] = "application/json"
-    request["x-rapidapi-host"] = "judge0-ce.p.rapidapi.com"
+    request["x-rapidapi-host"] = RAPIDAPI_HOST
     request["x-rapidapi-key"] = api_key
 
     request.body = JSON.generate({
@@ -58,8 +67,11 @@ class Judge0Service
     })
 
     response = http.request(request)
-    JSON.parse(response.body)["id"]
-  rescue => e
+    parsed = JSON.parse(response.body)
+    submission_id = parsed.dig("id")
+    Rails.logger.debug("Judge0 submission successful: submission_id=#{submission_id}")
+    submission_id
+  rescue JSON::JSONError, StandardError => e
     Rails.logger.error("Judge0 submission failed: #{e.message}")
     nil
   end
@@ -77,19 +89,24 @@ class Judge0Service
       http.use_ssl = true
 
       request = Net::HTTP::Get.new(uri.request_uri)
-      request["x-rapidapi-host"] = "judge0-ce.p.rapidapi.com"
+      request["x-rapidapi-host"] = RAPIDAPI_HOST
       request["x-rapidapi-key"] = api_key
 
       response = http.request(request)
       result = JSON.parse(response.body)
+      status_id = result.dig("status", "id")
 
-      return result if result["status"]["id"] > 2
+      if status_id && status_id > JUDGE0_PROCESSING_STATUS_ID
+        Rails.logger.debug("Judge0 polling completed: submission_id=#{submission_id}, status_id=#{status_id}")
+        return result
+      end
 
-      sleep(0.5)
+      sleep(POLL_INTERVAL_SECONDS)
     end
 
+    Rails.logger.warn("Judge0 polling timed out: submission_id=#{submission_id}")
     nil
-  rescue => e
+  rescue JSON::JSONError, Net::OpenTimeout, Net::ReadTimeout => e
     Rails.logger.error("Judge0 result polling failed: #{e.message}")
     nil
   end
