@@ -1,0 +1,14 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  challenger: one
+  opponent: two
+  challenge: one
+  status: pending
+
+two:
+  challenger: one
+  opponent: two
+  challenge: two
+  status: active
+  started_at: 2026-04-25 10:00:00
