@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: Sum Two Numbers
+  description: Write a function that sums two numbers
+  language: ruby
+  tests: assert_equal(3, sum(1, 2))
+  method_template: "def sum(a, b)\nend"
+  difficulty: 0
+
+two:
+  name: Reverse String
+  description: Write a function that reverses a string
+  language: ruby
+  tests: assert_equal('dlrow', reverse('world'))
+  method_template: "def reverse(str)\nend"
+  difficulty: 1
