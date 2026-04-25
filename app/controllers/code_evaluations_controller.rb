@@ -4,7 +4,9 @@ class CodeEvaluationsController < ApplicationController
 
   def evaluate
     challenge = Challenge.find(params[:id])
-    results = Judge0Service.new.run_tests(params[:code], challenge.tests, challenge.method_name)
+    tests = JSON.parse(challenge.tests) if challenge.tests.is_a?(String)
+    tests ||= challenge.tests || []
+    results = Judge0Service.new.run_tests(params[:code], tests, challenge.method_template)
 
     all_passed = results.values.all? { |r| r[:passed] }
     ChallengeCompletion.find_or_create_by(user: current_user, challenge: challenge) if all_passed
