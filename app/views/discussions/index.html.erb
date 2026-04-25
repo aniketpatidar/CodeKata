@@ -1,41 +1,102 @@
-<div class="container mx-auto px-4 py-2 flex justify-between">
-<div class="w-1/4 pr-8">
-  <div class="bg-white rounded-lg shadow-md p-6 mb-4">
-    <h3 class="text-lg font-semibold mb-2">Related Tags</h3>
-    <ul class="flex flex-wrap gap-2"><%= render @categories %></ul>
-  </div>
-  <div class="bg-white rounded-lg shadow-md p-6">
-    <h3 class="text-lg font-semibold mb-2">Hot Network Questions</h3>
-    <ul class="list-disc list-inside">
-      <% @hot_discussions.each do |discussion| %>
-        <li class="mb-2">
-          <%= link_to discussion.name, discussion_path(discussion), class: "text-blue-600 hover:text-blue-800" %>
-        </li>
-      <% end %>
-    </ul>
+<div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white py-8">
+  <div class="container mx-auto px-4">
+    <h1 class="text-4xl font-bold mb-2">Discussions</h1>
+    <p class="text-blue-100">Ask questions and share knowledge with the community</p>
   </div>
 </div>
-<div class="w-3/4">
-  <%= turbo_stream_from 'discussions' %>
-  <div class="flex items-center justify-between">
-    <h1 class="font-bold text-4xl">Questions</h1>
-    <%= form_tag discussions_path, method: :get, data: { turbo_frame: "search-results", turbo_action: "advance", controller: "search", action: "input->search#submit" } do |f| %>
-      <div class="flex items-center gap-2">
-        <%= text_field_tag "query", nil, placeholder: "Search...", class: "w-full max-w-xs px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 placeholder-gray-500" %>
-        <%= submit_tag "Search", class: "rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:ring hover:bg-blue-700" %>
+
+<div class="container mx-auto px-4 py-8">
+  <div class="flex flex-col lg:flex-row gap-8">
+    <!-- Main Content -->
+    <div class="lg:flex-1">
+      <div class="flex flex-col sm:flex-row gap-4 mb-8">
+        <%= form_with url: discussions_path, method: :get, local: true do |f| %>
+          <div class="flex-1">
+            <%= f.text_field :search, placeholder: "Search discussions...", value: params[:search], class: "w-full px-4 py-2 border rounded-lg" %>
+          </div>
+          <div>
+            <%= f.submit "Search", class: "px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700" %>
+          </div>
+          <div>
+            <%= link_to "Ask a Question", new_discussion_path, class: "px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700" %>
+          </div>
+        <% end %>
       </div>
-    <% end %>
-    <%= link_to new_discussion_path do %>
-      <button class="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:ring hover:bg-blue-700">
-        Ask a question
-      </button>
-    <% end %>
+
+      <div class="space-y-4">
+        <% @discussions.each do |discussion| %>
+          <div class="bg-white border rounded-lg p-6 hover:shadow-md transition">
+            <div class="flex justify-between items-start mb-3">
+              <div class="flex-1">
+                <h3 class="text-xl font-semibold mb-2">
+                  <%= link_to discussion.title, discussion_path(discussion), class: "text-blue-600 hover:underline" %>
+                </h3>
+                <p class="text-gray-600"><%= truncate(discussion.description, length: 150) %></p>
+              </div>
+              <div class="ml-4 text-right">
+                <p class="text-2xl font-bold text-blue-600"><%= discussion.posts.count %></p>
+                <p class="text-xs text-gray-500">replies</p>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mb-4">
+              <% discussion.categories.each do |category| %>
+                <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">
+                  <%= category.name %>
+                </span>
+              <% end %>
+            </div>
+
+            <div class="flex items-center justify-between text-sm text-gray-500">
+              <div>
+                Asked by <%= discussion.user.full_name %>
+              </div>
+              <div>
+                <%= time_ago_in_words(discussion.created_at) %> ago
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <% if @discussions.empty? %>
+        <div class="bg-gray-50 border rounded-lg p-12 text-center">
+          <p class="text-gray-600 mb-4">No discussions found</p>
+          <%= link_to "Ask the first question!", new_discussion_path, class: "text-blue-600 hover:underline" %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="lg:w-64 space-y-6">
+      <!-- Hot Questions -->
+      <div class="bg-white border rounded-lg p-6">
+        <h3 class="font-bold text-lg mb-4">Hot Discussions</h3>
+        <div class="space-y-3">
+          <% @hot_discussions ||= Discussion.order('posts_count DESC').limit(5) %>
+          <% @hot_discussions.each do |d| %>
+            <div>
+              <p class="text-sm font-semibold">
+                <%= link_to truncate(d.title, length: 40), discussion_path(d), class: "text-blue-600 hover:underline" %>
+              </p>
+              <p class="text-xs text-gray-500"><%= d.posts.count %> replies</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Categories -->
+      <div class="bg-white border rounded-lg p-6">
+        <h3 class="font-bold text-lg mb-4">Categories</h3>
+        <div class="space-y-2">
+          <% Category.all.limit(10).each do |category| %>
+            <p>
+              <%= link_to category.name, discussions_path(category_id: category.id), class: "text-blue-600 hover:underline text-sm" %>
+              <span class="text-gray-500 text-xs">(<%= category.discussions.count %>)</span>
+            </p>
+          <% end %>
+        </div>
+      </div>
+    </div>
   </div>
-  <div id="discussions">
-    <%= turbo_frame_tag "search-results" do %>
-      <%= render @discussions %>
-    <% end %>
-    <%== pagy_nav(@pagy) %>
-  </div>
-</div>
 </div>

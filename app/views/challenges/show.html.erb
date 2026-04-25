@@ -1,34 +1,101 @@
-    <div class="flex-grow flex flex-col" data-controller="codemirror">
-      <div class="flex flex-grow">
-        <div class="w-96 bg-gray-700 text-white p-5">
-          <h2 class="text-xl mb-4"><%= simple_format @challenge.name %></h2>
-          <p class="mb-4"><%= simple_format @challenge.description %></p>
+<div class="bg-gradient-to-r from-purple-500 to-purple-600 text-white py-8">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-start">
+      <div>
+        <h1 class="text-4xl font-bold mb-2"><%= @challenge.name %></h1>
+        <div class="flex gap-4">
+          <span class="px-3 py-1 bg-purple-400 rounded-full text-sm">
+            <%= @challenge.difficulty.titleize %>
+          </span>
+          <span class="px-3 py-1 bg-purple-400 rounded-full text-sm">
+            <%= @challenge.language %>
+          </span>
         </div>
+      </div>
+      <div class="text-right">
+        <% if user_signed_in? %>
+          <% completion = @challenge.challenge_completions.find_by(user: current_user) %>
+          <% if completion %>
+            <div class="text-green-300 font-semibold">✓ Completed</div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <div class="flex-grow flex flex-col"
+<div class="container mx-auto px-4 py-8">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+    <!-- Description -->
+    <div class="bg-white border rounded-lg p-6">
+      <h2 class="text-2xl font-bold mb-4">Description</h2>
+      <p class="text-gray-700 whitespace-pre-line"><%= @challenge.description %></p>
+    </div>
+
+    <!-- Challenge Info -->
+    <div class="bg-white border rounded-lg p-6">
+      <h2 class="text-2xl font-bold mb-4">Challenge Info</h2>
+      <div class="space-y-4">
+        <div>
+          <p class="text-gray-600 text-sm">Language</p>
+          <p class="font-semibold"><%= @challenge.language %></p>
+        </div>
+        <div>
+          <p class="text-gray-600 text-sm">Difficulty</p>
+          <p class="font-semibold"><%= @challenge.difficulty.titleize %></p>
+        </div>
+        <div>
+          <p class="text-gray-600 text-sm">Tests</p>
+          <p class="font-semibold">
+            <% tests = JSON.parse(@challenge.tests) rescue [] %>
+            <%= tests.is_a?(Array) ? tests.length : 0 %> test cases
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Code Editor and Test Results -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Code Editor -->
+    <div class="bg-white border rounded-lg p-6" data-controller="codemirror">
+      <h2 class="text-2xl font-bold mb-4">Solution</h2>
+      <div class="mb-4">
+        <textarea
           id="code-editor"
+          class="w-full h-80 p-4 border rounded font-mono text-sm"
+          placeholder="Write your code here..."
+          data-codemirror-target="editor"
           data-method-template="<%= @challenge.method_template %>"
           data-tests="<%= @challenge.tests %>"
           data-challenge-id="<%= @challenge.id %>"
           data-room-id="<%= @room_id %>"
-        >
-          <div class="bg-gray-700 text-white p-2 flex justify-end items-center gap-2">
-            <button data-action="click->codemirror#run" class="py-2 px-4 bg-blue-600 text-sm font-semibold text-white rounded-md focus:outline-none focus:ring hover:bg-blue-700 cursor-pointer" style="z-index:10;">Submit</button>
-            <button 
-              class="w-8 h-8 bg-white flex justify-center items-center rounded-lg"
-              data-controller="copy-to-clipboard"
-              data-action="copy-to-clipboard#copy"
-              data-url="<%= "#{request.base_url}/challenges/#{@room_id}/#{@challenge.name}" %>"
-            >
-              <%= inline_svg_tag('copy-paste.svg', class: "h-6 w-6") %>
-            </button>
-            <span class="text-white hidden z-20" id="message">Copied!</span>
-          </div>
-          <textarea class="flex-grow w-full" data-codemirror-target="editor"></textarea>
-        </div>
+        ><%= @challenge.method_template %></textarea>
       </div>
-      <div id="output" class="bg-gray-800 p-4 h-32 overflow-auto">
-        <h2 class="text-lg font-semibold text-white">Test results</h2>
-        <pre class="text-sm text-white" data-codemirror-target="output">Awaiting code submission</pre>
+
+      <% if user_signed_in? %>
+        <div class="space-y-3">
+          <button data-action="click->codemirror#run" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">Submit Solution</button>
+
+          <% if current_user.friend_with?(User.first) rescue false %>
+            <%= link_to "Challenge Friend to Duel", new_duel_path(opponent_slug: User.first.slug), class: "block w-full text-center px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold" %>
+          <% end %>
+
+          <% if current_user.admin? %>
+            <%= link_to "Get AI Hint", hints_path(challenge_id: @challenge.id), method: :post, class: "block w-full text-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold" %>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-gray-600"><%= link_to "Sign in", new_user_session_path, class: "text-blue-600 hover:underline" %> to submit a solution</p>
+      <% end %>
+    </div>
+
+    <!-- Test Results -->
+    <div class="bg-white border rounded-lg p-6">
+      <h2 class="text-2xl font-bold mb-4">Test Results</h2>
+      <div id="output" class="bg-gray-50 border rounded p-4 min-h-80 font-mono text-sm overflow-auto">
+        <pre data-codemirror-target="output">Submit your solution to see results</pre>
       </div>
     </div>
+  </div>
+</div>

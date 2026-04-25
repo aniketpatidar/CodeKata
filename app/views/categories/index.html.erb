@@ -1,14 +1,28 @@
-<div class="w-full">
+<div class="container mx-auto px-4 py-8">
   <% if notice.present? %>
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
   <% end %>
 
-  <div class="flex justify-between items-center">
-    <h1 class="font-bold text-4xl">Categories</h1>
-    <%= link_to "New category", new_category_path, class: "rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:ring hover:bg-blue-70" %>
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-4xl font-bold">Categories</h1>
+    <% if current_user&.admin? %>
+      <%= link_to "New Category", admin_categories_path, class: "rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700" %>
+    <% end %>
   </div>
 
-  <ul id="categories" class="w-full flex gap-4">
-    <%= render @categories %>
-  </ul>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @categories.each do |category| %>
+      <div class="bg-white border rounded-lg p-6 hover:shadow-lg transition">
+        <h2 class="text-xl font-bold mb-2"><%= link_to category.name, category_path(category), class: "text-blue-600 hover:underline" %></h2>
+        <p class="text-gray-600 mb-4"><%= truncate(category.description, length: 100) %></p>
+        <p class="text-sm text-gray-500"><%= category.discussions.count %> discussions</p>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @categories.empty? %>
+    <div class="bg-gray-50 border rounded-lg p-12 text-center">
+      <p class="text-gray-600">No categories yet</p>
+    </div>
+  <% end %>
 </div>
