@@ -1,87 +1,202 @@
-<div class="profile-container p-8 rounded-lg shadow-lg mx-auto">
-  <div class="profile-header flex flex-col sm:flex-row items-center">
-    <div class="profile-avatar text-center text-white text-4xl rounded-full w-24 h-24 flex items-center justify-center">
-      <% if @user.avatar&.present? %>
-        <%= image_tag @user.avatar, class: "h-16 w-16 object-cover rounded-full" %>
-      <% end %>
-    </div>
-    <div class="profile-info mt-4 sm:mt-0 sm:ml-6 text-center sm:text-left">
-      <h1 class="text-3xl font-bold"><%= @user.full_name %></h1>
-      <p class="text-gray-400"><%= @user.email %></p>
-      <p class="text-sm text-gray-500 mt-1">Joined <%= time_ago_in_words(@user.created_at) %> ago</p>
-    </div>
-    <div class="flex items-center ml-auto p-4">
+<div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white py-12">
+  <div class="container mx-auto px-4">
+    <div class="flex items-center justify-between gap-6">
+      <div class="flex items-center gap-6">
+        <div class="w-24 h-24 rounded-full bg-white flex items-center justify-center text-4xl font-bold text-blue-600">
+          <% if @user.avatar&.present? %>
+            <%= image_tag @user.avatar, class: "h-24 w-24 object-cover rounded-full" %>
+          <% else %>
+            <%= @user.initials %>
+          <% end %>
+        </div>
+        <div>
+          <h1 class="text-4xl font-bold"><%= @user.full_name %></h1>
+          <p class="text-blue-100">@<%= @user.slug %></p>
+          <p class="text-blue-100 text-sm mt-1">Joined <%= @user.created_at.strftime("%B %Y") %></p>
+        </div>
+      </div>
       <% if current_user != @user %>
-        <%= render 'invitations/friendship', user: @user, current_user: current_user %>
+        <div>
+          <%= render 'invitations/friendship', user: @user, current_user: current_user %>
+        </div>
       <% end %>
     </div>
   </div>
+</div>
 
-  <div
-    class="profile-navigation mt-8 text-center sm:text-left"
-    data-controller="tabs"
-    data-tabs-active-class="bg-blue-600 text-white"
-    data-tabs-default-tab-value="summary"
-  >
-    <ul class="flex justify-center sm:justify-start space-x-4">
-      <li><button data-tabs-target="btn" data-action="click->tabs#select" id="summary" class="rounded-md px-4 py-2 text-sm font-semibold focus:outline-none focus:ring hover:bg-blue-700 hover:text-white">Summary</button></li>
-      <li><button data-tabs-target="btn" data-action="click->tabs#select" id="questions" class="rounded-md px-4 py-2 text-sm font-semibold focus:outline-none focus:ring hover:bg-blue-700 hover:text-white">Questions</button></li>
-      <li><button data-tabs-target="btn" data-action="click->tabs#select" id="answers" class="rounded-md px-4 py-2 text-sm font-semibold focus:outline-none focus:ring hover:bg-blue-700 hover:text-white">Answers</button></li>
-      <li><button data-tabs-target="btn" data-action="click->tabs#select" id="votes" class="rounded-md px-4 py-2 text-sm font-semibold focus:outline-none focus:ring hover:bg-blue-700 hover:text-white">Votes</button></li>
-    </ul>
+<div class="container mx-auto px-4 py-8">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Main Content -->
+    <div class="lg:col-span-2">
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-3 gap-4 mb-8">
+        <div class="bg-white border rounded-lg p-6 text-center">
+          <p class="text-3xl font-bold text-blue-600"><%= @user.challenge_completions.count %></p>
+          <p class="text-gray-600 text-sm mt-2">Challenges Solved</p>
+        </div>
 
-    <div class="rounded-lg border p-4 mt-4">
-      <div data-tabs-target="tab" id="summary">
-        Summary
+        <div class="bg-white border rounded-lg p-6 text-center">
+          <p class="text-3xl font-bold text-green-600">
+            <%= Duel.where(winner_id: @user.id).count %>
+          </p>
+          <p class="text-gray-600 text-sm mt-2">Duels Won</p>
+        </div>
+
+        <div class="bg-white border rounded-lg p-6 text-center">
+          <p class="text-3xl font-bold text-purple-600">
+            <%= Duel.where("(challenger_id = ? OR opponent_id = ?) AND status = ?", @user.id, @user.id, 2).count %>
+          </p>
+          <p class="text-gray-600 text-sm mt-2">Total Duels</p>
+        </div>
       </div>
 
-      <div data-tabs-target="tab" id="questions" class='hidden'>
-        <div class="profile-discussions">
-          <h2 class="text-xl font-bold text-blue-600 focus:outline-none focus:ring hover:text-blue-700"><%= pluralize(@user.discussions.count, "question") %></h2>
-          <% @user.discussions.each do |discussion| %>
-            <div class="p-4 mt-4 rounded-lg">
-              <div class="flex justify-between items-start">
-                <div>
-                  <p class="font-bold text-blue-500"><%= link_to discussion.name, discussion_path(discussion), class: "hover:underline" %></p>
+      <!-- About Section -->
+      <div class="bg-white border rounded-lg p-6 mb-8">
+        <h2 class="text-2xl font-bold mb-4">About</h2>
+        <p class="text-gray-700 mb-2">
+          <strong>Email:</strong> <%= @user.email %>
+        </p>
+      </div>
+
+      <!-- Tabs Navigation -->
+      <div class="border-b mb-8">
+        <div class="flex gap-4">
+          <button id="questions-tab" class="px-4 py-2 border-b-2 border-blue-600 text-blue-600 font-semibold transition">
+            Questions (<%= @user.discussions.count %>)
+          </button>
+          <button id="answers-tab" class="px-4 py-2 text-gray-600 font-semibold hover:text-gray-800 transition">
+            Answers (<%= @user.posts.count %>)
+          </button>
+        </div>
+      </div>
+
+      <!-- Questions Tab -->
+      <div id="questions-content">
+        <div class="bg-white border rounded-lg p-6">
+          <% if @user.discussions.any? %>
+            <div class="space-y-4">
+              <% @user.discussions.each do |discussion| %>
+                <div class="border-b pb-4 last:border-b-0">
+                  <p class="font-semibold text-lg"><%= link_to discussion.name, discussion_path(discussion), class: "text-blue-600 hover:underline" %></p>
+                  <div class="flex items-center mt-2 gap-4 text-sm text-gray-600">
+                    <span><%= discussion.posts.count %> answers</span>
+                    <span>Asked <%= time_ago_in_words(discussion.created_at) %> ago</span>
+                  </div>
                 </div>
-                <div class="text-sm">
-                  <span class="ml-2"><%= discussion.posts.count %> answers</span>
-                </div>
-              </div>
-              <div class="flex items-center mt-2 gap-4">
-                <span class="text-gray-700 text-sm">Asked <span class="font-semibold"><%= time_ago_in_words(discussion.created_at) %> ago.</span></span>
-                <span class="text-gray-700 text-sm">Modified <span class="font-semibold"><%= time_ago_in_words(discussion.updated_at) %> ago.</span></span>
-              </div>
+              <% end %>
             </div>
+          <% else %>
+            <p class="text-gray-600 text-center py-8">No questions yet</p>
           <% end %>
         </div>
       </div>
 
-      <div data-tabs-target="tab" id="answers" class='hidden'>
-        <div class="profile-discussions">
-          <h2 class="text-xl font-bold text-blue-600 focus:outline-none focus:ring hover:text-blue-700"><%= pluralize(@user.posts.count, "answer") %></h2>
-          <% @user.posts.each do |post| %>
-            <div class="p-4 mt-4 rounded-lg">
-              <div>
-                <p class="font-bold text-blue-500"><%= link_to post.discussion.name, discussion_path(post.discussion), class: "hover:underline" %></p>
-              </div>
-              <div class="px-2">
-                <div>
-                  <p class="text-gray-700 mt-2"><%= post.body %></p>
+      <!-- Answers Tab -->
+      <div id="answers-content" class="hidden">
+        <div class="bg-white border rounded-lg p-6">
+          <% if @user.posts.any? %>
+            <div class="space-y-6">
+              <% @user.posts.each do |post| %>
+                <div class="border-b pb-6 last:border-b-0">
+                  <p class="font-semibold text-blue-600 mb-2"><%= link_to post.discussion.name, discussion_path(post.discussion), class: "hover:underline" %></p>
+                  <p class="text-gray-700 mb-3"><%= truncate(post.body, length: 200) %></p>
+                  <div class="flex items-center gap-4 text-sm text-gray-600">
+                    <span>Answered <%= time_ago_in_words(post.created_at) %> ago</span>
+                  </div>
                 </div>
-                <div class="flex items-center mt-2 gap-4">
-                  <span class="text-gray-700 text-sm">Answered <span class="font-semibold"><%= time_ago_in_words(post.created_at) %> ago.</span></span>
-                  <span class="text-gray-700 text-sm">Modified <span class="font-semibold"><%= time_ago_in_words(post.updated_at) %> ago.</span></span>
-                </div>
-              </div>
+              <% end %>
             </div>
+          <% else %>
+            <p class="text-gray-600 text-center py-8">No answers yet</p>
           <% end %>
         </div>
       </div>
+    </div>
 
-      <div data-tabs-target="tab" id="votes" class='hidden'>
-        Votes
+    <!-- Sidebar -->
+    <div class="lg:col-span-1">
+      <% if current_user&.id != @user.id %>
+        <!-- Action Buttons -->
+        <div class="bg-white border rounded-lg p-6 mb-6 space-y-3">
+          <% if current_user %>
+            <% if current_user.friend_with?(@user) %>
+              <%= link_to "Challenge to Duel", new_duel_path(opponent_slug: @user.slug),
+                  class: "block w-full text-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition font-medium" %>
+            <% elsif current_user.pending_invitations.exists?(user_id: @user.id) %>
+              <button class="w-full px-4 py-2 bg-gray-400 text-white rounded cursor-not-allowed" disabled>
+                Invitation Pending
+              </button>
+            <% elsif current_user.sent_invitations.exists?(friend_id: @user.id) %>
+              <button class="w-full px-4 py-2 bg-gray-400 text-white rounded cursor-not-allowed" disabled>
+                Invitation Sent
+              </button>
+            <% else %>
+              <%= button_to "Send Friend Invitation", invitations_path, params: { user_id: @user.id },
+                  method: :post, class: "w-full px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition font-medium" %>
+            <% end %>
+          <% else %>
+            <%= link_to "Sign In to Connect", new_user_session_path,
+                class: "block w-full text-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition font-medium" %>
+          <% end %>
+        </div>
+      <% else %>
+        <!-- Edit Profile for Own Profile -->
+        <div class="bg-white border rounded-lg p-6 mb-6">
+          <%= link_to "Edit Profile", edit_user_registration_path,
+              class: "block w-full text-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition font-medium" %>
+        </div>
+      <% end %>
+
+      <!-- Friends List -->
+      <div class="bg-white border rounded-lg p-6">
+        <h3 class="font-bold text-lg mb-4">Friends (<%= @user.friends.count %>)</h3>
+        <% if @user.friends.any? %>
+          <div class="space-y-3">
+            <% @user.friends.limit(10).each do |friend| %>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-xs font-bold text-white">
+                    <%= friend.initials %>
+                  </div>
+                  <%= link_to friend.full_name, user_path(friend), class: "text-blue-600 hover:underline text-sm" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          <% if @user.friends.count > 10 %>
+            <p class="text-sm text-gray-600 mt-4">
+              <%= link_to "See all #{@user.friends.count} friends", "#", class: "text-blue-600 hover:underline" %>
+            </p>
+          <% end %>
+        <% else %>
+          <p class="text-gray-600 text-sm">No friends yet</p>
+        <% end %>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  const questionTab = document.getElementById('questions-tab');
+  const answersTab = document.getElementById('answers-tab');
+  const questionsContent = document.getElementById('questions-content');
+  const answersContent = document.getElementById('answers-content');
+
+  questionTab.addEventListener('click', () => {
+    questionsContent.classList.remove('hidden');
+    answersContent.classList.add('hidden');
+    questionTab.classList.add('border-b-2', 'border-blue-600', 'text-blue-600');
+    questionTab.classList.remove('text-gray-600', 'hover:text-gray-800');
+    answersTab.classList.remove('border-b-2', 'border-blue-600', 'text-blue-600');
+    answersTab.classList.add('text-gray-600', 'hover:text-gray-800');
+  });
+
+  answersTab.addEventListener('click', () => {
+    answersContent.classList.remove('hidden');
+    questionsContent.classList.add('hidden');
+    answersTab.classList.add('border-b-2', 'border-blue-600', 'text-blue-600');
+    answersTab.classList.remove('text-gray-600', 'hover:text-gray-800');
+    questionTab.classList.remove('border-b-2', 'border-blue-600', 'text-blue-600');
+    questionTab.classList.add('text-gray-600', 'hover:text-gray-800');
+  });
+</script>

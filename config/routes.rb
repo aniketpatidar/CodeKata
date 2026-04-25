@@ -33,7 +33,14 @@ Rails.application.routes.draw do
     end
     resources :posts, only: [:create, :show, :edit, :update, :destroy], module: :discussions
   end
-  resources :categories
+
+  # Admin-only category management
+  namespace :admin do
+    resources :categories
+  end
+
+  # Users can view categories
+  resources :categories, only: [:index, :show]
   resources :users, only: %i[index show], param: :slug
   resources :challenges, only: %i[index show], param: :name
   get 'challenges/:room_id/:name', to: 'challenges#room', as: :challenge_room
