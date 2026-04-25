@@ -58,6 +58,10 @@ class User < ApplicationRecord
     slug
   end
 
+  def admin?
+    id == 1
+  end
+
   private
 
   def set_slug
