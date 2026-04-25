@@ -3,9 +3,15 @@ class DuelsController < ApplicationController
   before_action :set_duel, only: %i[show accept]
 
   def new
-    @opponent = User.find_by!(slug: params[:opponent_slug])
-    return redirect_to root_path, alert: "You can only duel friends." unless current_user.friend_with?(@opponent)
-    @challenges = Challenge.order(:difficulty, :name)
+    if params[:opponent_slug].present?
+      @opponent = User.find_by!(slug: params[:opponent_slug])
+      return redirect_to root_path, alert: "You can only duel friends." unless current_user.friend_with?(@opponent)
+      @challenges = Challenge.order(:difficulty, :name)
+    else
+      # Show friend selection
+      @friends = current_user.friends
+      @challenges = Challenge.order(:difficulty, :name)
+    end
   end
 
   def create
