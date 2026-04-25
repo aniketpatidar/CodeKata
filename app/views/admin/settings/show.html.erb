@@ -1,0 +1,32 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6">Admin Settings</h1>
+
+  <div class="max-w-2xl">
+    <div class="bg-white border rounded p-6 mb-6">
+      <h2 class="text-xl font-semibold mb-4">Feature Toggles</h2>
+
+      <form action="<%= admin_settings_path %>" method="POST">
+        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+        <input type="hidden" name="setting" value="ai_hints_enabled">
+
+        <div class="flex items-center justify-between">
+          <label class="font-medium">AI Hints</label>
+          <div class="flex items-center gap-4">
+            <span class="text-sm text-gray-600">
+              <%= @ai_hints_enabled ? "Enabled" : "Disabled" %>
+            </span>
+            <input
+              type="checkbox"
+              name="value"
+              value="true"
+              <%= "checked" if @ai_hints_enabled %>
+              class="w-5 h-5"
+              onchange="this.form.submit()">
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <%= link_to "Back to Home", home_path, class: "text-blue-600 hover:underline" %>
+  </div>
+</div>
