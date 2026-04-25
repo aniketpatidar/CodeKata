@@ -140,7 +140,6 @@ class GeminiServiceTest < Minitest::Test
     end
     mock_client.instance_variable_set(:@mock_response, mock_response)
 
-    original_create_client = @service.method(:create_client)
     @service.define_singleton_method(:create_client) do
       mock_client
     end
@@ -153,7 +152,6 @@ class GeminiServiceTest < Minitest::Test
       raise @error
     end
 
-    original_create_client = @service.method(:create_client)
     @service.define_singleton_method(:create_client) do
       mock_client
     end

@@ -1,5 +1,11 @@
+# Provides AI-powered hints for coding challenges using Google's Gemini API
 class GeminiService
+  GEMINI_MODEL = "gemini-2.0-flash"
+
   def hint(challenge_description, user_code)
+    raise ArgumentError, "Challenge description cannot be empty" if challenge_description.blank?
+    raise ArgumentError, "Code cannot be empty" if user_code.blank?
+
     api_key = gemini_api_key
     raise KeyError, "GEMINI_API_KEY is not set" if api_key.nil?
 
@@ -8,7 +14,7 @@ class GeminiService
     prompt = build_prompt(challenge_description, user_code)
 
     response = client.chat(
-      model: "gemini-2.0-flash",
+      model: GEMINI_MODEL,
       messages: [{ role: "user", content: prompt }]
     )
 

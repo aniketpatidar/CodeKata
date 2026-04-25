@@ -15,7 +15,7 @@ class CodeEvaluationsController < ApplicationController
   rescue KeyError
     render json: { error: "JUDGE0_API_KEY is not configured." }, status: :service_unavailable
   rescue => e
-    Rails.logger.error("Code evaluation failed: #{e.message}")
+    Rails.logger.error("Code evaluation failed")
     render json: { error: "Code evaluation failed. Please try again." }, status: :internal_server_error
   end
 
