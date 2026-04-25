@@ -1,5 +1,6 @@
-<div class="container mx-auto px-4 py-8">
-  <h1 class="text-4xl font-bold mb-8">CodeKata Dashboard</h1>
+<div class="min-h-screen">
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold mb-8">CodeKata Dashboard</h1>
 
   <% if @new_user %>
     <div class="bg-blue-50 border border-blue-200 rounded p-6 mb-8">
@@ -98,5 +99,6 @@
     <% else %>
       <p class="text-gray-600">You have no friends yet. <%= link_to "Send invitations", invitations_path, class: "text-blue-600 hover:underline" %> to start.</p>
     <% end %>
+  </div>
   </div>
 </div>

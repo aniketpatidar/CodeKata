@@ -1,11 +1,13 @@
-<div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white py-8">
-  <div class="container mx-auto px-4">
-    <h1 class="text-4xl font-bold mb-2">Discussions</h1>
-    <p class="text-blue-100">Ask questions and share knowledge with the community</p>
+<div class="min-h-screen flex flex-col">
+  <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white py-8">
+    <div class="container mx-auto px-4">
+      <h1 class="text-4xl font-bold mb-2">Discussions</h1>
+      <p class="text-blue-100">Ask questions and share knowledge with the community</p>
+    </div>
   </div>
-</div>
 
-<div class="container mx-auto px-4 py-8">
+  <div class="flex-1">
+    <div class="container mx-auto px-4 py-8">
   <div class="flex flex-col lg:flex-row gap-8">
     <!-- Main Content -->
     <div class="lg:flex-1">
@@ -29,9 +31,9 @@
             <div class="flex justify-between items-start mb-3">
               <div class="flex-1">
                 <h3 class="text-xl font-semibold mb-2">
-                  <%= link_to discussion.title, discussion_path(discussion), class: "text-blue-600 hover:underline" %>
+                  <%= link_to discussion.name, discussion_path(discussion), class: "text-blue-600 hover:underline" %>
                 </h3>
-                <p class="text-gray-600"><%= truncate(discussion.description, length: 150) %></p>
+                <p class="text-gray-600"><%= truncate(discussion.description.to_plain_text, length: 150) %></p>
               </div>
               <div class="ml-4 text-right">
                 <p class="text-2xl font-bold text-blue-600"><%= discussion.posts.count %></p>
@@ -77,7 +79,7 @@
           <% @hot_discussions.each do |d| %>
             <div>
               <p class="text-sm font-semibold">
-                <%= link_to truncate(d.title, length: 40), discussion_path(d), class: "text-blue-600 hover:underline" %>
+                <%= link_to truncate(d.name, length: 40), discussion_path(d), class: "text-blue-600 hover:underline" %>
               </p>
               <p class="text-xs text-gray-500"><%= d.posts.count %> replies</p>
             </div>
@@ -97,6 +99,7 @@
           <% end %>
         </div>
       </div>
+    </div>
     </div>
   </div>
 </div>

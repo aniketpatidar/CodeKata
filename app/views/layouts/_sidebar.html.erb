@@ -9,40 +9,49 @@
   <nav class="p-6 space-y-2">
     <% if user_signed_in? %>
       <!-- Main Menu -->
-      <%= link_to home_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg #{'bg-blue-600' if current_page?(home_path)} hover:bg-slate-800 transition" do %>
+      <% active_home = current_page?(home_path) %>
+      <% home_classes = 'flex items-center gap-3 px-4 py-3 rounded-lg ' + (active_home ? 'bg-blue-600' : '') + ' hover:bg-slate-800 transition' %>
+      <a href="<%= home_path %>" class="<%= home_classes %>">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9m-9 4v4m4-4v4"></path>
         </svg>
         <span>Home</span>
-      <% end %>
+      </a>
 
-      <%= link_to challenges_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg #{'bg-blue-600' if current_page?(challenges_path)} hover:bg-slate-800 transition" do %>
+      <% active_challenges = current_page?(challenges_path) %>
+      <% challenges_classes = 'flex items-center gap-3 px-4 py-3 rounded-lg ' + (active_challenges ? 'bg-blue-600' : '') + ' hover:bg-slate-800 transition' %>
+      <a href="<%= challenges_path %>" class="<%= challenges_classes %>">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
         </svg>
         <span>Challenges</span>
-      <% end %>
+      </a>
 
-      <%= link_to duels_path rescue '#', class: "flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 transition" do %>
+      <% duels_href = duels_path rescue '#' %>
+      <a href="<%= duels_href %>" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 transition">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
         <span>Duels</span>
-      <% end %>
+      </a>
 
-      <%= link_to discussions_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg #{'bg-blue-600' if current_page?(discussions_path)} hover:bg-slate-800 transition" do %>
+      <% active_discussions = current_page?(discussions_path) %>
+      <% discussions_classes = 'flex items-center gap-3 px-4 py-3 rounded-lg ' + (active_discussions ? 'bg-blue-600' : '') + ' hover:bg-slate-800 transition' %>
+      <a href="<%= discussions_path %>" class="<%= discussions_classes %>">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
         </svg>
         <span>Discussions</span>
-      <% end %>
+      </a>
 
-      <%= link_to invitations_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg #{'bg-blue-600' if current_page?(invitations_path)} hover:bg-slate-800 transition" do %>
+      <% active_invitations = current_page?(invitations_path) %>
+      <% invitations_classes = 'flex items-center gap-3 px-4 py-3 rounded-lg ' + (active_invitations ? 'bg-blue-600' : '') + ' hover:bg-slate-800 transition' %>
+      <a href="<%= invitations_path %>" class="<%= invitations_classes %>">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3a6 6 0 016-6h6a6 6 0 016 6h-2M9 13l3 3m0 0l3-3m-3 3V9"></path>
         </svg>
         <span>Invitations</span>
-      <% end %>
+      </a>
 
       <!-- Divider -->
       <div class="border-t border-slate-800 my-4"></div>
@@ -51,20 +60,24 @@
       <% if current_user&.admin? %>
         <p class="px-4 py-2 text-slate-400 text-xs font-semibold uppercase tracking-wider">Admin</p>
 
-        <%= link_to admin_categories_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg #{'bg-blue-600' if current_page?(admin_categories_path)} hover:bg-slate-800 transition" do %>
+        <% active_categories = current_page?(admin_categories_path) %>
+        <% categories_classes = 'flex items-center gap-3 px-4 py-3 rounded-lg ' + (active_categories ? 'bg-blue-600' : '') + ' hover:bg-slate-800 transition' %>
+        <a href="<%= admin_categories_path %>" class="<%= categories_classes %>">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
           </svg>
           <span>Categories</span>
-        <% end %>
+        </a>
 
-        <%= link_to admin_settings_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg #{'bg-blue-600' if current_page?(admin_settings_path)} hover:bg-slate-800 transition" do %>
+        <% active_settings = current_page?(admin_settings_path) %>
+        <% settings_classes = 'flex items-center gap-3 px-4 py-3 rounded-lg ' + (active_settings ? 'bg-blue-600' : '') + ' hover:bg-slate-800 transition' %>
+        <a href="<%= admin_settings_path %>" class="<%= settings_classes %>">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
           </svg>
           <span>Settings</span>
-        <% end %>
+        </a>
       <% end %>
 
       <!-- Divider -->
@@ -73,36 +86,36 @@
       <!-- User Menu -->
       <p class="px-4 py-2 text-slate-400 text-xs font-semibold uppercase tracking-wider">Account</p>
 
-      <%= link_to user_path(current_user), class: "flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 transition" do %>
+      <a href="<%= user_path(current_user) %>" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 transition">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
         <span>Profile</span>
-      <% end %>
+      </a>
 
-      <%= link_to destroy_user_session_path, method: :delete, class: "flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-900 transition text-red-400" do %>
+      <a href="<%= destroy_user_session_path %>" data-turbo-method="delete" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-900 transition text-red-400">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
         </svg>
         <span>Logout</span>
-      <% end %>
+      </a>
     <% else %>
       <!-- Auth Links -->
       <p class="px-4 py-2 text-slate-400 text-xs font-semibold uppercase tracking-wider">Getting Started</p>
 
-      <%= link_to new_user_session_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 transition" do %>
+      <a href="<%= new_user_session_path %>" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 transition">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3v-1"></path>
         </svg>
         <span>Sign In</span>
-      <% end %>
+      </a>
 
-      <%= link_to new_user_registration_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 transition" do %>
+      <a href="<%= new_user_registration_path %>" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 transition">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
         </svg>
         <span>Sign Up</span>
-      <% end %>
+      </a>
     <% end %>
   </nav>
 </aside>

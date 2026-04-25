@@ -2,6 +2,18 @@ class DuelsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_duel, only: %i[show accept]
 
+  def index
+    @active_duels = Duel.where(
+      "(challenger_id = :id OR opponent_id = :id) AND status = :status",
+      id: current_user.id, status: Duel.statuses[:active]
+    ).includes(:challenge, :challenger, :opponent).order(started_at: :desc)
+
+    @pending_duels = Duel.where(
+      "(challenger_id = :id OR opponent_id = :id) AND status = :status",
+      id: current_user.id, status: Duel.statuses[:pending]
+    ).includes(:challenge, :challenger, :opponent).order(created_at: :desc)
+  end
+
   def new
     if params[:opponent_slug].present?
       @opponent = User.find_by!(slug: params[:opponent_slug])

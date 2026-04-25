@@ -50,7 +50,7 @@ Rails.application.routes.draw do
   get 'home', to: 'home#index', as: 'home'
 
   # Duels
-  resources :duels, only: [:new, :create, :show] do
+  resources :duels, only: [:index, :new, :create, :show] do
     member do
       patch :accept
     end
