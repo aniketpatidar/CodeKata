@@ -3,7 +3,7 @@
     <div class="p-8">
       <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold"><%= post.title %></div>
       <a href="/<%= post.user.slug %>" class="block mt-1 text-lg leading-tight font-medium text-black hover:underline"><%= post.user.full_name %></a>
-      <p class="mt-2 text-gray-500"><%= truncate(post.body.body.to_plain_text, length: 100) %></p>
+      <p class="mt-2 text-gray-500"><%= post_body_preview(post, length: 100) %></p>
       <div class="mt-4">
         <%= link_to 'Read more', post, class: "text-indigo-600 hover:text-indigo-900" %>
       </div>

@@ -16,6 +16,10 @@ module ApplicationHelper
     end
   end
 
+  def post_body_preview(post, length: 200)
+    truncate(post.body.to_plain_text, length: length)
+  end
+
   def upvote_icon(user, discussion)
     if user.voted_up_on? discussion, vote_scope: 'like'
       'text-blue-600'
