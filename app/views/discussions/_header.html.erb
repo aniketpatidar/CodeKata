@@ -1,28 +1,36 @@
-<turbo-frame id="<%= dom_id(discussion) %>">
-  <article class="ck-card ck-card--quiet bg-white">
-    <div class="grid grid-cols-1 gap-5 lg:grid-cols-[auto_minmax(0,1fr)]">
-      <%= render "discussions/voting", discussion: discussion %>
+<%= turbo_frame_tag dom_id(discussion) do %>
+  <div class="ck-card" style="border-radius: 10px; padding: 20px 24px;">
+    <div class="flex gap-4">
+      <%# Voting column %>
+      <div class="shrink-0">
+        <%= render "discussions/voting", discussion: discussion %>
+      </div>
 
-      <div class="min-w-0">
-        <div class="mb-4 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-          <div>
-            <div class="ck-sticker mb-4">Discussion</div>
-            <h1 class="ck-heading max-w-5xl"><%= discussion.name %></h1>
-          </div>
-          <div class="flex shrink-0 flex-wrap gap-2">
-            <% if discussion.pinned %><span class="ck-chip ck-chip--medium">Pinned</span><% end %>
-            <% if discussion.closed %><span class="ck-chip ck-chip--hard">Closed</span><% end %>
+      <%# Content %>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-start justify-between gap-4 mb-3">
+          <h1 class="text-[20px] font-semibold leading-tight"><%= discussion.name %></h1>
+          <div class="flex items-center gap-1 shrink-0">
+            <% if discussion.pinned %>
+              <span class="ck-chip ck-chip--outline">Pinned</span>
+            <% end %>
+            <% if discussion.closed %>
+              <span class="ck-chip" style="background: rgba(248,113,113,0.15); color: #f87171;">Closed</span>
+            <% end %>
             <% if defined?(current_user) && current_user&.admin? %>
-              <%= link_to "Edit", edit_discussion_path(discussion), class: "ck-chip ck-chip--outline", data: { turbo_frame: "_top" } %>
-              <%= button_to "Delete", discussion, method: :delete, data: { confirm: "Are you sure?", turbo_frame: "_top" }, class: "ck-chip ck-chip--hard" %>
+              <%= button_to edit_discussion_path(discussion), method: :get, class: "ck-chip ck-chip--outline ml-1", style: "cursor: pointer;" do %>
+                Edit
+              <% end %>
+              <%= button_to discussion, method: :delete, data: { confirm: "Are you sure?" }, class: "ck-chip ml-1", style: "background: rgba(248,113,113,0.15); color: #f87171; cursor: pointer;" do %>
+                Delete
+              <% end %>
             <% end %>
           </div>
         </div>
-
-        <div class="trix-content text-lg font-bold leading-relaxed text-ck-ink">
+        <div class="text-[14px] leading-relaxed" style="color: var(--ck-muted);">
           <%= discussion.description %>
         </div>
       </div>
     </div>
-  </article>
-</turbo-frame>
+  </div>
+<% end %>
