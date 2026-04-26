@@ -1,29 +1,31 @@
-<div class="min-h-screen">
-  <div class="container mx-auto px-4 py-8">
-    <% if notice.present? %>
-      <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
-    <% end %>
-
-    <div class="flex justify-between items-center mb-8">
-      <h1 class="text-4xl font-bold">Categories</h1>
-      <% if current_user&.admin? %>
-        <%= link_to "New Category", admin_categories_path, class: "rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700" %>
-      <% end %>
+<div class="px-6 py-8 max-w-4xl mx-auto">
+  <div class="flex items-start justify-between mb-8">
+    <div>
+      <div class="ck-meta mb-1">Explore</div>
+      <h1 class="ck-heading">Categories</h1>
     </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <% @categories.each do |category| %>
-      <div class="bg-white border rounded-lg p-6 hover:shadow-lg transition">
-        <h2 class="text-xl font-bold mb-2"><%= link_to category.name, category_path(category), class: "text-blue-600 hover:underline" %></h2>
-        <p class="text-sm text-gray-500"><%= category.discussions.count %> discussions</p>
-      </div>
-    <% end %>
-    </div>
-
-    <% if @categories.empty? %>
-      <div class="bg-gray-50 border rounded-lg p-12 text-center">
-        <p class="text-gray-600">No categories yet</p>
-      </div>
+    <% if current_user&.admin? %>
+      <%= link_to "New Category", admin_categories_path, class: "ck-btn-primary" %>
     <% end %>
   </div>
+
+  <% if @categories.any? %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <% @categories.each do |category| %>
+        <%= link_to category_path(category),
+              class: "ck-card group flex flex-col gap-2 transition-colors",
+              style: "text-decoration: none;" do %>
+          <p class="text-[14px] font-medium" style="color: var(--ck-ink); transition: color 0.15s;"
+             onmouseover="this.style.color='var(--ck-accent)'" onmouseout="this.style.color='var(--ck-ink)'">
+            <%= category.name %>
+          </p>
+          <p class="ck-meta"><%= category.discussions.count %> discussions</p>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="ck-card text-center py-16">
+      <p class="text-[14px]" style="color: var(--ck-muted);">No categories yet</p>
+    </div>
+  <% end %>
 </div>

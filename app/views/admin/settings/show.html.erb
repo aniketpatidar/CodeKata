@@ -1,32 +1,37 @@
-<div class="container mx-auto px-4 py-8">
-  <h1 class="text-3xl font-bold mb-6">Admin Settings</h1>
+<div class="px-6 py-8 max-w-2xl mx-auto">
+  <div class="mb-8">
+    <div class="ck-meta mb-1">Admin</div>
+    <h1 class="ck-heading">Settings</h1>
+  </div>
 
-  <div class="max-w-2xl">
-    <div class="bg-white border rounded p-6 mb-6">
-      <h2 class="text-xl font-semibold mb-4">Feature Toggles</h2>
+  <div class="ck-card">
+    <div class="ck-meta mb-4">Feature Toggles</div>
 
-      <form action="<%= admin_settings_path %>" method="POST">
-        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-        <input type="hidden" name="setting" value="ai_hints_enabled">
+    <form action="<%= admin_settings_path %>" method="POST">
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+      <input type="hidden" name="setting" value="ai_hints_enabled">
 
-        <div class="flex items-center justify-between">
-          <label class="font-medium">AI Hints</label>
-          <div class="flex items-center gap-4">
-            <span class="text-sm text-gray-600">
-              <%= @ai_hints_enabled ? "Enabled" : "Disabled" %>
-            </span>
-            <input
-              type="checkbox"
-              name="value"
-              value="true"
-              <%= "checked" if @ai_hints_enabled %>
-              class="w-5 h-5"
-              onchange="this.form.submit()">
-          </div>
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-[13px] font-medium" style="color: var(--ck-ink);">AI Hints</p>
+          <p class="ck-meta">Show AI-powered hints on challenges</p>
         </div>
-      </form>
-    </div>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" name="value" value="true" <%= "checked" if @ai_hints_enabled %>
+                 class="sr-only peer" onchange="this.form.submit()">
+          <div class="w-9 h-5 rounded-full peer-checked:bg-[#a6d6ff] transition-colors"
+               style="background: var(--ck-raised);">
+            <div class="absolute top-0.5 left-0.5 w-4 h-4 rounded-full transition-transform peer-checked:translate-x-4"
+                 style="background: var(--ck-muted);"></div>
+          </div>
+        </label>
+      </div>
+    </form>
+  </div>
 
-    <%= link_to "Back to Home", home_path, class: "text-blue-600 hover:underline" %>
+  <div class="mt-6">
+    <%= link_to "← Back to Home", home_path,
+          class: "text-[12px] transition-colors",
+          style: "color: var(--ck-muted); text-decoration: none;"  %>
   </div>
 </div>

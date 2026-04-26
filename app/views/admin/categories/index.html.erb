@@ -1,36 +1,37 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="flex justify-between items-center mb-8">
-    <h1 class="text-4xl font-bold">Manage Categories</h1>
-    <%= link_to "New Category", new_admin_category_path, class: "px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700" %>
+<div class="px-6 py-8 max-w-3xl mx-auto">
+  <div class="flex items-start justify-between mb-8">
+    <div>
+      <div class="ck-meta mb-1">Admin</div>
+      <h1 class="ck-heading">Categories</h1>
+    </div>
+    <%= link_to "New Category", new_admin_category_path, class: "ck-btn-primary" %>
   </div>
 
-  <div class="bg-white border rounded-lg overflow-hidden">
-    <table class="w-full">
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="px-6 py-3 text-left">Name</th>
-          <th class="px-6 py-3 text-left">Discussions</th>
-          <th class="px-6 py-3 text-right">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @categories.each do |category| %>
-          <tr class="border-t hover:bg-gray-50">
-            <td class="px-6 py-3"><strong><%= category.name %></strong></td>
-            <td class="px-6 py-3"><%= category.discussions.count %></td>
-            <td class="px-6 py-3 text-right">
-              <%= link_to "Edit", edit_admin_category_path(category), class: "text-blue-600 hover:underline mr-4" %>
-              <%= link_to "Delete", admin_category_path(category), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 hover:underline" %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
-
-  <% if @categories.empty? %>
-    <div class="bg-gray-50 border rounded-lg p-8 text-center mt-8">
-      <p class="text-gray-600">No categories yet</p>
+  <% if @categories.any? %>
+    <div class="ck-card" style="padding: 0; overflow: hidden;">
+      <% @categories.each_with_index do |category, i| %>
+        <div class="flex items-center justify-between px-5 py-3 <%= i > 0 ? 'border-t' : '' %>"
+             style="<%= i > 0 ? 'border-color: var(--ck-line);' : '' %>">
+          <div>
+            <p class="text-[13px] font-medium" style="color: var(--ck-ink);"><%= category.name %></p>
+            <p class="ck-meta"><%= category.discussions.count %> discussions</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <%= link_to "Edit", edit_admin_category_path(category),
+                  class: "text-[12px] font-medium transition-colors",
+                  style: "color: var(--ck-accent); text-decoration: none;" %>
+            <%= link_to "Delete", admin_category_path(category),
+                  method: :delete,
+                  data: { confirm: "Delete #{category.name}?" },
+                  class: "text-[12px] font-medium transition-colors",
+                  style: "color: #f87171; text-decoration: none;" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="ck-card text-center py-16">
+      <p class="text-[14px]" style="color: var(--ck-muted);">No categories yet</p>
     </div>
   <% end %>
 </div>

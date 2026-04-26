@@ -1,18 +1,13 @@
-<div data-controller="notifications" id="notifications-container" class="relative" data-action="click@window->notifications#hide">
-  <button class="relative p-1 rounded-lg transition-colors" id="notifications-menu" data-action="click->notifications#toggle" aria-expanded="false"
-          style="color: var(--ck-muted); background: none; border: none; cursor: pointer;"
-          onmouseover="this.style.color='var(--ck-ink)'" onmouseout="this.style.color='var(--ck-muted)'">
-    <span class="sr-only">Notifications</span>
-    <%= inline_svg_tag('bell.svg', class: "h-4 w-4") %>
-    <% if user.notifications.unread.exists? %>
-      <div class="absolute -top-0.5 -right-0.5">
-        <div id="notification-count" class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full text-[9px] font-semibold" style="background: #f87171; color: #0e0e10;">
-          <%= user.notifications.unread.count %>
-        </div>
+<a href="<%= notifications_path %>" class="relative p-1 rounded-lg transition-colors"
+   style="color: var(--ck-muted); display: inline-flex; align-items: center;"
+   onmouseover="this.style.color='var(--ck-ink)'" onmouseout="this.style.color='var(--ck-muted)'">
+  <span class="sr-only">Notifications</span>
+  <%= inline_svg_tag('bell.svg', class: "h-4 w-4") %>
+  <% if user.notifications.unread.exists? %>
+    <div class="absolute -top-0.5 -right-0.5">
+      <div class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full text-[9px] font-semibold" style="background: #f87171; color: #0e0e10;">
+        <%= user.notifications.unread.count %>
       </div>
-    <% end %>
-  </button>
-  <div class="dropdown-content absolute w-80 max-h-96 overflow-y-auto rounded-xl shadow-2xl" style="background: var(--ck-card); border: 0.5px solid var(--ck-faint);" data-notifications-target="content">
-    <%= turbo_frame_tag "notifications", src: notifications_path, autoscroll: true, data: { autoscroll_block: "start" } %>
-  </div>
-</div>
+    </div>
+  <% end %>
+</a>
