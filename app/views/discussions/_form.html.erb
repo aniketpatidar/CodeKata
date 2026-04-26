@@ -1,49 +1,50 @@
-<%= form_with(model: discussion, class: "contents") do |form| %>
+<%= form_with(model: discussion, class: "space-y-6") do |form| %>
   <% if discussion.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
-      <h2><%= pluralize(discussion.errors.count, "error") %> prohibited this post from being saved:</h2>
-
-      <ul>
+    <div class="ck-card" style="border-left: 2px solid #f87171;">
+      <p class="ck-meta mb-2" style="color: #f87171;"><%= pluralize(discussion.errors.count, "error") %> prevented this from saving</p>
+      <ul class="space-y-0.5">
         <% discussion.errors.each do |error| %>
-          <li><%= error.options[:message] %></li>
+          <li class="text-[13px]" style="color: var(--ck-ink);"><%= error.options[:message] %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
-  <div class="my-5">
-    <%= form.label :name, class: "block text-sm font-medium text-gray-700" do %>
-      <span class="font-semibold">Title</span>
-      <span class="block text-xs text-gray-600 mt-1">Be specific and imagine you’re asking a question to another person.</span>
+  <div>
+    <%= form.label :name, class: "ck-meta block mb-1" do %>
+      Title
+      <span class="normal-case ml-2" style="font-family: inherit; font-size: 11px; color: var(--ck-muted);">Be specific and imagine you're asking another person.</span>
     <% end %>
-    <%= form.text_field :name, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
-  </div>
-  <br>
-  <div class="my-5">
-    <%= form.label :description, class: "block text-sm font-medium text-gray-700" do %>
-      <span class="font-semibold">What are the details of your problem?</span>
-      <span class="block text-xs text-gray-600 mt-1">Introduce the problem and expand on what you put in the title. Minimum 20 characters.</span>
-    <% end %>
-    <%= form.rich_text_area :description, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
-  </div>
-  <br>
-  <div class="my-5">
-    <%= form.label :categories, class: "block text-sm font-medium text-gray-700" do %>
-      <span class="font-semibold">Tags</span>
-      <span class="block text-xs text-gray-600 mt-1">Add up to 5 tags to describe what your question is about. Start typing to see suggestions.</span>
-    <% end %>
-    <%= form.collection_select :category_ids, Category.order(:name), :id, :name, {}, { class: "block shadow rounded-md border border-gray-200 outline-none mt-2 w-full select2", multiple: true, "data-controller": "select2" } %>
-  </div>
-  <br>
-  <div class="my-5">
-    <%= form.check_box :pinned, class: "mr-2" %><%= form.label :pinned %>
+    <%= form.text_field :name, class: "ck-input" %>
   </div>
 
-  <div class="my-5">
-    <%= form.check_box :closed, class: "mr-2" %><%= form.label :closed %>
+  <div>
+    <%= form.label :description, class: "ck-meta block mb-1" do %>
+      Details
+      <span class="normal-case ml-2" style="font-family: inherit; font-size: 11px; color: var(--ck-muted);">Expand on what you put in the title. Minimum 20 characters.</span>
+    <% end %>
+    <%= form.rich_text_area :description, class: "ck-input min-h-[120px]" %>
   </div>
 
-  <div class="inline">
-    <%= form.submit "Post Your Question", class: "rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:ring hover:bg-blue-700 cursor-pointer" %>
+  <div>
+    <%= form.label :categories, class: "ck-meta block mb-1" do %>
+      Tags
+      <span class="normal-case ml-2" style="font-family: inherit; font-size: 11px; color: var(--ck-muted);">Add up to 5 tags.</span>
+    <% end %>
+    <%= form.collection_select :category_ids, Category.order(:name), :id, :name, {},
+          { class: "ck-input", multiple: true, "data-controller": "select2" } %>
   </div>
+
+  <div class="flex items-center gap-6">
+    <label class="flex items-center gap-2 cursor-pointer">
+      <%= form.check_box :pinned, class: "rounded" %>
+      <span class="text-[13px]" style="color: var(--ck-muted);">Pinned</span>
+    </label>
+    <label class="flex items-center gap-2 cursor-pointer">
+      <%= form.check_box :closed, class: "rounded" %>
+      <span class="text-[13px]" style="color: var(--ck-muted);">Closed</span>
+    </label>
+  </div>
+
+  <%= form.submit "Post Your Question", class: "ck-btn-primary", style: "cursor: pointer;" %>
 <% end %>
