@@ -4,7 +4,7 @@
     <div class="ck-heading text-center mb-8">Create Account</div>
 
     <div class="ck-card" style="border-radius: 16px; padding: 32px;">
-      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { multipart: true }) do |f| %>
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
         <%= render "devise/shared/error_messages", resource: resource %>
 
         <div class="space-y-4">
@@ -25,7 +25,10 @@
 
           <div>
             <%= f.label :avatar, class: "ck-meta block mb-1" %>
-            <%= f.file_field :avatar, accept: "image/*", class: "ck-input" %>
+            <%= f.select :avatar,
+                [["Cooool Cactus", "cool-cactus.png"], ["DOGE", "cool-doge.png"], ["Funky Duck", "cool-duck.png"], ["Coolest duck", "coolest-duck.jpg"]],
+                { include_blank: false },
+                class: "ck-input" %>
           </div>
 
           <div>

@@ -1,16 +1,18 @@
 <div class="fixed bottom-6 right-6 z-50 pointer-events-none">
   <div data-controller="alert"
-       class="ck-card ck-card--quiet max-w-sm w-full pointer-events-auto px-4 py-3 flex items-start gap-3 <%= level.to_s == 'alert' ? 'bg-ck-accent' : 'bg-ck-secondary' %>">
+       class="max-w-sm w-full pointer-events-auto rounded-xl px-4 py-3 flex items-start gap-3"
+       style="background: var(--ck-card); border: 0.5px solid var(--ck-faint); box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
     <div class="flex-1 min-w-0">
-      <div class="ck-meta mb-1">
+      <div class="ck-meta mb-0.5 <%= level.to_s == 'alert' ? '' : '' %>"
+           style="color: <%= level.to_s == 'alert' ? '#f87171' : '#a6d6ff' %>;">
         <%= level.to_s == 'alert' ? 'Error' : 'Notice' %>
       </div>
-      <p class="text-[15px] font-bold leading-snug text-ck-ink"><%= content %></p>
+      <p class="text-[13px]" style="color: var(--ck-ink);"><%= content %></p>
     </div>
     <button data-action="alert#close"
-            class="ck-btn-outline shrink-0 h-10 w-10 min-h-0 p-0"
-            aria-label="Close notification">
-      <%= inline_svg_tag 'close.svg', class: 'h-5 w-5' %>
+            class="shrink-0 mt-0.5 transition-colors"
+            style="color: var(--ck-muted); background: none; border: none; cursor: pointer;">
+      <%= inline_svg_tag 'close.svg', class: 'h-4 w-4' %>
     </button>
   </div>
 </div>
