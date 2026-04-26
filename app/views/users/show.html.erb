@@ -88,7 +88,7 @@
                   <div class="text-[14px] font-semibold mb-1">
                     <%= link_to post.discussion.name, discussion_path(post.discussion), style: "color: #a6d6ff;" %>
                   </div>
-                  <p class="text-[13px] mb-2" style="color: var(--ck-muted);"><%= truncate(post.body, length: 200) %></p>
+                  <p class="text-[13px] mb-2" style="color: var(--ck-muted);"><%= post_body_preview(post) %></p>
                   <div class="ck-meta text-[9px]">Answered <%= time_ago_in_words(post.created_at) %> ago</div>
                 </div>
               <% end %>

@@ -1,4 +1,4 @@
-# one:
-#   record: name_of_fixture (ClassOfFixture)
-#   name: content
-#   body: <p>In a <i>million</i> stars!</p>
+post_body_one:
+  name: body
+  record: one (Post)
+  body: "<div><p>This is a very long rich text answer body that goes well beyond two hundred characters and definitely needs to be truncated when displayed as a preview on the user profile page. Adding extra text here to ensure it well exceeds the two hundred character limit applied during preview rendering.</p></div>"
