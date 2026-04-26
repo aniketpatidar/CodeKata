@@ -40,7 +40,7 @@
             </div>
             <div class="flex items-center gap-2 shrink-0">
               <% if duel.opponent_id == current_user.id %>
-                <%= link_to "Accept", duel_path(duel), method: :patch, class: "ck-btn-primary" %>
+                <%= button_to "Accept", duel_path(duel), method: :patch, class: "ck-btn-primary", style: "cursor: pointer;" %>
               <% end %>
               <%= link_to "View", duel_path(duel), class: "ck-btn-outline" %>
             </div>
