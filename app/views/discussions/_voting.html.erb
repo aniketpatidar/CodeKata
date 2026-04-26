@@ -1,17 +1,23 @@
-<div id="<%= dom_id(discussion, :voting) %>" class="flex flex-col items-center justify-center p-4">
-  <%= button_to upvote_discussion_path(discussion), method: :put, data: { turbo_stream: dom_id(discussion, :voting) }, class: "block text-center" do %>
-    <%= inline_svg "up-vote", 
-      title: "upvote", 
-      class: "fill-current #{upvote_icon(Current.user, discussion)} hover:text-blue-700 w-8 h-8" %>
+<div id="<%= dom_id(discussion, :voting) %>" class="flex flex-col items-center gap-1 pt-1">
+  <%= button_to upvote_discussion_path(discussion), method: :put,
+      data: { turbo_stream: dom_id(discussion, :voting) },
+      class: "flex items-center justify-center w-8 h-8 rounded-lg transition-colors",
+      style: "background: transparent; border: none; cursor: pointer; color: var(--ck-muted);" do %>
+    <%= inline_svg "up-vote",
+        title: "upvote",
+        class: "fill-current w-5 h-5 #{upvote_icon(Current.user, discussion)}" %>
   <% end %>
 
-  <span class="text-gray-700 text-center block text-sm">
+  <span class="text-[14px] font-medium tabular-nums" style="color: var(--ck-ink);">
     <%= discussion.total_vote_count %>
   </span>
 
-  <%= button_to downvote_discussion_path(discussion), method: :put, data: { turbo_stream: dom_id(discussion, :voting) }, class: "block text-center" do %>
-    <%= inline_svg "down-vote", 
-          title: "downvote", 
-          class: "fill-current #{downvote_icon(Current.user, discussion)} hover:text-blue-700 w-8 h-8" %>
+  <%= button_to downvote_discussion_path(discussion), method: :put,
+      data: { turbo_stream: dom_id(discussion, :voting) },
+      class: "flex items-center justify-center w-8 h-8 rounded-lg transition-colors",
+      style: "background: transparent; border: none; cursor: pointer; color: var(--ck-muted);" do %>
+    <%= inline_svg "down-vote",
+        title: "downvote",
+        class: "fill-current w-5 h-5 #{downvote_icon(Current.user, discussion)}" %>
   <% end %>
 </div>

@@ -1,105 +1,94 @@
-<div class="min-h-screen flex flex-col">
-  <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white py-8">
-    <div class="container mx-auto px-4">
-      <h1 class="text-4xl font-bold mb-2">Discussions</h1>
-      <p class="text-blue-100">Ask questions and share knowledge with the community</p>
-    </div>
+<div class="px-12 py-9">
+  <%# Page header %>
+  <div class="mb-8">
+    <div class="ck-meta mb-1">Community</div>
+    <div class="ck-heading">Discussions</div>
   </div>
 
-  <div class="flex-1">
-    <div class="container mx-auto px-4 py-8">
-  <div class="flex flex-col lg:flex-row gap-8">
-    <!-- Main Content -->
-    <div class="lg:flex-1">
-      <div class="mb-8">
-        <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-          <%= form_with url: discussions_path, method: :get, local: true, class: "flex flex-col sm:flex-row gap-3 flex-1" do |f| %>
-            <div class="flex-1">
-              <%= f.text_field :search, placeholder: "Search discussions...", value: params[:search], class: "w-full px-4 py-2 border rounded-lg" %>
-            </div>
-            <div class="flex gap-3">
-              <%= f.submit "Search", class: "px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold whitespace-nowrap" %>
-              <%= link_to "Ask a Question", new_discussion_path, class: "px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold whitespace-nowrap text-center" %>
-            </div>
-          <% end %>
-        </div>
+  <div class="flex gap-8">
+    <%# Main content %>
+    <div class="flex-1">
+      <%# Search + CTA %>
+      <div class="flex gap-3 mb-6">
+        <%= form_with url: discussions_path, method: :get, local: true, class: "flex-1 flex gap-3" do |f| %>
+          <%= f.text_field :search,
+              placeholder: "Search discussions...",
+              value: params[:search],
+              class: "ck-input flex-1" %>
+          <%= f.submit "Search", class: "ck-btn-outline", style: "cursor: pointer;" %>
+        <% end %>
+        <%= link_to "Ask a Question", new_discussion_path, class: "ck-btn-primary" %>
       </div>
 
-      <div class="space-y-4">
+      <%# Discussion cards %>
+      <div class="space-y-3">
         <% @discussions.each do |discussion| %>
-          <div class="bg-white border rounded-lg p-6 hover:shadow-md transition">
+          <div class="ck-card" style="border-radius: 10px; padding: 18px 20px;">
             <div class="flex justify-between items-start mb-3">
-              <div class="flex-1">
-                <h3 class="text-xl font-semibold mb-2">
-                  <%= link_to discussion.name, discussion_path(discussion), class: "text-blue-600 hover:underline" %>
+              <div class="flex-1 pr-6">
+                <h3 class="text-[15px] font-semibold mb-1">
+                  <%= link_to discussion.name, discussion_path(discussion), style: "color: #a6d6ff;" %>
                 </h3>
-                <p class="text-gray-600"><%= truncate(discussion.description.to_plain_text, length: 150) %></p>
+                <p class="text-[13px]" style="color: var(--ck-muted);">
+                  <%= truncate(discussion.description.to_plain_text, length: 140) %>
+                </p>
               </div>
-              <div class="ml-4 text-right">
-                <p class="text-2xl font-bold text-blue-600"><%= discussion.posts.count %></p>
-                <p class="text-xs text-gray-500">replies</p>
+              <div class="text-right shrink-0">
+                <div class="text-[20px] font-light tabular-nums" style="color: #a6d6ff;"><%= discussion.posts.count %></div>
+                <div class="ck-meta text-[9px]">replies</div>
               </div>
             </div>
 
-            <div class="flex flex-wrap gap-2 mb-4">
+            <div class="flex flex-wrap gap-1.5 mb-3">
               <% discussion.categories.each do |category| %>
-                <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">
-                  <%= category.name %>
-                </span>
+                <span class="ck-chip ck-chip--outline"><%= category.name %></span>
               <% end %>
             </div>
 
-            <div class="flex items-center justify-between text-sm text-gray-500">
-              <div>
-                Asked by <%= discussion.user.full_name %>
-              </div>
-              <div>
-                <%= time_ago_in_words(discussion.created_at) %> ago
-              </div>
+            <div class="flex justify-between text-[12px]" style="color: var(--ck-muted);">
+              <span>Asked by <%= discussion.user.full_name %></span>
+              <span><%= time_ago_in_words(discussion.created_at) %> ago</span>
             </div>
           </div>
         <% end %>
-      </div>
 
-      <% if @discussions.empty? %>
-        <div class="bg-gray-50 border rounded-lg p-12 text-center">
-          <p class="text-gray-600 mb-4">No discussions found</p>
-          <%= link_to "Ask the first question!", new_discussion_path, class: "text-blue-600 hover:underline" %>
-        </div>
-      <% end %>
+        <% if @discussions.empty? %>
+          <div class="ck-card text-center py-12">
+            <div class="ck-meta mb-2">No discussions found</div>
+            <%= link_to "Ask the first question!", new_discussion_path, style: "color: #a6d6ff; font-size: 14px;" %>
+          </div>
+        <% end %>
+      </div>
     </div>
 
-    <!-- Sidebar -->
-    <div class="lg:w-64 space-y-6">
-      <!-- Hot Questions -->
-      <div class="bg-white border rounded-lg p-6">
-        <h3 class="font-bold text-lg mb-4">Hot Discussions</h3>
+    <%# Sidebar %>
+    <div class="w-60 shrink-0 space-y-4">
+      <div class="ck-card">
+        <div class="ck-meta mb-3">Hot Discussions</div>
+        <% @hot_discussions ||= Discussion.order('posts_count DESC').limit(5) %>
         <div class="space-y-3">
-          <% @hot_discussions ||= Discussion.order('posts_count DESC').limit(5) %>
           <% @hot_discussions.each do |d| %>
             <div>
-              <p class="text-sm font-semibold">
-                <%= link_to truncate(d.name, length: 40), discussion_path(d), class: "text-blue-600 hover:underline" %>
-              </p>
-              <p class="text-xs text-gray-500"><%= d.posts.count %> replies</p>
+              <div class="text-[13px] font-medium mb-0.5">
+                <%= link_to truncate(d.name, length: 40), discussion_path(d), style: "color: #a6d6ff;" %>
+              </div>
+              <div class="ck-meta text-[9px]"><%= d.posts.count %> replies</div>
             </div>
           <% end %>
         </div>
       </div>
 
-      <!-- Categories -->
-      <div class="bg-white border rounded-lg p-6">
-        <h3 class="font-bold text-lg mb-4">Categories</h3>
+      <div class="ck-card">
+        <div class="ck-meta mb-3">Categories</div>
         <div class="space-y-2">
           <% Category.all.limit(10).each do |category| %>
-            <p>
-              <%= link_to category.name, discussions_path(category_id: category.id), class: "text-blue-600 hover:underline text-sm" %>
-              <span class="text-gray-500 text-xs">(<%= category.discussions.count %>)</span>
-            </p>
+            <div class="flex justify-between items-center">
+              <%= link_to category.name, discussions_path(category_id: category.id), class: "text-[13px]", style: "color: #a6d6ff;" %>
+              <span class="ck-meta text-[9px]"><%= category.discussions.count %></span>
+            </div>
           <% end %>
         </div>
       </div>
-    </div>
     </div>
   </div>
 </div>

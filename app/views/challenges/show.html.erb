@@ -1,69 +1,55 @@
-<div class="bg-gradient-to-r from-purple-500 to-purple-600 text-white py-8">
-  <div class="container mx-auto px-4">
-    <div class="flex justify-between items-start">
-      <div>
-        <h1 class="text-4xl font-bold mb-2"><%= @challenge.name %></h1>
-        <div class="flex gap-4">
-          <span class="px-3 py-1 bg-purple-400 rounded-full text-sm">
-            <%= @challenge.difficulty.titleize %>
-          </span>
-          <span class="px-3 py-1 bg-purple-400 rounded-full text-sm">
-            <%= @challenge.language %>
-          </span>
-        </div>
-      </div>
-      <div class="text-right">
-        <% if user_signed_in? %>
-          <% completion = @challenge.challenge_completions.find_by(user: current_user) %>
-          <% if completion %>
-            <div class="text-green-300 font-semibold">✓ Completed</div>
-          <% end %>
+<div class="px-12 py-9">
+  <%# Page header %>
+  <div class="mb-8">
+    <div class="ck-meta mb-1">Challenge</div>
+    <div class="flex items-start justify-between">
+      <div class="ck-heading"><%= @challenge.name %></div>
+      <div class="flex items-center gap-2 mt-1">
+        <span class="ck-chip ck-chip--<%= @challenge.difficulty.downcase %>"><%= @challenge.difficulty %></span>
+        <% if @challenge.respond_to?(:language) && @challenge.language.present? %>
+          <span class="ck-chip ck-chip--outline"><%= @challenge.language %></span>
+        <% end %>
+        <% if user_signed_in? && ChallengeCompletion.exists?(user: current_user, challenge: @challenge) %>
+          <span class="ck-chip" style="background: rgba(34,197,94,0.15); color: #4ade80;">✓ Completed</span>
         <% end %>
       </div>
     </div>
   </div>
-</div>
 
-<div class="container mx-auto px-4 py-8">
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-    <!-- Description -->
-    <div class="bg-white border rounded-lg p-6">
-      <h2 class="text-2xl font-bold mb-4">Description</h2>
-      <p class="text-gray-700 whitespace-pre-line"><%= @challenge.description %></p>
-    </div>
+  <%# Two column layout %>
+  <div class="grid grid-cols-2 gap-6">
+    <%# Left: description + info %>
+    <div class="space-y-4">
+      <div class="ck-card">
+        <div class="ck-meta mb-3">Description</div>
+        <p class="text-[14px] leading-relaxed whitespace-pre-line" style="color: var(--ck-muted);"><%= @challenge.description %></p>
+      </div>
 
-    <!-- Challenge Info -->
-    <div class="bg-white border rounded-lg p-6">
-      <h2 class="text-2xl font-bold mb-4">Challenge Info</h2>
-      <div class="space-y-4">
+      <div class="ck-stat-grid grid-cols-3">
         <div>
-          <p class="text-gray-600 text-sm">Language</p>
-          <p class="font-semibold"><%= @challenge.language %></p>
+          <div class="ck-meta mb-1">Language</div>
+          <div class="text-[14px] font-medium"><%= @challenge.respond_to?(:language) ? @challenge.language : 'Ruby' %></div>
         </div>
         <div>
-          <p class="text-gray-600 text-sm">Difficulty</p>
-          <p class="font-semibold"><%= @challenge.difficulty.titleize %></p>
+          <div class="ck-meta mb-1">Difficulty</div>
+          <div class="text-[14px] font-medium"><%= @challenge.difficulty.titleize %></div>
         </div>
         <div>
-          <p class="text-gray-600 text-sm">Tests</p>
-          <p class="font-semibold">
-            <% tests = JSON.parse(@challenge.tests) rescue [] %>
-            <%= tests.is_a?(Array) ? tests.length : 0 %> test cases
-          </p>
+          <div class="ck-meta mb-1">Tests</div>
+          <% tests = JSON.parse(@challenge.tests) rescue [] %>
+          <div class="text-[14px] font-medium"><%= tests.is_a?(Array) ? tests.length : 0 %> cases</div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Code Editor and Test Results -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-    <!-- Code Editor -->
-    <div class="bg-white border rounded-lg p-6" data-controller="codemirror">
-      <h2 class="text-2xl font-bold mb-4">Solution</h2>
-      <div class="mb-4">
+    <%# Right: editor + results %>
+    <div class="space-y-4" data-controller="codemirror">
+      <div class="ck-card">
+        <div class="ck-meta mb-3">Solution</div>
         <textarea
           id="code-editor"
-          class="w-full h-80 p-4 border rounded font-mono text-sm"
+          class="w-full font-mono text-[13px]"
+          style="background: var(--ck-bg); color: var(--ck-ink); border: none; outline: none; resize: none; height: 320px;"
           placeholder="Write your code here..."
           data-codemirror-target="editor"
           data-method-template="<%= @challenge.method_template %>"
@@ -71,30 +57,29 @@
           data-challenge-id="<%= @challenge.id %>"
           data-room-id="<%= @room_id %>"
         ><%= @challenge.method_template %></textarea>
+
+        <% if user_signed_in? %>
+          <div class="mt-4 space-y-2">
+            <button data-action="click->codemirror#run" class="ck-btn-primary w-full">
+              Submit Solution
+            </button>
+            <% if current_user.admin? %>
+              <%= button_to "Get AI Hint", hints_path, params: { challenge_id: @challenge.id },
+                  method: :post, class: "ck-btn-outline w-full", style: "cursor: pointer;" %>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="mt-4 text-[13px]" style="color: var(--ck-muted);">
+            <%= link_to "Sign in", new_user_session_path, style: "color: #a6d6ff;" %> to submit a solution.
+          </p>
+        <% end %>
       </div>
 
-      <% if user_signed_in? %>
-        <div class="space-y-3">
-          <button data-action="click->codemirror#run" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold">Submit Solution</button>
-
-          <% if current_user.friend_with?(User.first) rescue false %>
-            <%= link_to "Challenge Friend to Duel", new_duel_path(opponent_slug: User.first.slug), class: "block w-full text-center px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold" %>
-          <% end %>
-
-          <% if current_user.admin? %>
-            <%= link_to "Get AI Hint", hints_path(challenge_id: @challenge.id), method: :post, class: "block w-full text-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold" %>
-          <% end %>
+      <div class="ck-card">
+        <div class="ck-meta mb-3">Test Results</div>
+        <div id="output" class="rounded-lg overflow-auto font-mono text-[13px] p-4" style="background: var(--ck-bg); min-height: 200px; color: var(--ck-muted);">
+          <pre data-codemirror-target="output">Submit your solution to see results</pre>
         </div>
-      <% else %>
-        <p class="text-gray-600"><%= link_to "Sign in", new_user_session_path, class: "text-blue-600 hover:underline" %> to submit a solution</p>
-      <% end %>
-    </div>
-
-    <!-- Test Results -->
-    <div class="bg-white border rounded-lg p-6">
-      <h2 class="text-2xl font-bold mb-4">Test Results</h2>
-      <div id="output" class="bg-gray-50 border rounded p-4 min-h-80 font-mono text-sm overflow-auto">
-        <pre data-codemirror-target="output">Submit your solution to see results</pre>
       </div>
     </div>
   </div>

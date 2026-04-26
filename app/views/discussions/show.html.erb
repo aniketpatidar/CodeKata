@@ -1,14 +1,16 @@
 <%= turbo_stream_from @discussion %>
-<main class="container mx-auto px-5 flex flex-col">
-  <%= render(partial: "discussions/header", locals: { discussion: @discussion }) %>
-  <div id="posts">
+<div class="px-12 py-9">
+  <%= render partial: "discussions/header", locals: { discussion: @discussion } %>
+
+  <div id="posts" class="space-y-3 mt-4">
     <%= render partial: "discussions/posts/post", collection: @posts %>
   </div>
 
-  <div id="<%= dom_id(@new_post) %>" class="mt-4">
+  <div id="<%= dom_id(@new_post) %>" class="mt-6">
     <%= render "discussions/posts/form", post: @new_post %>
   </div>
-</main>
-<div class="inline-block ml-2 mt-2">
-  <%= link_to "Back to Questions", discussions_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+
+  <div class="mt-6">
+    <%= link_to "← Back to Discussions", discussions_path, class: "ck-meta", style: "color: #a6d6ff;" %>
+  </div>
 </div>
