@@ -18,12 +18,14 @@
               <span class="ck-chip" style="background: rgba(248,113,113,0.15); color: #f87171;">Closed</span>
             <% end %>
             <% if defined?(current_user) && current_user&.admin? %>
-              <%= button_to edit_discussion_path(discussion), method: :get, class: "ck-chip ck-chip--outline ml-1", style: "cursor: pointer;" do %>
-                Edit
-              <% end %>
-              <%= button_to discussion, method: :delete, data: { confirm: "Are you sure?" }, class: "ck-chip ml-1", style: "background: rgba(248,113,113,0.15); color: #f87171; cursor: pointer;" do %>
-                Delete
-              <% end %>
+              <%= link_to "Edit", edit_discussion_path(discussion),
+                    class: "ck-chip ck-chip--outline ml-1",
+                    data: { turbo_frame: "_top" } %>
+              <%= button_to "Delete", discussion,
+                    method: :delete,
+                    data: { confirm: "Are you sure?", turbo_frame: "_top" },
+                    class: "ck-chip ml-1",
+                    style: "background: rgba(248,113,113,0.15); color: #f87171; cursor: pointer;" %>
             <% end %>
           </div>
         </div>
