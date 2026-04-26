@@ -1,0 +1,34 @@
+<div class="px-12 py-9">
+  <div class="mb-8">
+    <div class="ck-meta mb-1">Admin</div>
+    <h1 class="ck-heading">Settings</h1>
+  </div>
+
+  <div class="ck-card">
+    <div class="ck-meta mb-4">Feature Toggles</div>
+
+    <form action="<%= admin_settings_path %>" method="POST">
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+      <input type="hidden" name="setting" value="ai_hints_enabled">
+
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-[13px] font-medium" style="color: var(--ck-ink);">AI Hints</p>
+          <p class="ck-meta">Show AI-powered hints on challenges</p>
+        </div>
+        <label class="ck-toggle">
+          <input type="checkbox" name="value" value="true" <%= "checked" if @ai_hints_enabled %>
+                 onchange="this.form.submit()">
+          <div class="ck-toggle-track"></div>
+          <div class="ck-toggle-thumb"></div>
+        </label>
+      </div>
+    </form>
+  </div>
+
+  <div class="mt-6">
+    <%= link_to "← Back to Home", home_path,
+          class: "text-[12px] transition-colors",
+          style: "color: var(--ck-muted); text-decoration: none;"  %>
+  </div>
+</div>

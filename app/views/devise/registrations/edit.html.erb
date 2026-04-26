@@ -1,72 +1,92 @@
-<div class="w-full min-h-[100vh]">
-  <div class="max-w-xl w-full mx-auto shadow-lg bg-gray-200 rounded-lg py-8">
-    <h2 class="text-xl mb-4 text-center">Edit <%= resource_name.to_s.humanize %></h2>
+<div class="px-12 py-9">
+  <div class="mb-8">
+    <div class="ck-meta mb-1">Account</div>
+    <h1 class="ck-heading">Edit Profile</h1>
+  </div>
 
-    <div class="w-3/4 mx-auto">
-      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-        <%= render "devise/shared/error_messages", resource: resource %>
+  <div class="ck-card">
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
 
-        <div class="field mb-4">
-          <%= f.label :first_name, class: "mb-2 text-lg" %><br />
-          <%= f.text_field :first_name, autofocus: true, class: "w-full rounded-lg bg-gray-50" %>
+      <div class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <%= f.label :first_name, class: "ck-meta block mb-1" %>
+            <%= f.text_field :first_name, autofocus: true, class: "ck-input" %>
+          </div>
+          <div>
+            <%= f.label :last_name, class: "ck-meta block mb-1" %>
+            <%= f.text_field :last_name, class: "ck-input" %>
+          </div>
         </div>
 
-        <div class="field mb-4">
-          <%= f.label :last_name, class: "mb-2 text-lg" %><br />
-          <%= f.text_field :last_name, autofocus: true, class: "w-full rounded-lg bg-gray-50" %>
-        </div>
-
-        <div class="field mb-4">
-          <%= f.label :email %><br />
-          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "w-full rounded-lg bg-gray-50" %>
-        </div>
-
-        <div class="field mb-4">
-          <%= f.label :slug %><br />
-          <%= f.text_field :slug, autofocus: true, class: "w-full rounded-lg bg-gray-50" %>
-        </div>
-
-        <div class="field mb-4">
-          <%= f.label :avatar, class: "mb-2 text-lg" %><br />
-          <%= f.select :avatar,
-             [["Cooool Cactus", "cool-cactus.png"], ["DOGE", "cool-doge.png"], ["Funky Duck", "cool-duck.png"], ["Coolest duck", "coolest-duck.jpg"]],
-             { include_blank: false },
-             class: "w-full rounded-lg bg-gray-50"
-          %>
-        </div>
-
-        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-          <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-        <% end %>
-
-        <div class="field mb-4">
-          <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
-          <%= f.password_field :password, autocomplete: "new-password", class: "w-full rounded-lg bg-gray-50" %>
-          <% if @minimum_password_length %>
-            <br />
-            <em><%= @minimum_password_length %> characters minimum</em>
+        <div>
+          <%= f.label :email, class: "ck-meta block mb-1" %>
+          <%= f.email_field :email, autocomplete: "email", class: "ck-input" %>
+          <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+            <p class="ck-meta mt-1">Awaiting confirmation for: <%= resource.unconfirmed_email %></p>
           <% end %>
         </div>
 
-        <div class="field mb-4">
-          <%= f.label :password_confirmation %><br />
-          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "w-full rounded-lg bg-gray-50" %>
+        <div>
+          <%= f.label :slug, class: "ck-meta block mb-1" %>
+          <%= f.text_field :slug, class: "ck-input" %>
         </div>
 
-        <div class="field mb-4">
-          <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-          <%= f.password_field :current_password, autocomplete: "current-password", class: "w-full rounded-lg bg-gray-50" %>
+        <div>
+          <%= f.label :avatar, class: "ck-meta block mb-1" %>
+          <%= f.select :avatar,
+               [["Cooool Cactus", "cool-cactus.png"], ["DOGE", "cool-doge.png"], ["Funky Duck", "cool-duck.png"], ["Coolest duck", "coolest-duck.jpg"]],
+               { include_blank: false },
+               class: "ck-input" %>
         </div>
 
-        <div class="actions">
-          <%= f.submit "Update", class: "bg-blue-500 w-full p-2 text-blue-100 rounded-lg cursor-pointer hover:bg-blue-700 hover:text-blue-300" %>
+        <div style="border-top: 1px solid var(--ck-line); padding-top: 16px; margin-top: 8px;">
+          <div class="ck-meta mb-3">Change Password</div>
+          <div class="space-y-4">
+            <div>
+              <%= f.label :password, class: "ck-meta block mb-1" %>
+              <span class="ck-meta ml-2 normal-case" style="font-size: 10px;">(leave blank to keep current)</span>
+              <%= f.password_field :password, autocomplete: "new-password", class: "ck-input mt-1" %>
+              <% if @minimum_password_length %>
+                <p class="ck-meta mt-1"><%= @minimum_password_length %> characters minimum</p>
+              <% end %>
+            </div>
+            <div>
+              <%= f.label :password_confirmation, class: "ck-meta block mb-1" %>
+              <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "ck-input" %>
+            </div>
+          </div>
         </div>
-      <% end %>
-      <br/>
 
-      <%= link_to "Back", :back, class: "text-lg" %>
+        <div style="border-top: 1px solid var(--ck-line); padding-top: 16px; margin-top: 8px;">
+          <div>
+            <%= f.label :current_password, class: "ck-meta block mb-1" %>
+            <span class="ck-meta ml-2 normal-case" style="font-size: 10px;">(required to confirm changes)</span>
+            <%= f.password_field :current_password, autocomplete: "current-password", class: "ck-input mt-1" %>
+          </div>
+        </div>
 
-      <div class="flex gap-2 items-center mt-8 mx-auto">Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete, class: "bg-red-500 p-2 rounded-lg text-red-100" %></div>
+        <div class="flex items-center gap-4 pt-2">
+          <%= f.submit "Save Changes", class: "ck-btn-primary", style: "cursor: pointer;" %>
+          <%= link_to "Cancel", :back, class: "ck-btn-outline" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mt-8" style="border-top: 1px solid var(--ck-line); padding-top: 24px;">
+    <div class="ck-meta mb-2" style="color: #f87171;">Danger Zone</div>
+    <div class="flex items-center justify-between ck-card" style="border: 1px solid rgba(248,113,113,0.2);">
+      <div>
+        <p class="text-[13px] font-medium" style="color: var(--ck-ink);">Delete Account</p>
+        <p class="ck-meta">This will permanently delete your account and all data.</p>
+      </div>
+      <%= button_to "Delete Account", registration_path(resource_name),
+            data: { confirm: "Are you sure? This cannot be undone.", turbo_confirm: "Are you sure? This cannot be undone." },
+            method: :delete,
+            class: "ck-btn-outline shrink-0",
+            style: "color: #f87171; border-color: rgba(248,113,113,0.3); cursor: pointer;" %>
     </div>
   </div>
 </div>

@@ -1,2 +1,2 @@
-<h4 class="text-lg font-semibold text-gray-900"><%= post.user.slug %></h4>
-<h6 class="text-sm text-gray-500 border-b border-gray-200 pb-2 mb-3">Posted on: <%= post.created_at %></h6>
+<p class="text-[13px] font-medium" style="color: var(--ck-ink);"><%= post.user.slug %></p>
+<p class="ck-meta mt-0.5 mb-3"><%= time_ago_in_words(post.created_at) %> ago</p>

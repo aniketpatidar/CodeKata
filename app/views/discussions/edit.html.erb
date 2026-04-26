@@ -1,7 +1,15 @@
-<div class="mx-auto md:w-2/3 w-full">
-  <h1 class="font-bold text-4xl">Editing discussion</h1>
+<div class="px-12 py-9">
+  <div class="mb-8">
+    <div class="ck-meta mb-1">Discussions</div>
+    <h1 class="ck-heading">Edit Discussion</h1>
+  </div>
+
   <%= turbo_frame_tag dom_id(@discussion) do %>
     <%= render("form", discussion: @discussion) %>
-    <%= link_to "Cancel", @discussion, class: "ml-2" %>
+    <div class="mt-4">
+      <%= link_to "Cancel", @discussion,
+            class: "text-[12px]",
+            style: "color: var(--ck-muted); text-decoration: none;" %>
+    </div>
   <% end %>
 </div>

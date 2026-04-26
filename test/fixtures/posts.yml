@@ -3,7 +3,9 @@
 one:
   title: MyString
   user: one
+  discussion: one
 
 two:
   title: MyString
   user: two
+  discussion: one

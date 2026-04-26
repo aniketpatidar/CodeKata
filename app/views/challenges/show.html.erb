@@ -1,34 +1,86 @@
-    <div class="flex-grow flex flex-col" data-controller="codemirror">
-      <div class="flex flex-grow">
-        <div class="w-96 bg-gray-700 text-white p-5">
-          <h2 class="text-xl mb-4"><%= simple_format @challenge.name %></h2>
-          <p class="mb-4"><%= simple_format @challenge.description %></p>
-        </div>
+<div class="px-12 py-9">
+  <%# Page header %>
+  <div class="mb-8">
+    <div class="ck-meta mb-1">Challenge</div>
+    <div class="flex items-start justify-between">
+      <div class="ck-heading"><%= @challenge.name %></div>
+      <div class="flex items-center gap-2 mt-1">
+        <span class="ck-chip ck-chip--<%= @challenge.difficulty.downcase %>"><%= @challenge.difficulty %></span>
+        <% if @challenge.respond_to?(:language) && @challenge.language.present? %>
+          <span class="ck-chip ck-chip--outline"><%= @challenge.language %></span>
+        <% end %>
+        <% if user_signed_in? && ChallengeCompletion.exists?(user: current_user, challenge: @challenge) %>
+          <span class="ck-chip" style="background: rgba(34,197,94,0.15); color: #4ade80;">✓ Completed</span>
+        <% end %>
+      </div>
+    </div>
+  </div>
 
-        <div class="flex-grow flex flex-col"
+  <%# Two column layout %>
+  <div class="grid grid-cols-2 gap-6">
+    <%# Left: description + info %>
+    <div class="space-y-4">
+      <div class="ck-card">
+        <div class="ck-meta mb-3">Description</div>
+        <p class="text-[14px] leading-relaxed whitespace-pre-line" style="color: var(--ck-muted);"><%= @challenge.description %></p>
+      </div>
+
+      <div class="ck-stat-grid grid-cols-3">
+        <div>
+          <div class="ck-meta mb-1">Language</div>
+          <div class="text-[14px] font-medium"><%= @challenge.respond_to?(:language) ? @challenge.language : 'Ruby' %></div>
+        </div>
+        <div>
+          <div class="ck-meta mb-1">Difficulty</div>
+          <div class="text-[14px] font-medium"><%= @challenge.difficulty.titleize %></div>
+        </div>
+        <div>
+          <div class="ck-meta mb-1">Tests</div>
+          <% tests = JSON.parse(@challenge.tests) rescue [] %>
+          <div class="text-[14px] font-medium"><%= tests.is_a?(Array) ? tests.length : 0 %> cases</div>
+        </div>
+      </div>
+    </div>
+
+    <%# Right: editor + results %>
+    <div class="space-y-4" data-controller="codemirror">
+      <div class="ck-card">
+        <div class="ck-meta mb-3">Solution</div>
+        <textarea
           id="code-editor"
+          class="w-full font-mono text-[13px]"
+          style="background: var(--ck-bg); color: var(--ck-ink); border: none; outline: none; resize: none; height: 320px;"
+          placeholder="Write your code here..."
+          data-codemirror-target="editor"
           data-method-template="<%= @challenge.method_template %>"
           data-tests="<%= @challenge.tests %>"
           data-challenge-id="<%= @challenge.id %>"
           data-room-id="<%= @room_id %>"
-        >
-          <div class="bg-gray-700 text-white p-2 flex justify-end items-center gap-2">
-            <button data-action="click->codemirror#run" class="py-2 px-4 bg-blue-600 text-sm font-semibold text-white rounded-md focus:outline-none focus:ring hover:bg-blue-700 cursor-pointer" style="z-index:10;">Submit</button>
-            <button 
-              class="w-8 h-8 bg-white flex justify-center items-center rounded-lg"
-              data-controller="copy-to-clipboard"
-              data-action="copy-to-clipboard#copy"
-              data-url="<%= "#{request.base_url}/challenges/#{@room_id}/#{@challenge.name}" %>"
-            >
-              <%= inline_svg_tag('copy-paste.svg', class: "h-6 w-6") %>
+        ><%= @challenge.method_template %></textarea>
+
+        <% if user_signed_in? %>
+          <div class="mt-4 space-y-2">
+            <button data-action="click->codemirror#run" class="ck-btn-primary w-full">
+              Submit Solution
             </button>
-            <span class="text-white hidden z-20" id="message">Copied!</span>
+            <% if current_user.admin? %>
+              <%= button_to "Get AI Hint", hints_path, params: { challenge_id: @challenge.id },
+                  method: :post, class: "ck-btn-outline w-full", style: "cursor: pointer;" %>
+            <% end %>
           </div>
-          <textarea class="flex-grow w-full" data-codemirror-target="editor"></textarea>
+        <% else %>
+          <p class="mt-4 text-[13px]" style="color: var(--ck-muted);">
+            <%= link_to "Sign in", new_user_session_path, style: "color: #a6d6ff;" %> to submit a solution.
+          </p>
+        <% end %>
+      </div>
+
+      <div class="ck-card">
+        <div class="ck-meta mb-3">Test Results</div>
+        <div id="output" class="rounded-lg overflow-auto font-mono text-[13px] p-4" style="background: var(--ck-bg); min-height: 200px; color: var(--ck-muted);">
+          <pre data-codemirror-target="output">Submit your solution to see results</pre>
         </div>
       </div>
-      <div id="output" class="bg-gray-800 p-4 h-32 overflow-auto">
-        <h2 class="text-lg font-semibold text-white">Test results</h2>
-        <pre class="text-sm text-white" data-codemirror-target="output">Awaiting code submission</pre>
-      </div>
     </div>
+  </div>
+</div>

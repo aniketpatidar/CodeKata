@@ -1,0 +1,73 @@
+<div class="px-12 py-9">
+  <div class="mb-8">
+    <div class="ck-meta mb-1">Duel</div>
+    <h1 class="ck-heading"><%= @duel.challenger.full_name %> vs <%= @duel.opponent.full_name %></h1>
+  </div>
+
+  <!-- Player cards -->
+  <div class="grid grid-cols-2 gap-4 mb-6">
+    <div class="ck-card" style="border-left: 2px solid #a6d6ff;">
+      <p class="text-[13px] font-semibold mb-2" style="color: var(--ck-ink);"><%= @duel.challenger.full_name %></p>
+      <p class="ck-meta">Status: <span id="challenger-status" style="color: var(--ck-accent);"><%= @duel.status.humanize %></span></p>
+      <p id="challenger-progress" class="ck-meta mt-1">Tests: <span style="color: var(--ck-ink);">0 / <%= @duel.challenge.tests.size rescue 0 %></span></p>
+    </div>
+    <div class="ck-card" style="border-left: 2px solid rgba(245,245,247,0.2);">
+      <p class="text-[13px] font-semibold mb-2" style="color: var(--ck-ink);"><%= @duel.opponent.full_name %></p>
+      <p class="ck-meta">Status: <span id="opponent-status" style="color: var(--ck-muted);"><%= @duel.status.humanize %></span></p>
+      <p id="opponent-progress" class="ck-meta mt-1">Tests: <span style="color: var(--ck-ink);">0 / <%= @duel.challenge.tests.size rescue 0 %></span></p>
+    </div>
+  </div>
+
+  <!-- Challenge description -->
+  <div class="ck-card mb-6">
+    <p class="ck-meta mb-2"><%= @duel.challenge.name %></p>
+    <p class="text-[13px]" style="color: var(--ck-ink); line-height: 1.6;"><%= @duel.challenge.description %></p>
+  </div>
+
+  <!-- Actions -->
+  <% if @duel.pending? && @duel.opponent == current_user %>
+    <div class="mb-6">
+      <%= button_to "Accept Challenge", accept_duel_path(@duel), method: :patch, class: "ck-btn-primary", style: "cursor: pointer;" %>
+    </div>
+  <% elsif @duel.completed? %>
+    <div class="ck-card mb-6" style="border-left: 2px solid #a6d6ff;">
+      <p class="text-[13px] font-medium" style="color: var(--ck-ink);">
+        <% if @duel.winner_id == current_user.id %>
+          You won! Congratulations.
+        <% else %>
+          <%= @duel.winner.full_name %> won this duel.
+        <% end %>
+      </p>
+    </div>
+  <% end %>
+
+  <%= link_to "← Back to Home", home_path,
+        class: "text-[12px] transition-colors",
+        style: "color: var(--ck-muted); text-decoration: none;" %>
+</div>
+
+<script>
+  if ("<%= @duel.status %>" === "active" || "<%= @duel.status %>" === "pending") {
+    const duelsChannel = App.cable.subscriptions.create(
+      { channel: "DuelChannel", duel_id: <%= @duel.id %> },
+      {
+        received(data) {
+          if (data.type === "progress") {
+            if (data.user_id === <%= current_user.id %>) {
+              document.getElementById("challenger-progress").innerHTML =
+                `Tests: <span style="color:var(--ck-ink)">${data.passed} / ${data.total}</span>`;
+            } else {
+              document.getElementById("opponent-progress").innerHTML =
+                `Tests: <span style="color:var(--ck-ink)">${data.passed} / ${data.total}</span>`;
+            }
+          } else if (data.type === "duel_won") {
+            window.location.reload();
+          } else if (data.type === "duel_started") {
+            document.getElementById("challenger-status").textContent = "Active";
+            document.getElementById("opponent-status").textContent = "Active";
+          }
+        }
+      }
+    );
+  }
+</script>

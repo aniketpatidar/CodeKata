@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_05_17_074216) do
+ActiveRecord::Schema[7.1].define(version: 2026_04_25_145720) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -52,6 +52,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_17_074216) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "app_settings", force: :cascade do |t|
+    t.string "key", null: false
+    t.boolean "value", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_app_settings_on_key", unique: true
+  end
+
   create_table "categories", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -63,6 +71,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_17_074216) do
     t.bigint "discussion_id", null: false
     t.index ["category_id", "discussion_id"], name: "index_categories_discussions_on_category_id_and_discussion_id"
     t.index ["discussion_id", "category_id"], name: "index_categories_discussions_on_discussion_id_and_category_id"
+  end
+
+  create_table "challenge_completions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "challenge_id", null: false
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["challenge_id"], name: "index_challenge_completions_on_challenge_id"
+    t.index ["user_id", "challenge_id"], name: "index_challenge_completions_on_user_id_and_challenge_id", unique: true
+    t.index ["user_id"], name: "index_challenge_completions_on_user_id"
   end
 
   create_table "challenges", force: :cascade do |t|
@@ -85,6 +104,23 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_17_074216) do
     t.datetime "updated_at", null: false
     t.integer "posts_count", default: 0
     t.index ["user_id"], name: "index_discussions_on_user_id"
+  end
+
+  create_table "duels", force: :cascade do |t|
+    t.bigint "challenger_id"
+    t.bigint "opponent_id"
+    t.bigint "challenge_id"
+    t.bigint "winner_id"
+    t.integer "status", default: 0
+    t.datetime "started_at"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["challenge_id"], name: "index_duels_on_challenge_id"
+    t.index ["challenger_id", "opponent_id", "status"], name: "index_duels_on_challenger_id_and_opponent_id_and_status"
+    t.index ["challenger_id"], name: "index_duels_on_challenger_id"
+    t.index ["opponent_id"], name: "index_duels_on_opponent_id"
+    t.index ["winner_id"], name: "index_duels_on_winner_id"
   end
 
   create_table "invitations", force: :cascade do |t|
@@ -155,7 +191,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_17_074216) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "challenge_completions", "challenges"
+  add_foreign_key "challenge_completions", "users"
   add_foreign_key "discussions", "users"
+  add_foreign_key "duels", "challenges"
+  add_foreign_key "duels", "users", column: "challenger_id"
+  add_foreign_key "duels", "users", column: "opponent_id"
+  add_foreign_key "duels", "users", column: "winner_id"
   add_foreign_key "invitations", "users"
   add_foreign_key "notifications", "users"
   add_foreign_key "posts", "discussions"

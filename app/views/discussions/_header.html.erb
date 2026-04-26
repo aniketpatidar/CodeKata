@@ -1,30 +1,36 @@
 <%= turbo_frame_tag dom_id(discussion) do %>
-  <div class="bg-white shadow-md rounded-lg my-4">
-    <div class="p-4 flex items-center justify-between border-b border-gray-200">
-      <div class="flex items-center">
-        <div>
-          <%= render "discussions/voting", discussion: discussion %>
-          <div class="flex flex-col items-center justify-center">
-            <%= button_to edit_discussion_path(discussion), method: :get do %>
-              <%= inline_svg_tag('edit-icon.svg', class: "h-8 w-8") %>
+  <div class="ck-card" style="border-radius: 10px; padding: 20px 24px;">
+    <div class="flex gap-4">
+      <%# Voting column %>
+      <div class="shrink-0">
+        <%= render "discussions/voting", discussion: discussion %>
+      </div>
+
+      <%# Content %>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-start justify-between gap-4 mb-3">
+          <h1 class="text-[20px] font-semibold leading-tight"><%= discussion.name %></h1>
+          <div class="flex items-center gap-1 shrink-0">
+            <% if discussion.pinned %>
+              <span class="ck-chip ck-chip--outline">Pinned</span>
             <% end %>
-            <%= button_to discussion, method: :delete, data: { confirm: "Are you sure?" } do %>
-              <%= inline_svg_tag('delete-icon.svg', class: "h-8 w-8") %>
+            <% if discussion.closed %>
+              <span class="ck-chip" style="background: rgba(248,113,113,0.15); color: #f87171;">Closed</span>
+            <% end %>
+            <% if defined?(current_user) && current_user&.admin? %>
+              <%= link_to "Edit", edit_discussion_path(discussion),
+                    class: "ck-chip ck-chip--outline ml-1",
+                    data: { turbo_frame: "_top" } %>
+              <%= button_to "Delete", discussion,
+                    method: :delete,
+                    data: { confirm: "Are you sure?", turbo_frame: "_top" },
+                    class: "ck-chip ml-1",
+                    style: "background: rgba(248,113,113,0.15); color: #f87171; cursor: pointer;" %>
             <% end %>
           </div>
         </div>
-
-        <div>
-          <h1 class="text-2xl font-bold text-gray-800"><%= discussion.name %></h1>
-          <p class="text-gray-700 mt-2"><%= discussion.description %></p>
-        </div>
-        <div class="mt-1 flex items-center space-x-2">
-          <% if discussion.pinned %>
-            <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-0.5 rounded-full">Pinned</span>
-          <% end %>
-          <% if discussion.closed %>
-            <span class="inline-block bg-red-100 text-red-800 text-xs font-semibold px-2 py-0.5 rounded-full">Closed</span>
-          <% end %>
+        <div class="text-[14px] leading-relaxed" style="color: var(--ck-muted);">
+          <%= discussion.description %>
         </div>
       </div>
     </div>

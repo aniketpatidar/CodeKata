@@ -8,9 +8,15 @@ import "config"
 import "channels"
 import { CableCar } from "mrujs/plugins"
 import mrujs from "mrujs"
+import consumer from "channels/consumer"
 
 mrujs.start({
   plugins: [
     new CableCar(CableReady)
   ]
 })
+
+// Make ActionCable consumer available globally for inline scripts
+window.App = {
+  cable: consumer
+}

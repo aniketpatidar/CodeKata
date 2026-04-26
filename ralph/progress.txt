@@ -1,0 +1,15 @@
+# Ralph Progress Log
+# Updated after each iteration. Most recent entry at the bottom.
+# Format: [TASK-ID] status | files changed | notes
+
+[TASK-01] DONE | config/tailwind.config.js, app/assets/stylesheets/application.tailwind.css, app/views/layouts/application.html.erb | Direction B tokens, .ck-* utilities, Google Fonts, layout offset
+[TASK-02] DONE | app/views/layouts/_sidebar.html.erb | Dark minimal sidebar, accent active state, plain <a> tags, pinned user block, data-turbo-method delete on logout
+[TASK-03] DONE | app/views/admin/categories/_form.html.erb, new.html.erb, edit.html.erb, show.html.erb | Created 4 missing templates, fixes 500 on /admin/categories/new and edit/show
+[TASK-04] DONE | app/views/home/index.html.erb | Stat grid, active/pending duel rows, featured challenge 3-col grid, friends row
+[TASK-05] DONE | app/views/challenges/index.html.erb | Flat dark rows, difficulty chips, Turbo Frame search preserved
+[TASK-06] DONE | app/views/challenges/show.html.erb | Two-column layout, dark editor panel, CodeMirror preserved
+[TASK-07] DONE | app/views/discussions/index.html.erb | Removed gradient, dark cards, accent reply count, sidebar
+[TASK-08] DONE | app/views/discussions/show.html.erb, _header.html.erb, _voting.html.erb, posts/_post.html.erb | Dark cards, Turbo voting preserved
+[TASK-09] DONE | app/views/users/show.html.erb | Flat profile, stat grid, tab bar, friends sidebar
+[TASK-10] DONE | app/views/devise/sessions/new.html.erb, registrations/new.html.erb, passwords/new.html.erb | Centred dark card auth pages
+[TASK-11] DONE | app/views/shared/_flash.html.erb | Dark card flash, accent/red label by type

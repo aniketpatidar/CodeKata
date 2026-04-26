@@ -1,87 +1,170 @@
-<div class="profile-container p-8 rounded-lg shadow-lg mx-auto">
-  <div class="profile-header flex flex-col sm:flex-row items-center">
-    <div class="profile-avatar text-center text-white text-4xl rounded-full w-24 h-24 flex items-center justify-center">
-      <% if @user.avatar&.present? %>
-        <%= image_tag @user.avatar, class: "h-16 w-16 object-cover rounded-full" %>
-      <% end %>
+<div class="px-12 py-9">
+  <%# Profile header %>
+  <div class="flex items-start justify-between mb-8">
+    <div class="flex items-center gap-4">
+      <div class="w-16 h-16 rounded-full flex items-center justify-center text-[20px] font-semibold shrink-0" style="background: var(--ck-raised); color: var(--ck-ink);">
+        <% if @user.avatar&.present? %>
+          <%= image_tag @user.avatar, class: "w-16 h-16 object-cover rounded-full" %>
+        <% else %>
+          <%= @user.initials %>
+        <% end %>
+      </div>
+      <div>
+        <div class="ck-meta mb-1">Profile · @<%= @user.slug %></div>
+        <div class="ck-heading"><%= @user.full_name %></div>
+        <div class="ck-meta mt-1">Joined <%= @user.created_at.strftime("%B %Y") %></div>
+      </div>
     </div>
-    <div class="profile-info mt-4 sm:mt-0 sm:ml-6 text-center sm:text-left">
-      <h1 class="text-3xl font-bold"><%= @user.full_name %></h1>
-      <p class="text-gray-400"><%= @user.email %></p>
-      <p class="text-sm text-gray-500 mt-1">Joined <%= time_ago_in_words(@user.created_at) %> ago</p>
-    </div>
-    <div class="flex items-center ml-auto p-4">
-      <% if current_user != @user %>
+
+    <% if current_user && current_user != @user %>
+      <div>
         <%= render 'invitations/friendship', user: @user, current_user: current_user %>
-      <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Stats %>
+  <div class="ck-stat-grid grid-cols-3 mb-8">
+    <div>
+      <div class="ck-meta mb-1">Challenges Solved</div>
+      <div class="text-[22px] font-light tabular-nums" style="color: #a6d6ff;"><%= @user.challenge_completions.count %></div>
+    </div>
+    <div>
+      <div class="ck-meta mb-1">Duels Won</div>
+      <div class="text-[22px] font-light tabular-nums" style="color: #a6d6ff;"><%= Duel.where(winner_id: @user.id).count %></div>
+    </div>
+    <div>
+      <div class="ck-meta mb-1">Total Duels</div>
+      <div class="text-[22px] font-light tabular-nums" style="color: #a6d6ff;"><%= Duel.where("(challenger_id = ? OR opponent_id = ?) AND status = ?", @user.id, @user.id, 2).count %></div>
     </div>
   </div>
 
-  <div
-    class="profile-navigation mt-8 text-center sm:text-left"
-    data-controller="tabs"
-    data-tabs-active-class="bg-blue-600 text-white"
-    data-tabs-default-tab-value="summary"
-  >
-    <ul class="flex justify-center sm:justify-start space-x-4">
-      <li><button data-tabs-target="btn" data-action="click->tabs#select" id="summary" class="rounded-md px-4 py-2 text-sm font-semibold focus:outline-none focus:ring hover:bg-blue-700 hover:text-white">Summary</button></li>
-      <li><button data-tabs-target="btn" data-action="click->tabs#select" id="questions" class="rounded-md px-4 py-2 text-sm font-semibold focus:outline-none focus:ring hover:bg-blue-700 hover:text-white">Questions</button></li>
-      <li><button data-tabs-target="btn" data-action="click->tabs#select" id="answers" class="rounded-md px-4 py-2 text-sm font-semibold focus:outline-none focus:ring hover:bg-blue-700 hover:text-white">Answers</button></li>
-      <li><button data-tabs-target="btn" data-action="click->tabs#select" id="votes" class="rounded-md px-4 py-2 text-sm font-semibold focus:outline-none focus:ring hover:bg-blue-700 hover:text-white">Votes</button></li>
-    </ul>
-
-    <div class="rounded-lg border p-4 mt-4">
-      <div data-tabs-target="tab" id="summary">
-        Summary
+  <div class="grid grid-cols-3 gap-6">
+    <%# Main content: tabs %>
+    <div class="col-span-2">
+      <div class="ck-card mb-4" style="border-radius: 10px;">
+        <div class="ck-meta mb-2">About</div>
+        <div class="text-[13px]" style="color: var(--ck-muted);"><strong style="color: var(--ck-ink);">Email:</strong> <%= @user.email %></div>
       </div>
 
-      <div data-tabs-target="tab" id="questions" class='hidden'>
-        <div class="profile-discussions">
-          <h2 class="text-xl font-bold text-blue-600 focus:outline-none focus:ring hover:text-blue-700"><%= pluralize(@user.discussions.count, "question") %></h2>
-          <% @user.discussions.each do |discussion| %>
-            <div class="p-4 mt-4 rounded-lg">
-              <div class="flex justify-between items-start">
-                <div>
-                  <p class="font-bold text-blue-500"><%= link_to discussion.name, discussion_path(discussion), class: "hover:underline" %></p>
+      <%# Tab bar %>
+      <div class="flex gap-1 mb-4" style="border-bottom: 0.5px solid var(--ck-line); padding-bottom: 0;">
+        <button id="questions-tab" class="ck-meta px-4 py-2 transition-colors" style="color: #a6d6ff; border-bottom: 2px solid #a6d6ff; margin-bottom: -0.5px;">
+          Questions (<%= @user.discussions.count %>)
+        </button>
+        <button id="answers-tab" class="ck-meta px-4 py-2 transition-colors" style="color: var(--ck-muted); border-bottom: 2px solid transparent; margin-bottom: -0.5px;">
+          Answers (<%= @user.posts.count %>)
+        </button>
+      </div>
+
+      <div id="questions-content">
+        <div class="ck-card" style="border-radius: 10px;">
+          <% if @user.discussions.any? %>
+            <div class="space-y-4">
+              <% @user.discussions.each do |discussion| %>
+                <div style="border-bottom: 0.5px solid var(--ck-line); padding-bottom: 14px;" class="last:border-b-0 last:pb-0">
+                  <div class="text-[14px] font-semibold mb-1">
+                    <%= link_to discussion.name, discussion_path(discussion), style: "color: #a6d6ff;" %>
+                  </div>
+                  <div class="flex gap-4 ck-meta text-[9px]">
+                    <span><%= discussion.posts.count %> answers</span>
+                    <span>Asked <%= time_ago_in_words(discussion.created_at) %> ago</span>
+                  </div>
                 </div>
-                <div class="text-sm">
-                  <span class="ml-2"><%= discussion.posts.count %> answers</span>
-                </div>
-              </div>
-              <div class="flex items-center mt-2 gap-4">
-                <span class="text-gray-700 text-sm">Asked <span class="font-semibold"><%= time_ago_in_words(discussion.created_at) %> ago.</span></span>
-                <span class="text-gray-700 text-sm">Modified <span class="font-semibold"><%= time_ago_in_words(discussion.updated_at) %> ago.</span></span>
-              </div>
+              <% end %>
             </div>
+          <% else %>
+            <p class="text-center py-8 ck-meta">No questions yet</p>
           <% end %>
         </div>
       </div>
 
-      <div data-tabs-target="tab" id="answers" class='hidden'>
-        <div class="profile-discussions">
-          <h2 class="text-xl font-bold text-blue-600 focus:outline-none focus:ring hover:text-blue-700"><%= pluralize(@user.posts.count, "answer") %></h2>
-          <% @user.posts.each do |post| %>
-            <div class="p-4 mt-4 rounded-lg">
-              <div>
-                <p class="font-bold text-blue-500"><%= link_to post.discussion.name, discussion_path(post.discussion), class: "hover:underline" %></p>
-              </div>
-              <div class="px-2">
-                <div>
-                  <p class="text-gray-700 mt-2"><%= post.body %></p>
+      <div id="answers-content" class="hidden">
+        <div class="ck-card" style="border-radius: 10px;">
+          <% if @user.posts.any? %>
+            <div class="space-y-4">
+              <% @user.posts.each do |post| %>
+                <div style="border-bottom: 0.5px solid var(--ck-line); padding-bottom: 14px;" class="last:border-b-0 last:pb-0">
+                  <div class="text-[14px] font-semibold mb-1">
+                    <%= link_to post.discussion.name, discussion_path(post.discussion), style: "color: #a6d6ff;" %>
+                  </div>
+                  <p class="text-[13px] mb-2" style="color: var(--ck-muted);"><%= truncate(post.body, length: 200) %></p>
+                  <div class="ck-meta text-[9px]">Answered <%= time_ago_in_words(post.created_at) %> ago</div>
                 </div>
-                <div class="flex items-center mt-2 gap-4">
-                  <span class="text-gray-700 text-sm">Answered <span class="font-semibold"><%= time_ago_in_words(post.created_at) %> ago.</span></span>
-                  <span class="text-gray-700 text-sm">Modified <span class="font-semibold"><%= time_ago_in_words(post.updated_at) %> ago.</span></span>
-                </div>
-              </div>
+              <% end %>
             </div>
+          <% else %>
+            <p class="text-center py-8 ck-meta">No answers yet</p>
           <% end %>
         </div>
       </div>
+    </div>
 
-      <div data-tabs-target="tab" id="votes" class='hidden'>
-        Votes
+    <%# Sidebar: actions + friends %>
+    <div class="space-y-4">
+      <% if current_user && current_user.id != @user.id %>
+        <div class="ck-card space-y-2" style="border-radius: 10px;">
+          <% if current_user.friend_with?(@user) %>
+            <%= link_to "Challenge to Duel", new_duel_path(opponent_slug: @user.slug), class: "ck-btn-primary block w-full text-center" %>
+          <% elsif current_user.pending_invitations.exists?(user_id: @user.id) %>
+            <button class="ck-btn-outline w-full" disabled style="opacity: 0.4; cursor: default;">Invitation Pending</button>
+          <% elsif current_user.sent_invitations.exists?(friend_id: @user.id) %>
+            <button class="ck-btn-outline w-full" disabled style="opacity: 0.4; cursor: default;">Invitation Sent</button>
+          <% else %>
+            <%= button_to "Send Friend Invitation", invitations_path, params: { user_id: @user.id },
+                method: :post, class: "ck-btn-primary w-full", style: "cursor: pointer;" %>
+          <% end %>
+        </div>
+      <% elsif current_user %>
+        <div class="ck-card" style="border-radius: 10px;">
+          <%= link_to "Edit Profile", edit_user_registration_path, class: "ck-btn-outline block w-full text-center" %>
+        </div>
+      <% end %>
+
+      <div class="ck-card" style="border-radius: 10px;">
+        <div class="ck-meta mb-3">Friends (<%= @user.friends.count %>)</div>
+        <% if @user.friends.any? %>
+          <div class="space-y-3">
+            <% @user.friends.limit(10).each do |friend| %>
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-semibold shrink-0" style="background: var(--ck-raised); color: var(--ck-ink);">
+                  <%= friend.initials %>
+                </div>
+                <%= link_to friend.full_name, user_path(friend), class: "text-[13px]", style: "color: #a6d6ff;" %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="ck-meta text-[9px]">No friends yet</p>
+        <% end %>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  const questionTab = document.getElementById('questions-tab');
+  const answersTab = document.getElementById('answers-tab');
+  const questionsContent = document.getElementById('questions-content');
+  const answersContent = document.getElementById('answers-content');
+
+  if (questionTab && answersTab) {
+    questionTab.addEventListener('click', () => {
+      questionsContent.classList.remove('hidden');
+      answersContent.classList.add('hidden');
+      questionTab.style.color = '#a6d6ff';
+      questionTab.style.borderBottomColor = '#a6d6ff';
+      answersTab.style.color = 'var(--ck-muted)';
+      answersTab.style.borderBottomColor = 'transparent';
+    });
+
+    answersTab.addEventListener('click', () => {
+      answersContent.classList.remove('hidden');
+      questionsContent.classList.add('hidden');
+      answersTab.style.color = '#a6d6ff';
+      answersTab.style.borderBottomColor = '#a6d6ff';
+      questionTab.style.color = 'var(--ck-muted)';
+      questionTab.style.borderBottomColor = 'transparent';
+    });
+  }
+</script>

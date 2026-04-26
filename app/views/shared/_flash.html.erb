@@ -1,18 +1,18 @@
-<div class="fixed inset-x-0 -bottom-32 flex items-end justify-right px-4 py-6 sm:p-6 justify-end z-50 pointer-events-none">
-  <div data-controller="alert" class="max-w-sm w-full h-24 shadow-lg rounded px-4 py-3 rounded relative border-l-4 text-white pointer-events-auto <%= flash_class(level) %>">
-    <div class="p-2">
-      <div class="flex items-start">
-        <div class="ml-3 w-0 flex-1 pt-0.5">
-          <p class="text-sm leading-5">
-            <%= content %>
-          </p>
-        </div>
-        <div class="ml-4 flex-shrink-0 flex">
-          <button data-action="alert#close" class="inline-flex text-white focus:outline-none focus:text-gray-300 transition ease-in-out duration-150">
-            <%= inline_svg_tag 'close.svg', class: 'h-4 w-4 inline-block' %>
-          </button>
-        </div>
+<div class="fixed bottom-6 right-6 z-50 pointer-events-none">
+  <div data-controller="alert"
+       class="max-w-sm w-full pointer-events-auto rounded-xl px-4 py-3 flex items-start gap-3"
+       style="background: var(--ck-card); border: 0.5px solid var(--ck-faint); box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
+    <div class="flex-1 min-w-0">
+      <div class="ck-meta mb-0.5 <%= level.to_s == 'alert' ? '' : '' %>"
+           style="color: <%= level.to_s == 'alert' ? '#f87171' : '#a6d6ff' %>;">
+        <%= level.to_s == 'alert' ? 'Error' : 'Notice' %>
       </div>
+      <p class="text-[13px]" style="color: var(--ck-ink);"><%= content %></p>
     </div>
+    <button data-action="alert#close"
+            class="shrink-0 mt-0.5 transition-colors"
+            style="color: var(--ck-muted); background: none; border: none; cursor: pointer;">
+      <%= inline_svg_tag 'close.svg', class: 'h-4 w-4' %>
+    </button>
   </div>
 </div>

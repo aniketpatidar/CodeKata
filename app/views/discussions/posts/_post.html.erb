@@ -1,15 +1,23 @@
 <%= turbo_frame_tag dom_id(post) do %>
-  <div class="flex md:flex-row items-start md:items-center justify-between bg-white shadow-md rounded-lg p-4 mt-4">
-    <div class="md:w-4/5">
-      <%= render(partial: "discussions/posts/header", locals: { post: post }) %>
-      <p class="text-gray-700 mt-2"><%= post.body %></p>
-    </div>
-    <div class="flex mt-4 md:mt-0 space-x-4">
-      <%= link_to edit_discussion_post_path(post.discussion, post), data: { turbo_frame: dom_id(post) } do %>
-        <%= image_tag "icon.png", alt: "Edit", class: "h-8 w-8" %>
-      <% end %>
-      <%= link_to discussion_post_path(post.discussion, post), method: :delete, data: { confirm: "Are you sure?" } do %>
-        <%= image_tag "delete.png", alt: "Delete", class: "h-8 w-8" %>
+  <div class="ck-card" style="border-radius: 10px; padding: 18px 20px;">
+    <div class="flex items-start justify-between gap-4">
+      <div class="flex-1 min-w-0">
+        <%= render partial: "discussions/posts/header", locals: { post: post } %>
+        <div class="text-[14px] leading-relaxed mt-2" style="color: var(--ck-muted);"><%= post.body %></div>
+      </div>
+      <% if Current.user&.admin? || Current.user&.id == post.user_id %>
+        <div class="flex gap-2 shrink-0">
+          <%= link_to edit_discussion_post_path(post.discussion, post),
+              data: { turbo_frame: dom_id(post) },
+              class: "ck-chip ck-chip--outline" do %>
+            Edit
+          <% end %>
+          <%= button_to "Delete", discussion_post_path(post.discussion, post),
+              method: :delete,
+              data: { confirm: "Are you sure?" },
+              class: "ck-chip",
+              style: "background: rgba(248,113,113,0.15); color: #f87171; cursor: pointer;" %>
+        </div>
       <% end %>
     </div>
   </div>

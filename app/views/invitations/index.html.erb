@@ -1,68 +1,170 @@
-<!-- app/views/invitations/index.html.erb -->
-<div class="container mx-auto px-4 py-8">
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-    <!-- Your Network Column -->
-    <div class="space-y-8">
-      <!-- Friends Card -->
-      <div class="bg-white rounded-2xl shadow-lg p-6">
-        <h2 class="text-2xl font-semibold mb-4">Your Friends</h2>
-        <ul class="divide-y divide-gray-200">
-          <%= render partial: 'invitations/friend', collection: current_user.friends, as: :friend %>
-        </ul>
-      </div>
+<div class="px-12 py-9">
+  <div class="mb-8">
+    <div class="ck-meta mb-1">Social</div>
+    <h1 class="ck-heading">Friends</h1>
+  </div>
 
-      <!-- Received Invitations Card -->
-      <div class="bg-white rounded-2xl shadow-lg p-6">
-        <h2 class="text-2xl font-semibold mb-4">Received Invitations</h2>
-        <ul class="divide-y divide-gray-200">
-          <% current_user.received_invitations.each do |inv| %>
-            <li class="flex items-center justify-between py-3">
-              <%= link_to inv.user.full_name, user_path(inv.user),
-                    class: "text-lg font-medium text-gray-800 hover:text-blue-600" %>
-              <div class="flex space-x-2">
-                <%= button_to "Accept", accept_invitation_path(inv),
-                      method: :post,
-                      class: "px-3 py-1 bg-green-500 text-white rounded-xl hover:bg-green-600 text-sm" %>
-                <%= button_to "Decline", decline_invitation_path(inv),
-                      method: :post,
-                      class: "px-3 py-1 bg-red-500 text-white rounded-xl hover:bg-red-600 text-sm" %>
+  <!-- Tabs -->
+  <div class="flex gap-1 mb-6 p-1 rounded-lg" style="background: var(--ck-raised);" id="invitation-tabs">
+    <button class="inv-tab px-4 py-1.5 rounded-md text-[13px] font-medium transition-colors" data-target="received-content"
+            style="color: var(--ck-ink); background: var(--ck-card);">
+      Received <span class="ck-meta ml-1 normal-case"><%= current_user.received_invitations.count %></span>
+    </button>
+    <button class="inv-tab px-4 py-1.5 rounded-md text-[13px] font-medium transition-colors" data-target="sent-content"
+            style="color: var(--ck-muted);">
+      Sent <span class="ck-meta ml-1 normal-case"><%= current_user.sent_invitations.count %></span>
+    </button>
+    <button class="inv-tab px-4 py-1.5 rounded-md text-[13px] font-medium transition-colors" data-target="friends-content"
+            style="color: var(--ck-muted);">
+      Friends <span class="ck-meta ml-1 normal-case"><%= current_user.friends.count %></span>
+    </button>
+    <button class="inv-tab px-4 py-1.5 rounded-md text-[13px] font-medium transition-colors" data-target="find-content"
+            style="color: var(--ck-muted);">
+      Find People
+    </button>
+  </div>
+
+  <!-- Received Invitations -->
+  <div id="received-content" class="inv-panel">
+    <% if current_user.received_invitations.any? %>
+      <div class="space-y-2">
+        <% current_user.received_invitations.each do |invitation| %>
+          <div id="<%= dom_id(invitation) %>" class="ck-card flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-[11px] font-semibold"
+                   style="background: var(--ck-raised); color: var(--ck-accent);">
+                <%= invitation.user.initials %>
               </div>
-            </li>
-          <% end %>
-        </ul>
-      </div>
-
-      <!-- Pending Requests Card -->
-      <div class="bg-white rounded-2xl shadow-lg p-6">
-        <h2 class="text-2xl font-semibold mb-4">Pending Requests</h2>
-        <ul class="divide-y divide-gray-200">
-          <% current_user.sent_invitations.each do |inv| %>
-            <li class="flex items-center justify-between py-3">
-              <%= link_to inv.friend.full_name, user_path(inv.friend),
-                    class: "text-lg font-medium text-gray-800 hover:text-blue-600" %>
-              <span class="px-3 py-1 bg-gray-300 text-gray-700 rounded-xl text-sm">Pending</span>
-            </li>
-          <% end %>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Find & Connect Column -->
-    <div class="bg-white rounded-2xl shadow-lg p-6 space-y-6">
-      <h2 class="text-2xl font-semibold">Find People</h2>
-      <ul class="divide-y divide-gray-200">
-        <% @users.reject { |u| u == current_user || current_user.friend_with?(u) || Invitation.reacted?(current_user.id, u.id) }.each do |user| %>
-          <li class="flex items-center justify-between py-3">
-            <%= link_to user.full_name, user_path(user),
-                  class: "text-lg font-medium text-gray-800 hover:text-blue-600" %>
-            <%= form_with url: invitations_path, method: :post, local: true, class: "m-0" do |f| %>
-              <%= f.hidden_field :user_id, value: user.id %>
-              <%= f.submit "Connect",
-                    class: "px-3 py-1 bg-blue-600 text-white rounded-xl hover:bg-blue-700 text-sm" %>
-            <% end %>
-          </li>
+              <div class="min-w-0">
+                <p class="text-[13px] font-medium truncate" style="color: var(--ck-ink);">
+                  <%= link_to invitation.user.full_name, user_path(invitation.user), style: "color: inherit; text-decoration: none;" %>
+                </p>
+                <p class="ck-meta"><%= time_ago_in_words(invitation.created_at) %> ago</p>
+              </div>
+            </div>
+            <div class="flex gap-2 shrink-0">
+              <%= button_to "Accept", accept_invitation_path(invitation), method: :post, class: "ck-btn-primary" %>
+              <%= button_to "Decline", decline_invitation_path(invitation), method: :post, class: "ck-btn-outline" %>
+            </div>
+          </div>
         <% end %>
-      </ul>
-    </div>
+      </div>
+    <% else %>
+      <div class="ck-card text-center py-12">
+        <p class="text-[13px] mb-3" style="color: var(--ck-muted);">No pending invitations</p>
+        <button class="ck-btn-outline text-[12px]" data-go-to="find-content">Find people</button>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Sent Invitations -->
+  <div id="sent-content" class="inv-panel hidden">
+    <% if current_user.sent_invitations.any? %>
+      <div class="space-y-2">
+        <% current_user.sent_invitations.each do |invitation| %>
+          <div id="<%= dom_id(invitation) %>" class="ck-card flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-[11px] font-semibold"
+                   style="background: var(--ck-raised); color: var(--ck-accent);">
+                <%= invitation.friend.initials %>
+              </div>
+              <div class="min-w-0">
+                <p class="text-[13px] font-medium truncate" style="color: var(--ck-ink);">
+                  <%= link_to invitation.friend.full_name, user_path(invitation.friend), style: "color: inherit; text-decoration: none;" %>
+                </p>
+                <p class="ck-meta"><%= time_ago_in_words(invitation.created_at) %> ago</p>
+              </div>
+            </div>
+            <%= button_to "Cancel", decline_invitation_path(invitation), method: :post, class: "ck-btn-outline shrink-0" %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="ck-card text-center py-12">
+        <p class="text-[13px]" style="color: var(--ck-muted);">No sent invitations</p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Friends -->
+  <div id="friends-content" class="inv-panel hidden">
+    <% if current_user.friends.any? %>
+      <div class="space-y-2">
+        <% current_user.friends.each do |friend| %>
+          <div class="ck-card flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-[11px] font-semibold"
+                   style="background: var(--ck-raised); color: var(--ck-accent);">
+                <%= friend.initials %>
+              </div>
+              <div class="min-w-0">
+                <p class="text-[13px] font-medium truncate" style="color: var(--ck-ink);">
+                  <%= link_to friend.full_name, user_path(friend), style: "color: inherit; text-decoration: none;" %>
+                </p>
+                <p class="ck-meta">Friends since <%= time_ago_in_words(Invitation.where("(user_id = ? AND friend_id = ?) OR (user_id = ? AND friend_id = ?)", current_user.id, friend.id, friend.id, current_user.id).where(confirmed: true).first.created_at) %> ago</p>
+              </div>
+            </div>
+            <%= link_to "View Profile", user_path(friend), class: "ck-btn-outline shrink-0" %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="ck-card text-center py-12">
+        <p class="text-[13px] mb-3" style="color: var(--ck-muted);">No friends yet</p>
+        <button class="ck-btn-outline text-[12px]" data-go-to="find-content">Find people</button>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Find People -->
+  <div id="find-content" class="inv-panel hidden">
+    <% available_users = @users.reject { |u| u == current_user || current_user.friend_with?(u) || Invitation.reacted?(current_user.id, u.id) } %>
+    <% if available_users.any? %>
+      <div class="space-y-2">
+        <% available_users.each do |user| %>
+          <div class="ck-card flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-[11px] font-semibold"
+                   style="background: var(--ck-raised); color: var(--ck-accent);">
+                <%= user.initials %>
+              </div>
+              <div class="min-w-0">
+                <p class="text-[13px] font-medium truncate" style="color: var(--ck-ink);">
+                  <%= link_to user.full_name, user_path(user), style: "color: inherit; text-decoration: none;" %>
+                </p>
+                <p class="ck-meta">@<%= user.slug %></p>
+              </div>
+            </div>
+            <%= button_to "Invite", invitations_path, params: { user_id: user.id }, method: :post, class: "ck-btn-primary shrink-0" %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="ck-card text-center py-12">
+        <p class="text-[13px]" style="color: var(--ck-muted);">No users available to connect with</p>
+      </div>
+    <% end %>
   </div>
 </div>
+
+<script>
+  (function() {
+    const tabs = document.querySelectorAll('.inv-tab');
+    const panels = document.querySelectorAll('.inv-panel');
+
+    function activate(targetId) {
+      tabs.forEach(t => {
+        const active = t.dataset.target === targetId;
+        t.style.color = active ? 'var(--ck-ink)' : 'var(--ck-muted)';
+        t.style.background = active ? 'var(--ck-card)' : 'transparent';
+      });
+      panels.forEach(p => p.classList.toggle('hidden', p.id !== targetId));
+    }
+
+    tabs.forEach(t => t.addEventListener('click', () => activate(t.dataset.target)));
+
+    document.querySelectorAll('[data-go-to]').forEach(btn => {
+      btn.addEventListener('click', () => activate(btn.dataset.goTo));
+    });
+  })();
+</script>

@@ -1,0 +1,59 @@
+<div class="px-12 py-9">
+  <div class="flex items-start justify-between mb-8">
+    <div>
+      <div class="ck-meta mb-1">Competition</div>
+      <h1 class="ck-heading">Duels</h1>
+    </div>
+    <%= link_to "Start New Duel", new_duel_path, class: "ck-btn-primary" %>
+  </div>
+
+  <% if @active_duels.any? %>
+    <div class="mb-8">
+      <div class="ck-meta mb-3">Active</div>
+      <div class="space-y-2">
+        <% @active_duels.each do |duel| %>
+          <div class="ck-card flex items-center justify-between gap-4" style="border-left: 2px solid #a6d6ff;">
+            <div class="flex-1 min-w-0">
+              <p class="text-[14px] font-medium truncate" style="color: var(--ck-ink);">
+                <%= duel.challenger.full_name %> <span style="color: var(--ck-muted);">vs</span> <%= duel.opponent.full_name %>
+              </p>
+              <p class="ck-meta mt-0.5"><%= duel.challenge.name %></p>
+            </div>
+            <%= link_to "View", duel_path(duel), class: "ck-btn-outline shrink-0" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @pending_duels.any? %>
+    <div class="mb-8">
+      <div class="ck-meta mb-3">Pending Invitations</div>
+      <div class="space-y-2">
+        <% @pending_duels.each do |duel| %>
+          <div class="ck-card flex items-center justify-between gap-4" style="border-left: 2px solid rgba(245,245,247,0.25);">
+            <div class="flex-1 min-w-0">
+              <p class="text-[14px] font-medium truncate" style="color: var(--ck-ink);">
+                <%= duel.challenger.full_name %> challenged you
+              </p>
+              <p class="ck-meta mt-0.5"><%= duel.challenge.name %></p>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <% if duel.opponent_id == current_user.id %>
+                <%= button_to "Accept", duel_path(duel), method: :patch, class: "ck-btn-primary", style: "cursor: pointer;" %>
+              <% end %>
+              <%= link_to "View", duel_path(duel), class: "ck-btn-outline" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @active_duels.empty? && @pending_duels.empty? %>
+    <div class="ck-card text-center py-16">
+      <p class="text-[14px] mb-4" style="color: var(--ck-muted);">No duels yet. Start challenging your friends!</p>
+      <%= link_to "Start a Duel", new_duel_path, class: "ck-btn-primary" %>
+    </div>
+  <% end %>
+</div>

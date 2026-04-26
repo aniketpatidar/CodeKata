@@ -1,0 +1,29 @@
+<div class="px-12 py-9">
+  <div class="mb-8">
+    <div class="ck-meta mb-1">Admin · Categories</div>
+    <div class="ck-heading"><%= @category.name %></div>
+  </div>
+
+  <div class="ck-stat-grid grid-cols-2 mb-8">
+    <div>
+      <div class="ck-meta mb-1">Discussions</div>
+      <div class="text-[22px] font-light tabular-nums" style="color: #a6d6ff;"><%= @category.discussions.count %></div>
+    </div>
+    <div>
+      <div class="ck-meta mb-1">Created</div>
+      <div class="text-[14px] font-medium"><%= @category.created_at.strftime("%b %d, %Y") %></div>
+    </div>
+  </div>
+
+  <div class="flex gap-3">
+    <%= link_to "Edit", edit_admin_category_path(@category), class: "ck-btn-outline" %>
+    <%= button_to "Delete", admin_category_path(@category), method: :delete,
+        data: { confirm: "Delete '#{@category.name}'? This cannot be undone." },
+        class: "ck-btn-outline",
+        style: "color: #f87171; border-color: rgba(248,113,113,0.3); cursor: pointer;" %>
+  </div>
+
+  <div class="mt-6">
+    <%= link_to "← All Categories", admin_categories_path, class: "ck-meta", style: "color: #a6d6ff;" %>
+  </div>
+</div>

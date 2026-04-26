@@ -1,24 +1,21 @@
 <%= turbo_frame_tag "#{dom_id(post)}_form", target: "_top" do %>
-  <%= form_with(model: [post.discussion, post]) do |form| %>
+  <%= form_with(model: [post.discussion, post], class: "space-y-4") do |form| %>
     <% if post.errors.any? %>
-      <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
-        <h2><%= pluralize(post.errors.count, "error") %> prohibited this post from being saved:</h2>
-
-        <ul>
+      <div class="ck-card mb-4" style="border-left: 2px solid #f87171;">
+        <p class="ck-meta mb-2" style="color: #f87171;"><%= pluralize(post.errors.count, "error") %> prevented this from saving</p>
+        <ul class="space-y-0.5">
           <% post.errors.each do |error| %>
-            <li><%= error.full_message %></li>
+            <li class="text-[13px]" style="color: var(--ck-ink);"><%= error.full_message %></li>
           <% end %>
         </ul>
       </div>
     <% end %>
-    <div class="my-5">
-      <%= form.label :body, class: "block text-sm font-medium text-gray-700" do %>
-        <span class="font-semibold">Your Answer</span>
-      <% end %>
-      <%= form.rich_text_area :body, placeholder: "Reply to this discussion...", class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+
+    <div>
+      <%= form.label :body, class: "ck-meta block mb-2" %>
+      <%= form.rich_text_area :body, placeholder: "Reply to this discussion..." %>
     </div>
-    <div class="my-5">
-      <%= form.submit "Post Your Answer", class: "rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white focus:outline-none focus:ring hover:bg-blue-700 cursor-pointer" %>
-    </div>
+
+    <%= form.submit "Post Your Answer", class: "ck-btn-primary", style: "cursor: pointer;" %>
   <% end %>
 <% end %>

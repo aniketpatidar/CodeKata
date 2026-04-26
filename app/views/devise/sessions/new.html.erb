@@ -1,31 +1,33 @@
-<div class="w-full min-h-[100vh]">
-  <div class="max-w-xl w-full mx-auto shadow-lg bg-gray-200 rounded-lg py-8">
-    <h2 class="text-xl mb-4 text-center">Log in</h2>
+<div class="flex items-center justify-center min-h-screen px-4">
+  <div class="w-full max-w-md">
+    <div class="ck-meta mb-1 text-center">Welcome back</div>
+    <div class="ck-heading text-center mb-8">Sign In</div>
 
-    <div class="w-3/4 mx-auto">
+    <div class="ck-card" style="border-radius: 16px; padding: 32px;">
       <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-        <div class="field mb-4">
-          <%= f.label :email, class: "mb-2 text-lg" %><br />
-          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "w-full rounded-lg bg-gray-50" %>
-        </div>
-
-        <div class="field mb-4">
-          <%= f.label :password, class: "mb-2 text-lg" %><br />
-          <%= f.password_field :password, autocomplete: "current-password", class: "w-full rounded-lg bg-gray-50" %>
-        </div>
-        
-        <% if devise_mapping.rememberable? %>
-          <div class="field mb-4">
-            <%= f.check_box :remember_me %>
-            <%= f.label :remember_me %>
+        <div class="space-y-4">
+          <div>
+            <%= f.label :email, class: "ck-meta block mb-1" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "ck-input" %>
           </div>
-        <% end %>
 
-        <div class="actions w-full">
-          <%= f.submit "Log in", class: "bg-blue-500 w-full p-2 text-blue-100 rounded-lg cursor-pointer hover:bg-blue-700 hover:text-blue-300" %>
+          <div>
+            <%= f.label :password, class: "ck-meta block mb-1" %>
+            <%= f.password_field :password, autocomplete: "current-password", class: "ck-input" %>
+          </div>
+
+          <% if devise_mapping.rememberable? %>
+            <div class="flex items-center gap-2">
+              <%= f.check_box :remember_me %>
+              <%= f.label :remember_me, class: "ck-meta cursor-pointer" %>
+            </div>
+          <% end %>
+
+          <%= f.submit "Sign in", class: "ck-btn-primary w-full mt-2", style: "cursor: pointer;" %>
         </div>
       <% end %>
-      <div class="flex flex-col items-center mt-4 gap-4">
+
+      <div class="mt-6 space-y-2 text-center">
         <%= render "devise/shared/links" %>
       </div>
     </div>

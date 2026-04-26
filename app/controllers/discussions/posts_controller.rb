@@ -3,12 +3,14 @@ module Discussions
     before_action :authenticate_user!
     before_action :set_discussion
     before_action :set_post, only: [:show, :edit, :update, :destroy]
+    before_action :require_ownership!, only: [:edit, :update, :destroy]
 
     def create
-      @post = @discussion.posts.new(post_params)
+      @post = @discussion.posts.new(post_params.merge(user: current_user))
 
       respond_to do |format|
         if @post.save
+          format.turbo_stream
           format.html { redirect_to discussion_path(@discussion), notice: "Post created" }
         else
           format.turbo_stream
@@ -50,6 +52,10 @@ module Discussions
 
     def set_post
       @post = @discussion.posts.find(params[:id])
+    end
+
+    def require_ownership!
+      redirect_to discussion_path(@discussion), alert: "You can't do that." unless @post.user == current_user
     end
 
     def post_params

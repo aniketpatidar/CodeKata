@@ -1,0 +1,37 @@
+<div class="px-12 py-9">
+  <div class="flex items-start justify-between mb-8">
+    <div>
+      <div class="ck-meta mb-1">Admin</div>
+      <h1 class="ck-heading">Categories</h1>
+    </div>
+    <%= link_to "New Category", new_admin_category_path, class: "ck-btn-primary" %>
+  </div>
+
+  <% if @categories.any? %>
+    <div class="ck-card" style="padding: 0; overflow: hidden;">
+      <% @categories.each_with_index do |category, i| %>
+        <div class="flex items-center justify-between px-5 py-3 <%= i > 0 ? 'border-t' : '' %>"
+             style="<%= i > 0 ? 'border-color: var(--ck-line);' : '' %>">
+          <div>
+            <p class="text-[13px] font-medium" style="color: var(--ck-ink);"><%= category.name %></p>
+            <p class="ck-meta"><%= category.discussions.count %> discussions</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <%= link_to "Edit", edit_admin_category_path(category),
+                  class: "text-[12px] font-medium transition-colors",
+                  style: "color: var(--ck-accent); text-decoration: none;" %>
+            <%= link_to "Delete", admin_category_path(category),
+                  method: :delete,
+                  data: { confirm: "Delete #{category.name}?" },
+                  class: "text-[12px] font-medium transition-colors",
+                  style: "color: #f87171; text-decoration: none;" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="ck-card text-center py-16">
+      <p class="text-[14px]" style="color: var(--ck-muted);">No categories yet</p>
+    </div>
+  <% end %>
+</div>

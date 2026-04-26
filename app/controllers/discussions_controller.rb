@@ -1,9 +1,9 @@
 class DiscussionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_discussion, only: [:show, :edit, :update, :destroy, :upvote, :downvote]
+  before_action :require_ownership!, only: [:edit, :update, :destroy]
 
   def index
-    # @discussions = Discussion.order(updated_at: :desc)
     @pagy, @discussions = pagy(Discussion.order(updated_at: :desc).search(params), items: 5)
     @hot_discussions = Discussion.ordered_by_votes
     @categories = Category.all
@@ -69,6 +69,10 @@ class DiscussionsController < ApplicationController
 
   def set_discussion
     @discussion = Discussion.find(params[:id])
+  end
+
+  def require_ownership!
+    redirect_to discussions_path, alert: "You can't do that." unless @discussion.user == current_user
   end
 
   def format_error_messages(errors)

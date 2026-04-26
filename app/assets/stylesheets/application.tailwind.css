@@ -2,87 +2,325 @@
 @tailwind components;
 @tailwind utilities;
 
-/*
-
-@layer components {
-  .btn-primary {
-    @apply py-2 px-4 bg-blue-200;
-  }
-}
-
-*/
 @import 'actiontext.css';
 @import "animation.css";
 @import "slideover.css";
 @import "dropdown.css";
 @import "tom-select.css";
 
+@layer base {
+  :root {
+    --ck-bg:     #0e0e10;
+    --ck-card:   #17171a;
+    --ck-raised: #1f1f23;
+    --ck-ink:    #f5f5f7;
+    --ck-muted:  rgba(245, 245, 247, 0.55);
+    --ck-faint:  rgba(245, 245, 247, 0.12);
+    --ck-line:   rgba(245, 245, 247, 0.08);
+    --ck-accent: #a6d6ff;
+  }
+
+  body {
+    background: var(--ck-bg);
+    color: var(--ck-ink);
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  /* Meta label: JetBrains Mono 10px uppercase */
+  .ck-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--ck-muted);
+  }
+
+  /* Page heading: Inter weight-300 32px */
+  .ck-heading {
+    font-family: 'Inter', sans-serif;
+    font-size: 32px;
+    font-weight: 300;
+    letter-spacing: -0.8px;
+    color: var(--ck-ink);
+  }
+
+  /* Standard card */
+  .ck-card {
+    background: var(--ck-card);
+    border-radius: 14px;
+    padding: 16px;
+  }
+
+  /* Chip/badge base */
+  .ck-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+  }
+
+  .ck-chip--filled {
+    background: var(--ck-accent);
+    color: #0e0e10;
+  }
+
+  .ck-chip--outline {
+    border: 0.5px solid var(--ck-faint);
+    color: var(--ck-muted);
+  }
+
+  /* Difficulty variants */
+  .ck-chip--easy   { background: rgba(166,214,255,0.15); color: #a6d6ff; }
+  .ck-chip--medium { background: rgba(252,211,77,0.15);  color: #fcd34d; }
+  .ck-chip--hard   { background: rgba(248,113,113,0.15); color: #f87171; }
+
+  /* Stat grid: gaps act as dividers via background on the wrapper */
+  .ck-stat-grid {
+    display: grid;
+    gap: 1px;
+    background: var(--ck-line);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .ck-stat-grid > div {
+    background: var(--ck-card);
+    padding: 14px 18px;
+  }
+
+  /* Buttons */
+  .ck-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    background: var(--ck-accent);
+    color: #0e0e10;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .ck-btn-primary:hover { opacity: 0.88; }
+
+  .ck-btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    background: transparent;
+    color: var(--ck-ink);
+    border: 1px solid var(--ck-faint);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .ck-btn-outline:hover { background: var(--ck-raised); }
+
+  /* Inputs */
+  .ck-input {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    background: var(--ck-raised);
+    border: 1px solid var(--ck-faint);
+    color: var(--ck-ink);
+    outline: none;
+  }
+
+  .ck-input:focus {
+    border-color: var(--ck-accent);
+  }
+
+  .ck-input::placeholder {
+    color: var(--ck-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+}
+
+/* Pagy pagination — dark restyle */
 .pagy-nav,
 .pagy-nav-js {
-  @apply flex space-x-2 mt-4;
+  @apply flex space-x-1 mt-6;
 }
 
 .pagy-nav .page a,
 .pagy-nav .page.active,
 .pagy-nav .page.prev.disabled,
-.pagy-nav .page.next.disabled,
-.pagy-nav-js .page a,
-.pagy-nav-js .page.active,
-.pagy-nav-js .page.prev.disabled,
-.pagy-nav-js .page.next.disabled {
-  @apply block rounded-lg px-3 py-1 text-sm text-gray-500 font-semibold bg-gray-200 shadow-md;
-  &:hover{
-    @apply bg-gray-300;
-  }
-  &:active{
-    @apply bg-gray-400 text-white;
-  }
+.pagy-nav .page.next.disabled {
+  display: block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--ck-card);
+  color: var(--ck-muted);
+  transition: background 0.12s;
+}
+
+.pagy-nav .page a:hover {
+  background: var(--ck-raised);
+  color: var(--ck-ink);
+}
+
+.pagy-nav .page.active {
+  background: var(--ck-raised);
+  color: var(--ck-accent);
 }
 
 .pagy-nav .page.prev.disabled,
-.pagy-nav .page.next.disabled,
-.pagy-nav-js .page.prev.disabled,
-.pagy-nav-js .page.next.disabled {
-  @apply text-gray-400 cursor-default;
-  &:hover {
-    @apply text-gray-400 bg-gray-200;
-  }
-  &:active {
-    @apply text-gray-400 bg-gray-200;
-  }
+.pagy-nav .page.next.disabled {
+  opacity: 0.35;
+  cursor: default;
 }
 
-.pagy-nav .page.active,
-.pagy-nav-js .page.active {
-  @apply text-white cursor-default bg-gray-400;
-  &:hover {
-    @apply text-white bg-gray-400;
-  }
-  &:active {
-    @apply bg-gray-400 text-white;
-  }
+/* ── Trix / ActionText dark theme ──────────────────────────────── */
+trix-toolbar {
+  background: var(--ck-raised);
+  border-bottom: 1px solid var(--ck-line);
+  border-radius: 10px 10px 0 0;
+  padding: 4px 6px;
 }
 
-
-.pagy-combo-nav-js {
-  @apply flex max-w-max rounded-full px-3 py-1 text-sm text-gray-500 font-semibold bg-gray-200 shadow-md;
+trix-toolbar .trix-button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
 }
 
-.pagy-combo-nav-js .pagy-combo-input {
-  @apply bg-white px-2 rounded-sm
+trix-toolbar .trix-button {
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: var(--ck-muted);
+  padding: 4px 6px;
+  min-width: 28px;
+  height: 26px;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
 }
 
-.pagy-combo-nav-js .page.prev,
-.pagy-combo-nav-js .page.next {
-  &:hover {
-    @apply text-gray-800;
-  }
-  &:active {
-    @apply text-gray-800;
-  }
+trix-toolbar .trix-button:not(:disabled):hover {
+  background: var(--ck-faint);
+  color: var(--ck-ink);
 }
 
-.pagy-combo-nav-js .page.prev.disabled,
-.pagy-combo-nav-js .page.next.disabled {
-  @apply text-gray-400 cursor-default;
+trix-toolbar .trix-button.trix-active {
+  background: var(--ck-faint);
+  color: var(--ck-accent);
+}
+
+trix-toolbar .trix-button--icon::before {
+  filter: invert(1) opacity(0.6);
+}
+
+trix-toolbar .trix-button--icon.trix-active::before,
+trix-toolbar .trix-button--icon:hover::before {
+  filter: invert(1) opacity(0.9);
+}
+
+trix-toolbar .trix-button-group {
+  border: none;
+  margin: 0;
+}
+
+trix-toolbar .trix-button-group + .trix-button-group {
+  margin-left: 0;
+}
+
+trix-toolbar .trix-button-group-spacer {
+  flex: 1;
+}
+
+trix-editor {
+  background: var(--ck-raised);
+  color: var(--ck-ink);
+  border: none;
+  border-radius: 0 0 10px 10px;
+  padding: 10px 14px;
+  min-height: 120px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  outline: none;
+}
+
+trix-editor:empty::before {
+  color: var(--ck-muted);
+}
+
+.trix-content { color: var(--ck-ink); }
+
+/* Wrap trix-toolbar + trix-editor in a styled border */
+action-text-editor,
+.trix-editor-wrapper {
+  display: block;
+  border: 1px solid var(--ck-faint);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+action-text-editor:focus-within {
+  border-color: var(--ck-accent);
+}
+
+/* ── Toggle switch ─────────────────────────────────────────────── */
+.ck-toggle {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.ck-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.ck-toggle-track {
+  position: absolute;
+  inset: 0;
+  background: var(--ck-raised);
+  border-radius: 20px;
+  transition: background 0.2s;
+}
+
+.ck-toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  background: var(--ck-muted);
+  border-radius: 50%;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.ck-toggle input:checked ~ .ck-toggle-track {
+  background: var(--ck-accent);
+}
+
+.ck-toggle input:checked ~ .ck-toggle-thumb {
+  transform: translateX(16px);
+  background: #0e0e10;
 }

@@ -1,0 +1,62 @@
+<div class="px-12 py-9">
+  <div class="mb-8">
+    <div class="ck-meta mb-1">Duels</div>
+    <h1 class="ck-heading">
+      <% if @opponent %>Challenge <%= @opponent.full_name %><% else %>Challenge a Friend<% end %>
+    </h1>
+  </div>
+
+  <% if @opponent %>
+    <form action="<%= duels_path %>" method="POST">
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+      <%= hidden_field_tag :opponent_id, @opponent.id %>
+
+      <div class="mb-6">
+        <div class="ck-meta mb-3">Select a Challenge</div>
+        <div class="space-y-2">
+          <% @challenges.group_by(&:difficulty).each do |difficulty, challenges| %>
+            <div class="mb-4">
+              <p class="ck-meta mb-2"><%= difficulty.titleize %></p>
+              <% challenges.each do |challenge| %>
+                <label class="ck-card flex items-center gap-3 cursor-pointer mb-2" style="padding: 12px 16px;">
+                  <input type="radio" name="challenge_id" value="<%= challenge.id %>" required
+                         class="shrink-0" style="accent-color: #a6d6ff;">
+                  <span class="text-[13px]" style="color: var(--ck-ink);"><%= challenge.name %></span>
+                </label>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button type="submit" class="ck-btn-primary">Send Challenge</button>
+        <%= link_to "Cancel", home_path, class: "ck-btn-outline" %>
+      </div>
+    </form>
+  <% else %>
+    <% if @friends.any? %>
+      <div class="space-y-2">
+        <% @friends.each do |friend| %>
+          <%= link_to new_duel_path(opponent_slug: friend.slug),
+                class: "ck-card flex items-center justify-between gap-4",
+                style: "text-decoration: none;" do %>
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-semibold"
+                   style="background: var(--ck-raised); color: var(--ck-accent);">
+                <%= friend.initials %>
+              </div>
+              <span class="text-[13px] font-medium" style="color: var(--ck-ink);"><%= friend.full_name %></span>
+            </div>
+            <span class="ck-meta">Challenge →</span>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="ck-card text-center py-12">
+        <p class="text-[13px] mb-4" style="color: var(--ck-muted);">No friends yet. Send invitations to start challenging people!</p>
+        <%= link_to "Send Invitations", invitations_path, class: "ck-btn-outline" %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

@@ -1,29 +1,22 @@
-<li
-  class="p-4 transition-opacity"
-  id="<%= dom_id(notification) %>"
-  data-controller="notifications"
-  data-public="<%= notification.to_global_id.to_s %>"
->
-  <div class="flex space-x-4 items-center">
-    <div>
-      <button data-action="click->notifications#read">
-        <%= render_inline_svg "check-circle", class: "h-7 w-7 text-gray-500 hover:text-green-500", title: "Mark as read" %>
-        <span class="sr-only">Mark as read</span>
-      </button>
-    </div>
-    <div>
-      <h4 class="text-sm font-medium">
-        <%= link_to notification.message,
-          notification.url,
-          data: {
-            id: notification.id,
-            action: "click->slideover#connect",
-            remote: true
-          } %>
-      </h4>
-      <p class="text-sm text-gray-500">
-        <%= time_ago_in_words(notification.created_at) %> ago
-      </p>
-    </div>
+<div class="ck-card flex items-start gap-3"
+     id="<%= dom_id(notification) %>"
+     data-controller="notifications"
+     data-public="<%= notification.to_global_id.to_s %>">
+  <button data-action="click->notifications#read"
+          class="shrink-0 mt-0.5 transition-colors"
+          style="background: none; border: none; cursor: pointer; color: var(--ck-muted);"
+          onmouseover="this.style.color='#a6d6ff'" onmouseout="this.style.color='var(--ck-muted)'"
+          title="Mark as read">
+    <%= render_inline_svg "check-circle", class: "h-4 w-4" %>
+    <span class="sr-only">Mark as read</span>
+  </button>
+  <div class="flex-1 min-w-0">
+    <p class="text-[13px] font-medium" style="color: var(--ck-ink);">
+      <%= link_to notification.message,
+            notification.url,
+            style: "color: inherit; text-decoration: none;",
+            data: { id: notification.id, action: "click->slideover#connect", remote: true } %>
+    </p>
+    <p class="ck-meta mt-0.5"><%= time_ago_in_words(notification.created_at) %> ago</p>
   </div>
-</li>
+</div>

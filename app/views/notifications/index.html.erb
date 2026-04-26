@@ -1,5 +1,18 @@
-<%= turbo_frame_tag "notifications" do %>
-  <ul class="p-2" role="list" aria-orientation="vertical" aria-labelledby="notifications-list">
-    <%= render @notifications %>
-  </ul>
-<% end %>
+<div class="px-12 py-9">
+  <div class="mb-8">
+    <div class="ck-meta mb-1">Inbox</div>
+    <h1 class="ck-heading">Notifications</h1>
+  </div>
+
+  <%= turbo_frame_tag "notifications" do %>
+    <% if @notifications.any? %>
+      <div class="space-y-2">
+        <%= render @notifications %>
+      </div>
+    <% else %>
+      <div class="ck-card text-center py-16">
+        <p class="text-[14px]" style="color: var(--ck-muted);">You're all caught up</p>
+      </div>
+    <% end %>
+  <% end %>
+</div>

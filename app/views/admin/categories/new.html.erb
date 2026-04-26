@@ -1,0 +1,14 @@
+<div class="px-12 py-9">
+  <div class="mb-8">
+    <div class="ck-meta mb-1">Admin · Categories</div>
+    <div class="ck-heading">New Category</div>
+  </div>
+
+  <div class="ck-card">
+    <%= render "form", category: @category %>
+  </div>
+
+  <div class="mt-6">
+    <%= link_to "← Back to Categories", admin_categories_path, class: "ck-meta", style: "color: #a6d6ff;" %>
+  </div>
+</div>
