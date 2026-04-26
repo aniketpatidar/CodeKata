@@ -10,8 +10,18 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+        sans: ['Inter', ...defaultTheme.fontFamily.sans],
+        mono: ['"JetBrains Mono"', ...defaultTheme.fontFamily.mono],
       },
+      colors: {
+        ck: {
+          bg:     '#0e0e10',
+          card:   '#17171a',
+          raised: '#1f1f23',
+          ink:    '#f5f5f7',
+          accent: '#a6d6ff',
+        }
+      }
     },
   },
   plugins: [
