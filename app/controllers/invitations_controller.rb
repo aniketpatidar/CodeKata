@@ -28,10 +28,14 @@ class InvitationsController < ApplicationController
   end
 
   def decline
-    invitation = current_user.received_invitations.find(params[:id])
+    invitation = Invitation.find(params[:id])
+    unless invitation.user == current_user || invitation.friend == current_user
+      return redirect_to invitations_path, alert: "Not authorized"
+    end
     invitation.destroy
     respond_to do |format|
-      render turbo_stream: turbo_stream.remove(invitation)
+      format.turbo_stream { render turbo_stream: turbo_stream.remove(dom_id(invitation)) }
+      format.html { redirect_to invitations_path }
     end
   end
 end

@@ -29,7 +29,7 @@
     <% if current_user.received_invitations.any? %>
       <div class="space-y-2">
         <% current_user.received_invitations.each do |invitation| %>
-          <div class="ck-card flex items-center justify-between gap-4">
+          <div id="<%= dom_id(invitation) %>" class="ck-card flex items-center justify-between gap-4">
             <div class="flex items-center gap-3 min-w-0">
               <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-[11px] font-semibold"
                    style="background: var(--ck-raised); color: var(--ck-accent);">
@@ -62,7 +62,7 @@
     <% if current_user.sent_invitations.any? %>
       <div class="space-y-2">
         <% current_user.sent_invitations.each do |invitation| %>
-          <div class="ck-card flex items-center justify-between gap-4">
+          <div id="<%= dom_id(invitation) %>" class="ck-card flex items-center justify-between gap-4">
             <div class="flex items-center gap-3 min-w-0">
               <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-[11px] font-semibold"
                    style="background: var(--ck-raised); color: var(--ck-accent);">

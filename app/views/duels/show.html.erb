@@ -26,11 +26,9 @@
 
   <!-- Actions -->
   <% if @duel.pending? && @duel.opponent == current_user %>
-    <form action="<%= duel_path(@duel) %>" method="POST" class="mb-6">
-      <input type="hidden" name="_method" value="PATCH">
-      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-      <button type="submit" class="ck-btn-primary">Accept Challenge</button>
-    </form>
+    <div class="mb-6">
+      <%= button_to "Accept Challenge", accept_duel_path(@duel), method: :patch, class: "ck-btn-primary", style: "cursor: pointer;" %>
+    </div>
   <% elsif @duel.completed? %>
     <div class="ck-card mb-6" style="border-left: 2px solid #a6d6ff;">
       <p class="text-[13px] font-medium" style="color: var(--ck-ink);">
