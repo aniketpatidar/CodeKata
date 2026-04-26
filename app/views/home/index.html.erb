@@ -1,45 +1,47 @@
-<div class="min-h-screen">
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-4xl font-bold mb-8">CodeKata Dashboard</h1>
+<div class="px-12 py-9">
+  <%# Page header %>
+  <div class="mb-8">
+    <div class="ck-meta mb-1">Dashboard · Your Stats</div>
+    <div class="ck-heading">Welcome back<% if current_user %>, <%= current_user.first_name %><% end %></div>
+  </div>
 
   <% if @new_user %>
-    <div class="bg-blue-50 border border-blue-200 rounded p-6 mb-8">
-      <h2 class="text-xl font-semibold mb-2">Welcome to CodeKata!</h2>
-      <p class="text-gray-700">
-        Start by <%= link_to "sending a duel challenge", new_duel_path, class: "text-blue-600 hover:underline" %>
-        to a friend or <%= link_to "solving a challenge", challenges_path, class: "text-blue-600 hover:underline" %>.
+    <div class="ck-card mb-8" style="border: 1px solid rgba(166,214,255,0.2);">
+      <div class="ck-meta mb-1" style="color: #a6d6ff;">Getting started</div>
+      <p class="text-[14px]" style="color: var(--ck-muted);">
+        <%= link_to "Send a duel challenge", new_duel_path, style: "color: #a6d6ff;" %> to a friend or
+        <%= link_to "solve a challenge", challenges_path, style: "color: #a6d6ff;" %> to begin.
       </p>
     </div>
   <% end %>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <div class="bg-white border rounded p-6">
-      <h3 class="text-lg font-semibold text-gray-700 mb-2">Challenges Solved</h3>
-      <p class="text-4xl font-bold text-blue-600"><%= @challenges_solved %></p>
+  <%# Stat row %>
+  <div class="ck-stat-grid grid-cols-3 mb-8">
+    <div>
+      <div class="ck-meta mb-1">Challenges Solved</div>
+      <div class="text-[22px] font-light tabular-nums" style="color: #a6d6ff;"><%= @challenges_solved %></div>
     </div>
-
-    <div class="bg-white border rounded p-6">
-      <h3 class="text-lg font-semibold text-gray-700 mb-2">Duels Won</h3>
-      <p class="text-4xl font-bold text-green-600"><%= @duels_won %></p>
+    <div>
+      <div class="ck-meta mb-1">Duels Won</div>
+      <div class="text-[22px] font-light tabular-nums" style="color: #a6d6ff;"><%= @duels_won %></div>
     </div>
-
-    <div class="bg-white border rounded p-6">
-      <h3 class="text-lg font-semibold text-gray-700 mb-2">Total Duels</h3>
-      <p class="text-4xl font-bold text-purple-600"><%= @duels_played %></p>
+    <div>
+      <div class="ck-meta mb-1">Total Duels</div>
+      <div class="text-[22px] font-light tabular-nums" style="color: #a6d6ff;"><%= @duels_played %></div>
     </div>
   </div>
 
   <% if @active_duels.any? %>
     <div class="mb-8">
-      <h2 class="text-2xl font-bold mb-4">Active Duels</h2>
-      <div class="space-y-4">
+      <div class="ck-meta mb-3">Active Duels</div>
+      <div class="space-y-2">
         <% @active_duels.each do |duel| %>
-          <div class="bg-white border border-yellow-300 rounded p-4 flex justify-between items-center">
+          <div class="ck-card flex justify-between items-center" style="border-radius: 10px; padding: 14px 16px;">
             <div>
-              <p class="font-semibold"><%= duel.challenger.full_name %> vs <%= duel.opponent.full_name %></p>
-              <p class="text-sm text-gray-600"><%= duel.challenge.name %></p>
+              <div class="text-[14px] font-medium"><%= duel.challenger.full_name %> vs <%= duel.opponent.full_name %></div>
+              <div class="text-[12px] mt-0.5" style="color: var(--ck-muted);"><%= duel.challenge.name %></div>
             </div>
-            <%= link_to "View", duel_path(duel), class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" %>
+            <%= link_to "View", duel_path(duel), class: "ck-chip ck-chip--filled" %>
           </div>
         <% end %>
       </div>
@@ -48,19 +50,19 @@
 
   <% if @pending_duels.any? %>
     <div class="mb-8">
-      <h2 class="text-2xl font-bold mb-4">Pending Duel Invitations</h2>
-      <div class="space-y-4">
+      <div class="ck-meta mb-3">Pending Invitations</div>
+      <div class="space-y-2">
         <% @pending_duels.each do |duel| %>
-          <div class="bg-white border border-blue-300 rounded p-4 flex justify-between items-center">
+          <div class="ck-card flex justify-between items-center" style="border-radius: 10px; padding: 14px 16px;">
             <div>
-              <p class="font-semibold"><%= duel.challenger.full_name %> challenged you to a duel</p>
-              <p class="text-sm text-gray-600"><%= duel.challenge.name %></p>
+              <div class="text-[14px] font-medium"><%= duel.challenger.full_name %> challenged you</div>
+              <div class="text-[12px] mt-0.5" style="color: var(--ck-muted);"><%= duel.challenge.name %></div>
             </div>
             <div class="flex gap-2">
               <% if duel.opponent_id == current_user.id %>
-                <%= link_to "Accept", duel_path(duel), method: :patch, class: "px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700" %>
+                <%= link_to "Accept", accept_duel_path(duel), data: { turbo_method: "patch" }, class: "ck-chip ck-chip--filled" %>
               <% end %>
-              <%= link_to "View", duel_path(duel), class: "px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700" %>
+              <%= link_to "View", duel_path(duel), class: "ck-chip ck-chip--outline" %>
             </div>
           </div>
         <% end %>
@@ -68,37 +70,46 @@
     </div>
   <% end %>
 
-  <div>
-    <h2 class="text-2xl font-bold mb-4">Featured Challenges</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <%# Featured Challenges %>
+  <div class="mb-8">
+    <div class="flex items-center justify-between mb-3">
+      <div class="ck-meta">Featured Challenges</div>
+      <%= link_to "See all →", challenges_path, class: "ck-meta", style: "color: #a6d6ff;" %>
+    </div>
+    <div class="grid grid-cols-3 gap-3">
       <% @featured_challenges.each do |challenge| %>
-        <div class="bg-white border rounded p-4">
-          <h3 class="font-semibold mb-2"><%= challenge.name %></h3>
-          <p class="text-sm text-gray-600 mb-3"><%= truncate(challenge.description, length: 100) %></p>
-          <span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">
-            <%= challenge.difficulty.titleize %>
-          </span>
-        </div>
+        <a href="/challenges/<%= challenge.name %>"
+           class="ck-card block transition-colors"
+           style="border-radius: 10px;"
+           onmouseover="this.style.background='var(--ck-raised)'"
+           onmouseout="this.style.background='var(--ck-card)'">
+          <div class="text-[14px] font-medium mb-1"><%= challenge.name %></div>
+          <div class="text-[12px] mb-3" style="color: var(--ck-muted);"><%= truncate(challenge.description, length: 80) %></div>
+          <span class="ck-chip ck-chip--<%= challenge.difficulty.downcase %>"><%= challenge.difficulty %></span>
+        </a>
       <% end %>
     </div>
-    <%= link_to "See All Challenges", challenges_path, class: "mt-4 inline-block text-blue-600 hover:underline" %>
   </div>
 
-  <div class="mt-8 pt-8 border-t">
-    <h2 class="text-2xl font-bold mb-4">Friends</h2>
+  <%# Friends %>
+  <div>
+    <div class="ck-meta mb-3">Friends</div>
     <% if @friends.any? %>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="flex gap-4 flex-wrap">
         <% @friends.each do |friend| %>
           <div class="text-center">
-            <div class="w-16 h-16 rounded-full bg-gray-300 mx-auto mb-2"></div>
-            <p class="font-semibold"><%= friend.full_name %></p>
-            <%= link_to "Challenge", new_duel_path(opponent_slug: friend.slug), class: "text-sm text-blue-600 hover:underline" %>
+            <div class="w-10 h-10 rounded-full flex items-center justify-center text-[12px] font-semibold mx-auto mb-1" style="background: var(--ck-raised); color: var(--ck-ink);">
+              <%= friend.initials %>
+            </div>
+            <div class="text-[12px] font-medium mb-0.5"><%= friend.full_name %></div>
+            <%= link_to "Challenge", new_duel_path(opponent_slug: friend.slug), class: "ck-meta text-[9px]", style: "color: #a6d6ff;" %>
           </div>
         <% end %>
       </div>
     <% else %>
-      <p class="text-gray-600">You have no friends yet. <%= link_to "Send invitations", invitations_path, class: "text-blue-600 hover:underline" %> to start.</p>
+      <p class="text-[14px]" style="color: var(--ck-muted);">
+        No friends yet. <%= link_to "Send invitations", invitations_path, style: "color: #a6d6ff;" %> to start.
+      </p>
     <% end %>
-  </div>
   </div>
 </div>
