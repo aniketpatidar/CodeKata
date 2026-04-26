@@ -10,6 +10,7 @@ module Discussions
 
       respond_to do |format|
         if @post.save
+          format.turbo_stream
           format.html { redirect_to discussion_path(@discussion), notice: "Post created" }
         else
           format.turbo_stream

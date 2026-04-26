@@ -1,3 +1,12 @@
-<%= turbo_stream.replace "new_post_form" do %>
-  <%= render partial: "discussions/posts/form", formats: :html, locals: { post: @post } %>
+<% if @post.persisted? %>
+  <%= turbo_stream.append "posts" do %>
+    <%= render partial: "discussions/posts/post", locals: { post: @post } %>
+  <% end %>
+  <%= turbo_stream.replace "new_post_form" do %>
+    <%= render partial: "discussions/posts/form", formats: :html, locals: { post: @discussion.posts.new } %>
+  <% end %>
+<% else %>
+  <%= turbo_stream.replace "new_post_form" do %>
+    <%= render partial: "discussions/posts/form", formats: :html, locals: { post: @post } %>
+  <% end %>
 <% end %>

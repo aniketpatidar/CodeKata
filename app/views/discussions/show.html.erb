@@ -1,5 +1,6 @@
 <%= turbo_stream_from @discussion %>
 <div class="px-12 py-9">
+  <div class="ck-meta mb-6">Discussions</div>
   <%= render partial: "discussions/header", locals: { discussion: @discussion } %>
 
   <div id="posts" class="space-y-3 mt-4">
