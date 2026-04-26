@@ -1,40 +1,31 @@
-<div class="ck-page overflow-hidden">
-  <section class="relative mb-8 border-4 border-black bg-ck-muted p-5 shadow-[8px_8px_0_0_#000] sm:p-8 lg:p-10">
-    <div class="absolute -right-8 -top-8 hidden h-28 w-28 rotate-12 border-4 border-black bg-ck-accent shadow-[6px_6px_0_0_#000] lg:block"></div>
-    <div class="absolute -bottom-6 right-8 hidden rotate-3 border-4 border-black bg-white px-4 py-2 text-sm font-black uppercase shadow-[4px_4px_0_0_#000] md:block">
-      <%= @categories.count %> Categories
+<div class="px-6 py-8 max-w-4xl mx-auto">
+  <div class="flex items-start justify-between mb-8">
+    <div>
+      <div class="ck-meta mb-1">Explore</div>
+      <h1 class="ck-heading">Categories</h1>
     </div>
-    <div class="relative flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-      <div>
-        <div class="ck-sticker mb-5">Explore</div>
-        <h1 class="ck-heading max-w-4xl">Categories</h1>
-      </div>
-      <% if current_user&.admin? %>
-        <%= link_to "New Category", new_admin_category_path, class: "ck-btn-primary" %>
-      <% end %>
-    </div>
-  </section>
+    <% if current_user&.admin? %>
+      <%= link_to "New Category", admin_categories_path, class: "ck-btn-primary" %>
+    <% end %>
+  </div>
 
   <% if @categories.any? %>
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      <% @categories.each_with_index do |category, index| %>
-        <% card_class = index.even? ? 'rotate-[-0.5deg]' : 'rotate-[0.5deg]' %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <% @categories.each do |category| %>
         <%= link_to category_path(category),
-              class: "ck-card group block #{card_class}",
+              class: "ck-card group flex flex-col gap-2 transition-colors",
               style: "text-decoration: none;" do %>
-          <div class="flex flex-col gap-3">
-            <div class="flex items-center justify-between">
-              <span class="text-xl font-black uppercase text-ck-ink group-hover:text-ck-accent transition-colors"><%= category.name %></span>
-              <span class="rounded-full border-4 border-black bg-ck-muted px-3 py-1 text-xs font-black shadow-[2px_2px_0_0_#000]"><%= category.discussions.count %></span>
-            </div>
-            <p class="ck-meta"><%= category.discussions.count %> discussion<%= 's' unless category.discussions.count == 1 %></p>
-          </div>
+          <p class="text-[14px] font-medium" style="color: var(--ck-ink); transition: color 0.15s;"
+             onmouseover="this.style.color='var(--ck-accent)'" onmouseout="this.style.color='var(--ck-ink)'">
+            <%= category.name %>
+          </p>
+          <p class="ck-meta"><%= category.discussions.count %> discussions</p>
         <% end %>
       <% end %>
     </div>
   <% else %>
-    <div class="ck-card bg-ck-muted text-center py-16">
-      <p class="text-lg font-black uppercase leading-snug">No categories yet</p>
+    <div class="ck-card text-center py-16">
+      <p class="text-[14px]" style="color: var(--ck-muted);">No categories yet</p>
     </div>
   <% end %>
 </div>
