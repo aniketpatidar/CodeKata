@@ -190,3 +190,137 @@
   opacity: 0.35;
   cursor: default;
 }
+
+/* ── Trix / ActionText dark theme ──────────────────────────────── */
+trix-toolbar {
+  background: var(--ck-raised);
+  border-bottom: 1px solid var(--ck-line);
+  border-radius: 10px 10px 0 0;
+  padding: 4px 6px;
+}
+
+trix-toolbar .trix-button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+trix-toolbar .trix-button {
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: var(--ck-muted);
+  padding: 4px 6px;
+  min-width: 28px;
+  height: 26px;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+
+trix-toolbar .trix-button:not(:disabled):hover {
+  background: var(--ck-faint);
+  color: var(--ck-ink);
+}
+
+trix-toolbar .trix-button.trix-active {
+  background: var(--ck-faint);
+  color: var(--ck-accent);
+}
+
+trix-toolbar .trix-button--icon::before {
+  filter: invert(1) opacity(0.6);
+}
+
+trix-toolbar .trix-button--icon.trix-active::before,
+trix-toolbar .trix-button--icon:hover::before {
+  filter: invert(1) opacity(0.9);
+}
+
+trix-toolbar .trix-button-group {
+  border: none;
+  margin: 0;
+}
+
+trix-toolbar .trix-button-group + .trix-button-group {
+  margin-left: 0;
+}
+
+trix-toolbar .trix-button-group-spacer {
+  flex: 1;
+}
+
+trix-editor {
+  background: var(--ck-raised);
+  color: var(--ck-ink);
+  border: none;
+  border-radius: 0 0 10px 10px;
+  padding: 10px 14px;
+  min-height: 120px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  outline: none;
+}
+
+trix-editor:empty::before {
+  color: var(--ck-muted);
+}
+
+.trix-content { color: var(--ck-ink); }
+
+/* Wrap trix-toolbar + trix-editor in a styled border */
+action-text-editor,
+.trix-editor-wrapper {
+  display: block;
+  border: 1px solid var(--ck-faint);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+action-text-editor:focus-within {
+  border-color: var(--ck-accent);
+}
+
+/* ── Toggle switch ─────────────────────────────────────────────── */
+.ck-toggle {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.ck-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.ck-toggle-track {
+  position: absolute;
+  inset: 0;
+  background: var(--ck-raised);
+  border-radius: 20px;
+  transition: background 0.2s;
+}
+
+.ck-toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  background: var(--ck-muted);
+  border-radius: 50%;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.ck-toggle input:checked ~ .ck-toggle-track {
+  background: var(--ck-accent);
+}
+
+.ck-toggle input:checked ~ .ck-toggle-thumb {
+  transform: translateX(16px);
+  background: #0e0e10;
+}

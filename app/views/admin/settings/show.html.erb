@@ -16,14 +16,11 @@
           <p class="text-[13px] font-medium" style="color: var(--ck-ink);">AI Hints</p>
           <p class="ck-meta">Show AI-powered hints on challenges</p>
         </div>
-        <label class="relative inline-flex items-center cursor-pointer">
+        <label class="ck-toggle">
           <input type="checkbox" name="value" value="true" <%= "checked" if @ai_hints_enabled %>
-                 class="sr-only peer" onchange="this.form.submit()">
-          <div class="w-9 h-5 rounded-full peer-checked:bg-[#a6d6ff] transition-colors"
-               style="background: var(--ck-raised);">
-            <div class="absolute top-0.5 left-0.5 w-4 h-4 rounded-full transition-transform peer-checked:translate-x-4"
-                 style="background: var(--ck-muted);"></div>
-          </div>
+                 onchange="this.form.submit()">
+          <div class="ck-toggle-track"></div>
+          <div class="ck-toggle-thumb"></div>
         </label>
       </div>
     </form>
