@@ -1,4 +1,4 @@
-<aside class="w-[240px] h-screen fixed left-0 top-0 overflow-y-auto flex flex-col"
+<aside data-sidebar-target="panel" class="w-[240px] h-screen fixed left-0 top-0 z-40 overflow-y-auto flex flex-col -translate-x-full lg:translate-x-0 transition-transform duration-200"
        style="background: var(--ck-bg); border-right: 0.5px solid var(--ck-line);">
 
   <%# Logo %>
@@ -14,7 +14,8 @@
       <% [
         [home_path,        "Home",        "M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9m-9 4v4m4-4v4",       -> { current_page?(home_path) }],
         [challenges_path,  "Challenges",  "M13 10V3L4 14h7v7l9-11h-7z",                                                      -> { request.path.start_with?('/challenges') }],
-        [(duels_path rescue '#'), "Duels", "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z", -> { request.path.start_with?('/duels') }],
+        [new_game_path,    "Games",       "M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z M21 12a9 9 0 11-18 0 9 9 0 0118 0z", -> { request.path.start_with?('/games') }],
+        [mocks_path,       "Timed Mock",  "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z", -> { request.path.start_with?('/mocks') }],
         [discussions_path, "Discussions", "M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z", -> { request.path.start_with?('/discussions') }],
         [invitations_path, "Friends",     "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z", -> { current_page?(invitations_path) }],
       ].each do |path, label, icon_d, active_fn| %>
@@ -28,6 +29,9 @@
           <span><%= label %></span>
         </a>
       <% end %>
+
+      <%= turbo_stream_from current_user, :notifications %>
+      <%= render "nav/notifications", user: current_user %>
 
       <% if current_user&.admin? %>
         <div class="pt-4 pb-1 px-3">
@@ -68,10 +72,6 @@
   <%# User block (pinned bottom) %>
   <% if user_signed_in? %>
     <div class="px-4 py-3" style="border-top: 0.5px solid var(--ck-line);">
-      <div class="flex items-center gap-2 mb-3">
-        <%= turbo_stream_from current_user, :notifications %>
-        <%= render "nav/notifications", user: current_user %>
-      </div>
       <div class="flex items-center gap-3">
         <a href="<%= user_path(current_user) %>" class="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-semibold text-[#f5f5f7] shrink-0" style="background: var(--ck-raised);">
           <%= current_user.initials %>

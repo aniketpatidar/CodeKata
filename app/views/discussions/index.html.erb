@@ -1,20 +1,20 @@
-<div class="px-12 py-9">
+<div class="px-4 py-6 sm:px-8 lg:px-12 lg:py-9">
   <%# Page header %>
   <div class="mb-8">
     <div class="ck-meta mb-1">Community</div>
     <div class="ck-heading">Discussions</div>
   </div>
 
-  <div class="flex gap-8">
+  <div class="flex flex-col lg:flex-row gap-8">
     <%# Main content %>
-    <div class="flex-1">
+    <div class="flex-1 min-w-0">
       <%# Search + CTA %>
-      <div class="flex gap-3 mb-6">
-        <%= form_with url: discussions_path, method: :get, local: true, class: "flex-1 flex gap-3" do |f| %>
+      <div class="flex flex-col sm:flex-row gap-3 mb-6">
+        <%= form_with url: discussions_path, method: :get, local: true, class: "flex-1 min-w-0 flex gap-3" do |f| %>
           <%= f.text_field :search,
               placeholder: "Search discussions...",
               value: params[:search],
-              class: "ck-input flex-1" %>
+              class: "ck-input flex-1 min-w-0" %>
           <%= f.submit "Search", class: "ck-btn-outline", style: "cursor: pointer;" %>
         <% end %>
         <%= link_to "Ask a Question", new_discussion_path, class: "ck-btn-primary" %>
@@ -62,7 +62,7 @@
     </div>
 
     <%# Sidebar %>
-    <div class="w-60 shrink-0 space-y-4">
+    <div class="w-full lg:w-60 shrink-0 space-y-4">
       <div class="ck-card">
         <div class="ck-meta mb-3">Hot Discussions</div>
         <% @hot_discussions ||= Discussion.order('posts_count DESC').limit(5) %>

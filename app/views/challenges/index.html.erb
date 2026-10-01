@@ -1,17 +1,16 @@
-<div class="px-12 py-9">
+<div class="px-4 py-6 sm:px-8 lg:px-12 lg:py-9">
   <%# Page header + search %>
-  <div class="flex items-end justify-between mb-8">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-8">
     <div>
       <div class="ck-meta mb-1">Challenges</div>
       <div class="ck-heading">All Problems</div>
     </div>
     <%= form_tag challenges_path, method: :get,
         data: { turbo_frame: "search-results", turbo_action: "advance", controller: "search", action: "input->search#submit" } do %>
-      <div class="flex gap-2">
+      <div class="flex gap-2 w-full sm:w-auto">
         <%= text_field_tag "query", params[:query],
             placeholder: "Search...",
-            class: "ck-input",
-            style: "width: 260px;" %>
+            class: "ck-input flex-1 min-w-0 sm:w-[260px] sm:flex-none" %>
         <%= submit_tag "Search", class: "ck-btn-outline", style: "cursor: pointer;" %>
       </div>
     <% end %>

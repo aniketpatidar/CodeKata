@@ -3,7 +3,13 @@ class CodeEvaluation
     def all_passed? = all_passed
   end
 
-  def self.run(user:, challenge:, code:, broadcaster: ActionCable.server, executor: Judge0Service.new)
+  class << self
+    attr_writer :executor
+
+    def executor = @executor || Judge0Service.new
+  end
+
+  def self.run(user:, challenge:, code:, broadcaster: ActionCable.server, executor: self.executor)
     new(user:, challenge:, code:, broadcaster:, executor:).run
   end
 

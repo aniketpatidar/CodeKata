@@ -44,7 +44,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     users(:one).send_invitation(users(:three))
     get user_path(users(:three))
     assert_response :success
-    assert_select ".ck-chip--outline", text: "Invitation Sent"
+    assert_select "button.ck-btn-outline", text: "Invitation Sent"
     assert_select "button[type=submit]", text: "Send Friend Invitation", count: 0
   end
 
@@ -52,7 +52,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     users(:three).send_invitation(users(:one))
     get user_path(users(:three))
     assert_response :success
-    assert_select ".ck-chip--outline", text: "Invitation Pending"
+    assert_select "button.ck-btn-outline", text: "Invitation Pending"
     assert_select "button[type=submit]", text: "Send Friend Invitation", count: 0
   end
 end

@@ -1,4 +1,4 @@
-<div class="px-12 py-9">
+<div class="px-4 py-6 sm:px-8 lg:px-12 lg:py-9">
   <%# Profile header %>
   <div class="flex items-start justify-between mb-8">
     <div class="flex items-center gap-4">
@@ -24,24 +24,16 @@
   </div>
 
   <%# Stats %>
-  <div class="ck-stat-grid grid-cols-3 mb-8">
+  <div class="ck-stat-grid grid-cols-1 sm:grid-cols-3 mb-8">
     <div>
       <div class="ck-meta mb-1">Challenges Solved</div>
       <div class="text-[22px] font-light tabular-nums" style="color: #a6d6ff;"><%= @user.challenge_completions.count %></div>
     </div>
-    <div>
-      <div class="ck-meta mb-1">Duels Won</div>
-      <div class="text-[22px] font-light tabular-nums" style="color: #a6d6ff;"><%= Duel.where(winner_id: @user.id).count %></div>
-    </div>
-    <div>
-      <div class="ck-meta mb-1">Total Duels</div>
-      <div class="text-[22px] font-light tabular-nums" style="color: #a6d6ff;"><%= Duel.where("(challenger_id = ? OR opponent_id = ?) AND status = ?", @user.id, @user.id, 2).count %></div>
-    </div>
   </div>
 
-  <div class="grid grid-cols-3 gap-6">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <%# Main content: tabs %>
-    <div class="col-span-2">
+    <div class="lg:col-span-2">
       <div class="ck-card mb-4" style="border-radius: 10px;">
         <div class="ck-meta mb-2">About</div>
         <div class="text-[13px]" style="color: var(--ck-muted);"><strong style="color: var(--ck-ink);">Email:</strong> <%= @user.email %></div>
@@ -88,7 +80,7 @@
                   <div class="text-[14px] font-semibold mb-1">
                     <%= link_to post.discussion.name, discussion_path(post.discussion), style: "color: #a6d6ff;" %>
                   </div>
-                  <p class="text-[13px] mb-2" style="color: var(--ck-muted);"><%= truncate(post.body, length: 200) %></p>
+                  <p class="text-[13px] mb-2" style="color: var(--ck-muted);"><%= truncate(post.body.to_plain_text, length: 200) %></p>
                   <div class="ck-meta text-[9px]">Answered <%= time_ago_in_words(post.created_at) %> ago</div>
                 </div>
               <% end %>
@@ -105,7 +97,7 @@
       <% if current_user && current_user.id != @user.id %>
         <div class="ck-card space-y-2" style="border-radius: 10px;">
           <% if current_user.friend_with?(@user) %>
-            <%= link_to "Challenge to Duel", new_duel_path(opponent_slug: @user.slug), class: "ck-btn-primary block w-full text-center" %>
+            <%= link_to "Challenge to a game", new_game_path, class: "ck-btn-primary block w-full text-center" %>
           <% elsif current_user.pending_invitations.exists?(user_id: @user.id) %>
             <button class="ck-btn-outline w-full" disabled style="opacity: 0.4; cursor: default;">Invitation Pending</button>
           <% elsif current_user.sent_invitations.exists?(friend_id: @user.id) %>

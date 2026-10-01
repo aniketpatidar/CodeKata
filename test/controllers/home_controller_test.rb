@@ -7,21 +7,24 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     sign_in users(:one)
   end
 
+  test "dashboard links to timed mocks" do
+    get home_path
+    assert_select "a[href=?]", mocks_path
+  end
+
   test "should get index" do
     get home_url
     assert_response :success
   end
 
-  test "leaderboard shows top 10 users by score descending" do
+  test "home shows featured challenges" do
     get home_url
-    assert_select ".ck-card" do
-      assert_select ".flex.items-center.gap-3", minimum: 1
-    end
+    assert_select ".ck-card", minimum: 1
   end
 
-  test "leaderboard highlights signed-in user when they are in top 10" do
+  test "home shows timed mocks section" do
     get home_url
-    assert_select ".flex.items-center.gap-3.bg-ck-accent", count: 1
+    assert_select ".ck-meta", text: /Timed mocks/i
   end
 
 end

@@ -1,0 +1,52 @@
+<div class="ck-page">
+  <section class="mb-8 border-[0.5px] border-ck-line bg-ck-raised p-5  sm:p-8 lg:p-10">
+    <div class="ck-sticker mb-5">Timed Mocks</div>
+    <h1 class="ck-heading">Prove it under the clock</h1>
+  </section>
+
+  <% if @current_mock.present? %>
+    <div class="mb-8 border-[0.5px] border-ck-line bg-ck-card p-5  sm:p-8">
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <div class="ck-meta mb-2">In Progress</div>
+          <div class="text-2xl font-semibold  leading-none">
+            Resume <%= @current_mock.paper.name %>
+          </div>
+          <div class="ck-meta mt-2"><%= clock(@current_mock.seconds_left) %> left</div>
+        </div>
+        <%= link_to "Resume", mock_path(@current_mock), class: "ck-btn-primary whitespace-nowrap" %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="mb-12">
+    <div class="mb-4 text-xl font-semibold ">Available Papers</div>
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <% @papers.each do |paper| %>
+        <%= render partial: "paper", locals: { paper: paper, best_scores: @best_scores, locked: @current_mock.present? } %>
+      <% end %>
+    </div>
+  </div>
+
+  <% if @past_mocks.any? %>
+    <section class="ck-card ck-card--quiet bg-ck-raised">
+      <div class="mb-6 text-xl font-semibold ">Recent Results</div>
+      <div class="space-y-4">
+        <% @past_mocks.each do |mock| %>
+          <div class="flex flex-col gap-3 border-[0.5px] border-ck-line bg-ck-card p-4  sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <div class="text-lg font-semibold  leading-none"><%= mock.paper.name %></div>
+              <div class="ck-meta mt-1">
+                <%= mock.solved_count %> / <%= mock.mock_challenges.size %> solved · <%= clock(mock.time_taken) %>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-3xl font-semibold tabular-nums"><%= mock.score %></div>
+              <div class="ck-meta">pts</div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+</div>

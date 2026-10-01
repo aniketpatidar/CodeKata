@@ -1,8 +1,7 @@
 <%= turbo_stream_from @category %>
 
 <div class="ck-page overflow-hidden">
-  <section class="relative mb-8 border-4 border-black bg-ck-muted p-5 shadow-[8px_8px_0_0_#000] sm:p-8 lg:p-10">
-    <div class="absolute -right-8 -top-8 hidden h-28 w-28 rotate-12 border-4 border-black bg-ck-accent shadow-[6px_6px_0_0_#000] lg:block"></div>
+  <section class="relative mb-8 rounded-[10px] border-[0.5px] border-ck-line bg-ck-raised p-5  sm:p-8 lg:p-10">
     <div class="relative">
       <div class="ck-sticker mb-5">Category</div>
       <h1 class="ck-heading max-w-5xl"><%= @category.name %></h1>
@@ -10,21 +9,21 @@
   </section>
 
   <% if notice.present? %>
-    <div class="ck-card bg-ck-secondary mb-6 flex items-center gap-3">
+    <div class="ck-card bg-ck-raised mb-6 flex items-center gap-3">
       <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
       </svg>
-      <p class="text-sm font-black uppercase"><%= notice %></p>
+      <p class="text-sm font-semibold "><%= notice %></p>
     </div>
   <% end %>
 
   <div class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
     <main class="space-y-5">
       <%= turbo_frame_tag dom_id(@category) do %>
-        <div class="ck-card bg-ck-secondary">
+        <div class="ck-card bg-ck-raised">
           <div class="flex items-center justify-between gap-4">
-            <span class="text-2xl font-black uppercase"><%= @category.name %></span>
-            <span class="rounded-full border-4 border-black bg-white px-4 py-2 text-sm font-black shadow-[3px_3px_0_0_#000]">
+            <span class="text-2xl font-semibold "><%= @category.name %></span>
+            <span class="rounded-full border-[0.5px] border-ck-line bg-ck-card px-4 py-2 text-sm font-semibold ">
               <%= @category.discussions.count %> discussions
             </span>
           </div>
@@ -36,16 +35,16 @@
           <%= render @category.discussions %>
         </div>
       <% else %>
-        <div class="ck-card bg-ck-muted text-center">
+        <div class="ck-card bg-ck-raised text-center">
           <div class="ck-meta mb-3">No discussions yet</div>
-          <p class="mb-5 text-lg font-black uppercase leading-snug">Be the first to start a discussion in this category.</p>
+          <p class="mb-5 text-lg font-semibold  leading-snug">Be the first to start a discussion in this category.</p>
           <%= link_to "Start a Discussion", new_discussion_path(category_id: @category.id), class: "ck-btn-primary" %>
         </div>
       <% end %>
     </main>
 
     <aside class="space-y-4">
-      <div class="ck-card bg-white">
+      <div class="ck-card bg-ck-card">
         <div class="ck-meta mb-3">Related Tags</div>
         <div class="flex flex-wrap gap-2">
           <%= render @categories %>

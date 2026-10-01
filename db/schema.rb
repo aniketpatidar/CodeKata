@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_05_08_193815) do
+ActiveRecord::Schema[7.1].define(version: 2026_09_30_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -146,6 +146,34 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_08_193815) do
     t.index ["user_id"], name: "index_invitations_on_user_id"
   end
 
+  create_table "mock_challenges", force: :cascade do |t|
+    t.bigint "mock_id", null: false
+    t.bigint "challenge_id", null: false
+    t.integer "position", null: false
+    t.text "code"
+    t.datetime "solved_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["challenge_id"], name: "index_mock_challenges_on_challenge_id"
+    t.index ["mock_id", "challenge_id"], name: "index_mock_challenges_on_mock_id_and_challenge_id", unique: true
+    t.index ["mock_id", "position"], name: "index_mock_challenges_on_mock_id_and_position", unique: true
+    t.index ["mock_id"], name: "index_mock_challenges_on_mock_id"
+  end
+
+  create_table "mocks", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "paper_key", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "started_at", null: false
+    t.datetime "deadline_at", null: false
+    t.datetime "finished_at"
+    t.integer "score", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_mocks_on_user_id"
+    t.index ["user_id"], name: "index_mocks_one_in_progress_per_user", unique: true, where: "(status = 0)"
+  end
+
   create_table "notifications", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.datetime "read_at"
@@ -215,6 +243,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_08_193815) do
   add_foreign_key "games", "users", column: "opponent_id"
   add_foreign_key "games", "users", column: "winner_id"
   add_foreign_key "invitations", "users"
+  add_foreign_key "mock_challenges", "mocks"
   add_foreign_key "notifications", "users"
   add_foreign_key "posts", "discussions"
   add_foreign_key "posts", "users"

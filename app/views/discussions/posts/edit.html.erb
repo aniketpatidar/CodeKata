@@ -1,5 +1,5 @@
 <turbo-frame id="<%= dom_id(@post) %>">
-  <div class="ck-card ck-card--quiet my-4 bg-white">
+  <div class="ck-card ck-card--quiet my-4 bg-ck-card">
     <%= render(partial: "discussions/posts/header", locals: { post: @post }) %>
     <div class="mt-4">
       <%= render("form", post: @post) %>

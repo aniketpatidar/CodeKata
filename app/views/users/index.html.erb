@@ -1,16 +1,12 @@
 <div class="ck-page overflow-hidden">
-  <section class="relative mb-8 border-4 border-black bg-ck-secondary p-5 shadow-[8px_8px_0_0_#000] sm:p-8 lg:p-10">
-    <div class="absolute -right-8 -top-8 hidden h-28 w-28 rotate-12 border-4 border-black bg-ck-accent shadow-[6px_6px_0_0_#000] lg:block"></div>
-    <div class="absolute -bottom-6 right-8 hidden rotate-3 border-4 border-black bg-white px-4 py-2 text-sm font-black uppercase shadow-[4px_4px_0_0_#000] md:block">
-      <%= @pagy.count %> Users
-    </div>
+  <section class="relative mb-8 rounded-[10px] border-[0.5px] border-ck-line bg-ck-raised p-5  sm:p-8 lg:p-10">
     <div class="relative grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_420px] xl:items-end">
       <div>
         <div class="ck-sticker mb-5">Community</div>
         <h1 class="ck-heading max-w-4xl">All Users</h1>
       </div>
       <%= form_tag users_path, method: :get, data: { turbo_frame: "search-results", turbo_action: "advance", controller: "search", action: "input->search#submit" } do %>
-        <div class="border-4 border-black bg-white p-4 shadow-[6px_6px_0_0_#000]">
+        <div class="border-[0.5px] border-ck-line bg-ck-card p-4 ">
           <label for="query" class="ck-meta mb-3 block">Search Users</label>
           <div class="flex flex-col gap-3 sm:flex-row">
             <%= text_field_tag "query", nil, placeholder: "Search by name or username...", class: "ck-input min-w-0 flex-1" %>
@@ -34,9 +30,9 @@
           <%== pagy_nav(@pagy) %>
         </div>
       <% else %>
-        <div class="ck-card bg-ck-muted text-center">
+        <div class="ck-card bg-ck-raised text-center">
           <div class="ck-meta mb-3">No users found</div>
-          <p class="mb-5 text-xl font-black uppercase leading-snug">Try another search.</p>
+          <p class="mb-5 text-xl font-semibold  leading-snug">Try another search.</p>
         </div>
       <% end %>
     <% end %>
