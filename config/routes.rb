@@ -47,6 +47,14 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :mocks, only: %i[index create show] do
+    member { post :finish }
+    scope module: :mocks do
+      resources :challenges,  only: :update, param: :position
+      resources :submissions, only: :create
+    end
+  end
+
   post 'evaluate_code', to: 'code_evaluations#evaluate'
 
   get 'home', to: 'home#index', as: 'home'

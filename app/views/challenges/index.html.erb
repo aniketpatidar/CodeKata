@@ -1,94 +1,55 @@
-<div class="ck-page overflow-hidden">
-  <section class="relative mb-8 border-4 border-black bg-ck-accent p-5 shadow-[8px_8px_0_0_#000] sm:p-8 lg:p-10">
-    <div class="absolute -bottom-6 right-8 hidden rotate-3 border-4 border-black bg-white px-4 py-2 text-sm font-black uppercase shadow-[4px_4px_0_0_#000] md:block">
-      <%= @pagy.count %> Challenges
+<div class="px-4 py-6 sm:px-8 lg:px-12 lg:py-9">
+  <%# Page header + search %>
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-8">
+    <div>
+      <div class="ck-meta mb-1">Challenges</div>
+      <div class="ck-heading">All Problems</div>
     </div>
-    <div class="absolute -right-10 -top-10 hidden h-28 w-28 rotate-12 border-4 border-black bg-ck-secondary shadow-[6px_6px_0_0_#000] lg:block"></div>
-
-    <div class="relative grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_420px] xl:items-end">
-      <div>
-        <div class="ck-sticker mb-5">Challenges</div>
-        <h1 class="ck-heading max-w-4xl">All Ruby brawls</h1>
+    <%= form_tag challenges_path, method: :get,
+        data: { turbo_frame: "search-results", turbo_action: "advance", controller: "search", action: "input->search#submit" } do %>
+      <div class="flex gap-2 w-full sm:w-auto">
+        <%= text_field_tag "query", params[:query],
+            placeholder: "Search...",
+            class: "ck-input flex-1 min-w-0 sm:w-[260px] sm:flex-none" %>
+        <%= submit_tag "Search", class: "ck-btn-outline", style: "cursor: pointer;" %>
       </div>
+    <% end %>
+  </div>
 
-      <form action="<%= challenges_path %>"
-            method="get"
-            class="border-4 border-black bg-white p-4 shadow-[6px_6px_0_0_#000]"
-            data-turbo-frame="search-results"
-            data-turbo-action="advance"
-            data-controller="search"
-            data-action="input->search#submit">
-        <label for="query" class="ck-meta mb-3 block">Search Challenges</label>
-        <div class="flex flex-col gap-3 sm:flex-row xl:flex-col 2xl:flex-row">
-          <%= text_field_tag "query", params[:query],
-              placeholder: "Search...",
-              class: "ck-input min-w-0 flex-1" %>
-          <%= submit_tag "Search", class: "ck-btn-outline shrink-0" %>
-        </div>
-      </form>
-    </div>
-  </section>
-
+  <%# Challenge list %>
   <div id="challenges-list">
-    <turbo-frame id="search-results">
-      <% if @challenges.any? %>
-        <div class="grid grid-cols-1 gap-5">
-          <% @challenges.each_with_index do |challenge, index| %>
-            <% completed = user_signed_in? && ChallengeCompletion.exists?(user: current_user, challenge: challenge) %>
-            <a href="<%= challenge_path(challenge.name) %>"
-               data-turbo-frame="_top"
-               class="ck-card group block <%= index.even? ? 'rotate-[-0.5deg]' : 'rotate-[0.5deg]' %>">
-              <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-                <div class="min-w-0 flex-1">
-                  <div class="mb-4 flex flex-wrap items-center gap-3">
-                    <span class="flex h-12 w-12 items-center justify-center border-4 border-black bg-ck-secondary text-base font-black tabular-nums shadow-[3px_3px_0_0_#000]">
-                      <%= challenge.id %>
-                    </span>
-                    <span class="ck-chip ck-chip--<%= challenge.difficulty.downcase %>"><%= challenge.difficulty %></span>
-                    <% if challenge.respond_to?(:language) && challenge.language.present? %>
-                      <span class="ck-chip ck-chip--outline"><%= challenge.language %></span>
-                    <% end %>
-                    <% if completed %>
-                      <span class="ck-chip ck-chip--completed">
-                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        Completed
-                      </span>
-                    <% end %>
-                  </div>
-
-                  <h2 class="mb-2 text-3xl font-black uppercase leading-none text-ck-ink sm:text-4xl">
-                    <%= challenge.name %>
-                  </h2>
-                  <p class="max-w-3xl text-base font-bold leading-snug text-ck-ink sm:text-lg">
-                    <%= challenge.description.truncate(150) %>
-                  </p>
-                </div>
-
-                <div class="flex shrink-0 items-center justify-between gap-4 border-t-4 border-black pt-4 lg:min-w-[180px] lg:flex-col lg:items-stretch lg:border-l-4 lg:border-t-0 lg:pl-5 lg:pt-0">
-                  <div class="rotate-2 border-4 border-black bg-ck-muted px-3 py-2 text-center text-sm font-black uppercase shadow-[3px_3px_0_0_#000]">
-                    Open Challenge
-                  </div>
-                  <svg class="h-10 w-10 transition-transform duration-100 group-hover:translate-x-2 lg:self-end" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                  </svg>
-                </div>
+    <%= turbo_frame_tag "search-results" do %>
+      <div class="space-y-2">
+        <% @challenges.each do |challenge| %>
+          <a href="/challenges/<%= challenge.name %>"
+             class="flex items-center justify-between px-5 py-4 rounded-[10px] transition-colors"
+             style="background: var(--ck-card);"
+             onmouseover="this.style.background='var(--ck-raised)'"
+             onmouseout="this.style.background='var(--ck-card)'">
+            <div class="flex items-center gap-4">
+              <span class="ck-meta w-8 text-right shrink-0"><%= challenge.id %></span>
+              <div>
+                <div class="text-[14px] font-medium"><%= challenge.name %></div>
+                <div class="text-[12px] mt-0.5" style="color: var(--ck-muted);"><%= challenge.description.truncate(60) %></div>
               </div>
-            </a>
-          <% end %>
-        </div>
+            </div>
+            <div class="flex items-center gap-3 shrink-0">
+              <% if challenge.respond_to?(:language) && challenge.language.present? %>
+                <span class="ck-chip ck-chip--outline"><%= challenge.language %></span>
+              <% end %>
+              <span class="ck-chip ck-chip--<%= challenge.difficulty.downcase %>"><%= challenge.difficulty %></span>
+              <% if user_signed_in? && ChallengeCompletion.exists?(user: current_user, challenge: challenge) %>
+                <svg class="w-4 h-4" fill="none" stroke="#a6d6ff" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              <% end %>
+            </div>
+          </a>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
 
-        <div class="mt-8">
-          <%= raw pagy_nav(@pagy) %>
-        </div>
-      <% else %>
-        <div class="ck-card bg-ck-muted">
-          <div class="ck-meta mb-3">No Challenges found</div>
-          <p class="mb-5 text-xl font-black uppercase leading-snug">Try another search or clear the query.</p>
-          <%= link_to "Show all Challenges", challenges_path, class: "ck-btn-primary" %>
-        </div>
-      <% end %>
-    </turbo-frame>
+  <%# Pagination %>
+  <div class="mt-6">
+    <%== pagy_nav(@pagy) %>
   </div>
 </div>

@@ -1,7 +1,7 @@
 <turbo-frame id="<%= "#{dom_id(post)}_form" %>" target="_top">
   <%= form_with(model: [post.discussion, post], class: "space-y-4") do |form| %>
     <% if post.errors.any? %>
-      <div class="ck-card mb-4 bg-ck-accent">
+      <div class="ck-card mb-4 bg-ck-card">
         <p class="ck-meta mb-2"><%= pluralize(post.errors.count, "error") %> prevented this from saving</p>
         <ul class="space-y-0.5">
           <% post.errors.each do |error| %>

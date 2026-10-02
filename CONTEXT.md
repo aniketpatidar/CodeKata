@@ -34,6 +34,18 @@ A single coding round within a Game. Each Round has one Challenge assigned at ra
 - **Round Winner**: the User who passes all tests first in a given Round (nullable until Round is completed)
 - Avoid: "stage", "level" — use "Round" or "Game Round"
 
+### Mock
+A solo, timed session on a fixed Paper. The system picks Challenges for the Paper's mix (unsolved first), starts a server-side countdown, and scores the Mock when it finishes — on the last solve, on "Finish now", or lazily on the first request after the deadline. A Mock moves `in_progress` → `finished`; a User has at most one `in_progress` Mock. Mock scores never change a User's Score.
+
+- **Mock Score**: 10 / 20 / 30 per solved easy / medium / hard Challenge, plus up to 20% time bonus when every Challenge is solved
+- **Personal best**: the highest Mock Score a User has on a given Paper
+- Avoid: "exam", "test", "quiz" — use "Mock"
+
+### Paper
+A code-defined preset a Mock is taken on: a challenge mix and a duration (Sprint: 3 easy / 20 min; Standard: 2 easy + 2 medium / 45 min; Marathon: 2 easy + 4 medium / 90 min).
+
+- Avoid: "template", "format" — use "Paper"
+
 ### Score
 A numeric value on each User that accumulates across completed Games. Winning a Game earns: `rounds_won + 3 (bonus) + min(opponent_score / 20, 50) - rounds_lost`. Losing earns: `rounds_won` (floored at 0). Score never decreases below 0.
 

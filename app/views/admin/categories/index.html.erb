@@ -1,42 +1,37 @@
-<div class="ck-page overflow-hidden">
-  <section class="relative mb-8 border-4 border-black bg-ck-accent p-5 shadow-[8px_8px_0_0_#000] sm:p-8 lg:p-10">
-    <div class="absolute -right-8 -top-8 hidden h-28 w-28 rotate-12 border-4 border-black bg-ck-secondary shadow-[6px_6px_0_0_#000] lg:block"></div>
-    <div class="relative flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-      <div>
-        <div class="ck-sticker mb-5">Admin</div>
-        <h1 class="ck-heading max-w-4xl">Categories</h1>
-      </div>
-      <%= link_to "New Category", new_admin_category_path, class: "ck-btn-primary" %>
+<div class="px-6 py-8 max-w-3xl mx-auto">
+  <div class="flex flex-wrap items-start justify-between gap-4 mb-8">
+    <div>
+      <div class="ck-meta mb-1">Admin</div>
+      <h1 class="ck-heading">Categories</h1>
     </div>
-  </section>
+    <%= link_to "New Category", new_admin_category_path, class: "ck-btn-primary" %>
+  </div>
 
   <% if @categories.any? %>
     <div class="ck-card" style="padding: 0; overflow: hidden;">
       <% @categories.each_with_index do |category, i| %>
-        <div class="flex items-center justify-between px-5 py-4 <%= i > 0 ? 'border-t-4 border-black' : '' %>">
+        <div class="flex items-center justify-between px-5 py-3 <%= i > 0 ? 'border-t' : '' %>"
+             style="<%= i > 0 ? 'border-color: var(--ck-line);' : '' %>">
           <div>
-            <p class="text-lg font-black uppercase leading-none text-ck-ink"><%= category.name %></p>
-            <p class="ck-meta mt-1"><%= category.discussions.count %> discussions</p>
+            <p class="text-[13px] font-medium" style="color: var(--ck-ink);"><%= category.name %></p>
+            <p class="ck-meta"><%= category.discussions.count %> discussions</p>
           </div>
           <div class="flex items-center gap-3">
             <%= link_to "Edit", edit_admin_category_path(category),
-                  class: "ck-btn-outline text-[12px]" %>
+                  class: "text-[12px] font-medium transition-colors",
+                  style: "color: var(--ck-accent); text-decoration: none;" %>
             <%= link_to "Delete", admin_category_path(category),
                   method: :delete,
                   data: { confirm: "Delete #{category.name}?" },
-                  class: "ck-btn-outline text-[12px]",
-                  style: "color: #f87171; border-color: rgba(248,113,113,0.3);" %>
+                  class: "text-[12px] font-medium transition-colors",
+                  style: "color: #f87171; text-decoration: none;" %>
           </div>
         </div>
       <% end %>
     </div>
   <% else %>
-    <div class="ck-card bg-ck-muted text-center py-16">
-      <p class="text-lg font-black uppercase leading-snug">No categories yet</p>
+    <div class="ck-card text-center py-16">
+      <p class="text-[14px]" style="color: var(--ck-muted);">No categories yet</p>
     </div>
   <% end %>
-
-  <div class="mt-6">
-    <%= link_to "← Back to Home", home_path, class: "ck-btn-outline" %>
-  </div>
 </div>

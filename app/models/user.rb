@@ -21,6 +21,7 @@ class User < ApplicationRecord
   has_many :challenge_completions, dependent: :destroy
   has_many :games_as_challenger, class_name: "Game", foreign_key: :challenger_id, dependent: :destroy
   has_many :games_as_opponent,   class_name: "Game", foreign_key: :opponent_id,   dependent: :destroy
+  has_many :mocks, dependent: :destroy
   acts_as_voter
 
   def friends

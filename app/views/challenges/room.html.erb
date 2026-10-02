@@ -1,8 +1,7 @@
 <% tests = JSON.parse(@challenge.tests) rescue [] %>
 
 <div class="ck-page overflow-hidden">
-  <section class="relative mb-8 border-4 border-black bg-ck-muted p-5 shadow-[8px_8px_0_0_#000] sm:p-8 lg:p-10">
-    <div class="absolute -right-8 -top-8 hidden h-28 w-28 rotate-12 border-4 border-black bg-ck-secondary shadow-[6px_6px_0_0_#000] lg:block"></div>
+  <section class="relative mb-8 rounded-[10px] border-[0.5px] border-ck-line bg-ck-raised p-5  sm:p-8 lg:p-10">
     <div class="relative">
       <div class="mb-5 flex flex-wrap items-center gap-3">
         <span class="ck-sticker">Collaborative Room</span>
@@ -15,7 +14,7 @@
 
   <div class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]">
     <aside class="space-y-6">
-      <section class="ck-card ck-card--quiet bg-white">
+      <section class="ck-card ck-card--quiet bg-ck-card">
         <div class="ck-meta mb-3">Brief</div>
         <div class="text-lg font-bold leading-relaxed text-ck-ink">
           <%= simple_format(@challenge.description) %>
@@ -25,27 +24,27 @@
       <section class="ck-stat-grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-1">
         <div>
           <div class="ck-meta mb-2">Language</div>
-          <div class="text-2xl font-black uppercase"><%= @challenge.respond_to?(:language) && @challenge.language.present? ? @challenge.language : 'Ruby' %></div>
+          <div class="text-2xl font-semibold "><%= @challenge.respond_to?(:language) && @challenge.language.present? ? @challenge.language : 'Ruby' %></div>
         </div>
-        <div class="bg-ck-secondary">
+        <div class="bg-ck-raised">
           <div class="ck-meta mb-2">Tests</div>
-          <div class="text-2xl font-black uppercase"><%= tests.is_a?(Array) ? tests.length : 0 %> cases</div>
+          <div class="text-2xl font-semibold "><%= tests.is_a?(Array) ? tests.length : 0 %> cases</div>
         </div>
-        <div class="bg-ck-accent">
+        <div class="bg-ck-card">
           <div class="ck-meta mb-2">Mode</div>
-          <div class="text-2xl font-black uppercase">Shared</div>
+          <div class="text-2xl font-semibold ">Shared</div>
         </div>
       </section>
     </aside>
 
     <section class="space-y-6" data-controller="codemirror">
-      <div class="ck-card ck-card--quiet bg-white">
+      <div class="ck-card ck-card--quiet bg-ck-card">
         <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div class="ck-meta mb-2">Shared Solution</div>
-            <h2 class="text-3xl font-black uppercase leading-none">Pair on Ruby</h2>
+            <h2 class="text-3xl font-semibold  leading-none">Pair on Ruby</h2>
           </div>
-          <div class="rotate-2 border-4 border-black bg-ck-secondary px-3 py-2 text-sm font-black uppercase shadow-[3px_3px_0_0_#000]">
+          <div class=" border-[0.5px] border-ck-line bg-ck-raised px-3 py-2 text-sm font-semibold  ">
             Live room
           </div>
         </div>
@@ -69,9 +68,9 @@
         </div>
       </div>
 
-      <div class="ck-card ck-card--quiet bg-ck-secondary">
+      <div class="ck-card ck-card--quiet bg-ck-raised">
         <div class="ck-meta mb-3">Test Results</div>
-        <div class="min-h-[220px] overflow-auto border-4 border-black bg-white p-4 font-mono text-sm font-bold leading-relaxed text-ck-ink shadow-[4px_4px_0_0_#000]">
+        <div class="min-h-[220px] overflow-auto border-[0.5px] border-ck-line bg-ck-card p-4 font-mono text-sm font-bold leading-relaxed text-ck-ink ">
           <pre data-codemirror-target="output">Awaiting code submission</pre>
         </div>
       </div>

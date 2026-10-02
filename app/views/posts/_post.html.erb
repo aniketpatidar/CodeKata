@@ -1,17 +1,17 @@
-<div id="<%= dom_id post %>" class="ck-card group <%= (defined?(index) && index.even?) ? 'rotate-[-0.5deg]' : 'rotate-[0.5deg]' %>">
+<div id="<%= dom_id post %>" class="ck-card group <%= (defined?(index) && index.even?) ? ']' : ']' %>">
   <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
     <div class="min-w-0 flex-1">
       <div class="mb-3 flex flex-wrap items-center gap-2">
         <span class="ck-chip ck-chip--outline text-[10px]">Post</span>
         <span class="ck-meta text-[10px]">by <%= post.user.full_name %></span>
       </div>
-      <h2 class="mb-2 text-2xl font-black uppercase leading-none">
+      <h2 class="mb-2 text-2xl font-semibold  leading-none">
         <%= link_to post.title, post, class: "text-ck-ink hover:underline" %>
       </h2>
       <p class="text-base font-bold leading-snug text-ck-ink"><%= post_body_preview(post, length: 100) %></p>
     </div>
 
-    <div class="flex shrink-0 items-center gap-3 border-t-4 border-black pt-4 lg:min-w-[160px] lg:flex-col lg:border-l-4 lg:border-t-0 lg:pl-5 lg:pt-0">
+    <div class="flex shrink-0 items-center gap-3 border-t-[0.5px] border-ck-line pt-4 lg:min-w-[160px] lg:flex-col lg:border-l-[0.5px] lg:border-t-0 lg:pl-5 lg:pt-0">
       <%= link_to "Read", post, class: "ck-btn-primary text-center text-[12px]" %>
       <% if current_user == post.user %>
         <%= link_to "Edit", edit_post_path(post), class: "ck-btn-outline text-center text-[12px]" %>

@@ -1,9 +1,5 @@
 <div class="ck-page overflow-hidden">
-  <section class="relative mb-8 border-4 border-black bg-ck-accent p-5 shadow-[8px_8px_0_0_#000] sm:p-8 lg:p-10">
-    <div class="absolute -right-8 -top-8 hidden h-28 w-28 rotate-12 border-4 border-black bg-ck-secondary shadow-[6px_6px_0_0_#000] lg:block"></div>
-    <div class="absolute -bottom-6 right-8 hidden rotate-3 border-4 border-black bg-white px-4 py-2 text-sm font-black uppercase shadow-[4px_4px_0_0_#000] md:block">
-      Inbox
-    </div>
+  <section class="relative mb-8 rounded-[10px] border-[0.5px] border-ck-line bg-ck-card p-5  sm:p-8 lg:p-10">
     <div class="relative">
       <div class="ck-sticker mb-5">Alerts</div>
       <h1 class="ck-heading max-w-4xl">Notifications</h1>
@@ -16,9 +12,9 @@
         <%= render @notifications %>
       </div>
     <% else %>
-      <div class="ck-card bg-ck-muted text-center py-16">
-        <div class="text-4xl mb-4 font-black">✓</div>
-        <p class="text-lg font-black uppercase leading-snug">You're all caught up</p>
+      <div class="ck-card bg-ck-raised text-center py-16">
+        <div class="text-4xl mb-4 font-semibold">✓</div>
+        <p class="text-lg font-semibold  leading-snug">You're all caught up</p>
       </div>
     <% end %>
   <% end %>

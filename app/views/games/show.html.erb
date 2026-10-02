@@ -8,21 +8,21 @@
     data-game-current-user-id-value="<%= current_user.id %>"
     class="ck-page"
   >
-    <section class="mb-8 border-4 border-black bg-ck-secondary p-5 shadow-[8px_8px_0_0_#000] sm:p-8 lg:p-10">
+    <section class="mb-8 border-[0.5px] border-ck-line bg-ck-raised p-5  sm:p-8 lg:p-10">
       <div class="ck-sticker mb-5">Game / Pending</div>
       <h1 class="ck-heading">Waiting room</h1>
     </section>
 
-    <section class="ck-card ck-card--quiet max-w-3xl bg-white">
+    <section class="ck-card ck-card--quiet max-w-3xl bg-ck-card">
       <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
-        <% [[@game.challenger, "Challenger", "bg-ck-accent"], [@game.opponent, "Opponent", "bg-ck-muted"]].each do |player, role, color_class| %>
-          <div class="border-4 border-black <%= color_class %> p-4 shadow-[4px_4px_0_0_#000]">
-            <div class="mb-3 flex h-14 w-14 items-center justify-center rounded-full border-4 border-black bg-white text-lg font-black"><%= player.initials %></div>
-            <div class="text-2xl font-black uppercase leading-none"><%= player.full_name %></div>
+        <% [[@game.challenger, "Challenger", "bg-ck-card"], [@game.opponent, "Opponent", "bg-ck-raised"]].each do |player, role, color_class| %>
+          <div class="border-[0.5px] border-ck-line <%= color_class %> p-4 ">
+            <div class="mb-3 flex h-14 w-14 items-center justify-center rounded-full border-[0.5px] border-ck-line bg-ck-card text-lg font-semibold"><%= player.initials %></div>
+            <div class="text-2xl font-semibold  leading-none"><%= player.full_name %></div>
             <div class="ck-meta mt-2"><%= role %></div>
           </div>
           <% if role == "Challenger" %>
-            <div class="justify-self-center border-4 border-black bg-ck-ink px-4 py-3 text-xl font-black uppercase text-white shadow-[4px_4px_0_0_#000]">vs</div>
+            <div class="justify-self-center border-[0.5px] border-ck-line bg-ck-ink px-4 py-3 text-xl font-semibold  text-white ">vs</div>
           <% end %>
         <% end %>
       </div>
@@ -39,7 +39,7 @@
               data: { confirm: "Are you sure you want to decline?" } %>
         </div>
       <% else %>
-        <div class="flex items-center gap-3 border-4 border-black bg-ck-muted p-4 text-lg font-black uppercase shadow-[4px_4px_0_0_#000]">
+        <div class="flex items-center gap-3 border-[0.5px] border-ck-line bg-ck-raised p-4 text-lg font-semibold  ">
           <svg class="h-6 w-6 animate-spin" viewBox="0 0 24 24" fill="none">
             <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
             <path fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
@@ -52,30 +52,30 @@
 
 <% elsif @game.completed? %>
   <div class="ck-page">
-    <section class="mb-8 border-4 border-black bg-ck-accent p-5 shadow-[8px_8px_0_0_#000] sm:p-8 lg:p-10">
+    <section class="mb-8 border-[0.5px] border-ck-line bg-ck-card p-5  sm:p-8 lg:p-10">
       <div class="ck-sticker mb-5">Game / Completed</div>
       <h1 class="ck-heading">Results</h1>
     </section>
 
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,520px)_minmax(0,1fr)]">
-      <section class="ck-card ck-card--quiet bg-white text-center">
+      <section class="ck-card ck-card--quiet bg-ck-card text-center">
         <% if @game.winner == current_user %>
-          <div class="mb-4 text-6xl font-black">WIN</div>
-          <div class="mb-2 text-3xl font-black uppercase leading-none">You won</div>
+          <div class="mb-4 text-6xl font-semibold">WIN</div>
+          <div class="mb-2 text-3xl font-semibold  leading-none">You won</div>
           <div class="ck-meta">Beat <%= opp.first_name %></div>
         <% else %>
-          <div class="mb-4 text-6xl font-black">LOSS</div>
-          <div class="mb-2 text-3xl font-black uppercase leading-none"><%= @game.winner.full_name %> won</div>
+          <div class="mb-4 text-6xl font-semibold">LOSS</div>
+          <div class="mb-2 text-3xl font-semibold  leading-none"><%= @game.winner.full_name %> won</div>
           <div class="ck-meta">Run it back.</div>
         <% end %>
 
         <% deltas = @game.score_deltas %>
         <% if deltas.present? %>
-          <div class="mt-6 grid grid-cols-2 gap-4 border-t-4 border-black pt-5">
+          <div class="mt-6 grid grid-cols-2 gap-4 border-t-[0.5px] border-ck-line pt-5">
             <% [@game.challenger, @game.opponent].each do |player| %>
-              <div class="border-4 border-black bg-ck-secondary p-4 shadow-[4px_4px_0_0_#000]">
+              <div class="border-[0.5px] border-ck-line bg-ck-raised p-4 ">
                 <div class="ck-meta mb-2"><%= player == current_user ? "You" : player.first_name %></div>
-                <div class="text-3xl font-black tabular-nums">
+                <div class="text-3xl font-semibold tabular-nums">
                   <%= deltas[:winner_id] == player.id ? "+#{deltas[:winner_delta]}" : "+#{deltas[:loser_delta]}" %>
                 </div>
               </div>
@@ -84,13 +84,13 @@
         <% end %>
       </section>
 
-      <section class="ck-card ck-card--quiet bg-ck-muted">
+      <section class="ck-card ck-card--quiet bg-ck-raised">
         <div class="ck-meta mb-4">Round Summary</div>
         <div class="space-y-4">
           <% @rounds.each do |round| %>
-            <div class="flex flex-col gap-3 border-4 border-black bg-white p-4 shadow-[4px_4px_0_0_#000] sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex flex-col gap-3 border-[0.5px] border-ck-line bg-ck-card p-4  sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <div class="text-xl font-black uppercase leading-none">Round <%= round.round_number %> / <%= round.challenge.name %></div>
+                <div class="text-xl font-semibold  leading-none">Round <%= round.round_number %> / <%= round.challenge.name %></div>
                 <div class="ck-meta mt-2"><%= round.challenge.difficulty.capitalize %></div>
               </div>
               <% if round.round_winner %>
@@ -120,24 +120,24 @@
     data-game-round-id-value="<%= @current_round&.id %>"
     class="ck-page space-y-6"
   >
-    <div id="game-banner" class="ck-card hidden bg-ck-accent text-center text-2xl font-black uppercase"></div>
+    <div id="game-banner" class="ck-card hidden bg-ck-card text-center text-2xl font-semibold "></div>
 
-    <section class="ck-card ck-card--quiet bg-ck-secondary">
+    <section class="ck-card ck-card--quiet bg-ck-raised">
       <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <div class="ck-meta mb-2">Round <span id="current-round-number"><%= @current_round&.round_number || @rounds.size %></span> of <%= Game::ROUND_COUNT_NUM[@game.round_count] %></div>
-          <h1 class="text-4xl font-black uppercase leading-none"><%= @current_round&.challenge&.name %></h1>
+          <h1 class="text-4xl font-semibold  leading-none"><%= @current_round&.challenge&.name %></h1>
         </div>
         <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-center">
-          <div class="border-4 border-black bg-white p-3 shadow-[4px_4px_0_0_#000]">
+          <div class="border-[0.5px] border-ck-line bg-ck-card p-3 ">
             <div class="ck-meta mb-1">You</div>
-            <div class="text-4xl font-black tabular-nums" data-game-target="myScore"><%= @rounds.count { |r| r.round_winner == current_user } %></div>
+            <div class="text-4xl font-semibold tabular-nums" data-game-target="myScore"><%= @rounds.count { |r| r.round_winner == current_user } %></div>
             <span id="user_status_<%= current_user.id %>"><%= render partial: 'users/status', locals: { status: 'Active' } %></span>
           </div>
-          <div class="font-black uppercase">vs</div>
-          <div class="border-4 border-black bg-ck-muted p-3 shadow-[4px_4px_0_0_#000]">
+          <div class="font-semibold ">vs</div>
+          <div class="border-[0.5px] border-ck-line bg-ck-raised p-3 ">
             <div class="ck-meta mb-1"><%= opp.first_name %></div>
-            <div class="text-4xl font-black tabular-nums" data-game-target="opponentScore"><%= @rounds.count { |r| r.round_winner == opp } %></div>
+            <div class="text-4xl font-semibold tabular-nums" data-game-target="opponentScore"><%= @rounds.count { |r| r.round_winner == opp } %></div>
             <span id="user_status_<%= opp.id %>"><%= render partial: 'users/status', locals: { status: 'Inactive' } %></span>
           </div>
         </div>
@@ -147,14 +147,14 @@
     <% if @current_round %>
       <div class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
         <aside class="space-y-6">
-          <section class="ck-card ck-card--quiet bg-white">
+          <section class="ck-card ck-card--quiet bg-ck-card">
             <div class="ck-meta mb-3">Challenge Description</div>
             <div class="whitespace-pre-line text-lg font-bold leading-relaxed text-ck-ink"><%= @current_round.challenge.description %></div>
           </section>
 
-          <section class="ck-card ck-card--quiet bg-ck-muted">
+          <section class="ck-card ck-card--quiet bg-ck-raised">
             <div class="ck-meta mb-3">Test Cases</div>
-            <div class="overflow-auto border-4 border-black bg-white p-4 font-mono text-sm font-bold leading-relaxed shadow-[4px_4px_0_0_#000]">
+            <div class="overflow-auto border-[0.5px] border-ck-line bg-ck-card p-4 font-mono text-sm font-bold leading-relaxed ">
               <% if @current_round.challenge.tests.present? %>
                 <%= @current_round.challenge.parsed_tests.map.with_index { |t, i| "Test #{i + 1}: #{t}" }.join("\n") %>
               <% else %>
@@ -163,18 +163,18 @@
             </div>
           </section>
 
-          <section class="ck-card ck-card--quiet bg-ck-secondary">
+          <section class="ck-card ck-card--quiet bg-ck-raised">
             <div class="ck-meta mb-3">Test Results</div>
-            <pre class="min-h-[120px] overflow-auto border-4 border-black bg-white p-4 font-mono text-sm font-bold leading-relaxed shadow-[4px_4px_0_0_#000]" data-game-target="output">Run your code to see results.</pre>
+            <pre class="min-h-[120px] overflow-auto border-[0.5px] border-ck-line bg-ck-card p-4 font-mono text-sm font-bold leading-relaxed " data-game-target="output">Run your code to see results.</pre>
           </section>
         </aside>
 
         <section class="space-y-6">
-          <div id="code-editor" data-method-template="<%= @current_round.challenge.method_template %>" class="ck-card ck-card--quiet bg-white">
+          <div id="code-editor" data-method-template="<%= @current_round.challenge.method_template %>" class="ck-card ck-card--quiet bg-ck-card">
             <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <div class="ck-meta mb-2">Your Code</div>
-                <h2 class="text-3xl font-black uppercase leading-none">Ruby editor</h2>
+                <h2 class="text-3xl font-semibold  leading-none">Ruby editor</h2>
               </div>
               <div class="flex flex-col gap-2 sm:flex-row">
                 <% if AppSetting.ai_hints_enabled? %>
@@ -186,23 +186,23 @@
             <textarea class="hidden" data-game-target="editor"></textarea>
           </div>
 
-          <div class="ck-card ck-card--quiet bg-ck-muted">
+          <div class="ck-card ck-card--quiet bg-ck-raised">
             <div class="mb-4 flex items-center justify-between gap-3">
               <div>
                 <div class="ck-meta mb-2"><%= opp.first_name %>'s Code</div>
-                <h2 class="text-2xl font-black uppercase leading-none">Read only</h2>
+                <h2 class="text-2xl font-semibold  leading-none">Read only</h2>
               </div>
               <span class="ck-chip ck-chip--outline">Opponent</span>
             </div>
             <textarea class="hidden" data-game-target="opponentEditor"></textarea>
-            <div class="mt-4 border-4 border-black bg-white p-3 text-sm font-black uppercase shadow-[4px_4px_0_0_#000]" data-game-target="opponentStatus">
+            <div class="mt-4 border-[0.5px] border-ck-line bg-ck-card p-3 text-sm font-semibold  " data-game-target="opponentStatus">
               Waiting for <%= opp.first_name %> to start coding
             </div>
           </div>
         </section>
       </div>
     <% else %>
-      <div class="ck-card bg-ck-muted py-8 text-center text-2xl font-black uppercase">All rounds complete.</div>
+      <div class="ck-card bg-ck-raised py-8 text-center text-2xl font-semibold ">All rounds complete.</div>
     <% end %>
   </div>
 <% end %>

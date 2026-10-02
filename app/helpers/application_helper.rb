@@ -21,6 +21,7 @@ module ApplicationHelper
   end
 
   def upvote_icon(user, discussion)
+    return 'text-gray-600' unless user
     if user.voted_up_on? discussion, vote_scope: 'like'
       'text-blue-600'
     else
@@ -29,6 +30,7 @@ module ApplicationHelper
   end
 
   def downvote_icon(user, discussion)
+    return 'text-gray-600' unless user
     if user.voted_down_on? discussion, vote_scope: 'like'
       'text-blue-600'
     else

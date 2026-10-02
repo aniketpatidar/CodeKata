@@ -1,6 +1,6 @@
 <%= form_with(model: discussion, class: "space-y-6") do |form| %>
   <% if discussion.errors.any? %>
-    <div class="ck-card bg-ck-accent">
+    <div class="ck-card bg-ck-card">
       <p class="ck-meta mb-2"><%= pluralize(discussion.errors.count, "error") %> prevented this from saving</p>
       <ul class="space-y-0.5">
         <% discussion.errors.each do |error| %>
@@ -37,12 +37,12 @@
 
   <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
     <label class="flex items-center gap-2 cursor-pointer">
-      <%= form.check_box :pinned, class: "h-6 w-6 border-4 border-black text-ck-accent" %>
-      <span class="text-sm font-black uppercase text-ck-ink">Pinned</span>
+      <%= form.check_box :pinned, class: "h-6 w-6 border-[0.5px] border-ck-line text-ck-accent" %>
+      <span class="text-sm font-semibold  text-ck-ink">Pinned</span>
     </label>
     <label class="flex items-center gap-2 cursor-pointer">
-      <%= form.check_box :closed, class: "h-6 w-6 border-4 border-black text-ck-accent" %>
-      <span class="text-sm font-black uppercase text-ck-ink">Closed</span>
+      <%= form.check_box :closed, class: "h-6 w-6 border-[0.5px] border-ck-line text-ck-accent" %>
+      <span class="text-sm font-semibold  text-ck-ink">Closed</span>
     </label>
   </div>
 

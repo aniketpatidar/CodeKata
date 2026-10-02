@@ -15,21 +15,16 @@ module.exports = {
       },
       colors: {
         ck: {
-          bg:        '#FFFDF5',
-          card:      '#FFFFFF',
-          raised:    '#FFD93D',
-          ink:       '#000000',
-          accent:    '#FF6B6B',
-          secondary: '#FFD93D',
-          muted:     '#C4B5FD',
+          bg:        'var(--ck-bg)',
+          card:      'var(--ck-card)',
+          raised:    'var(--ck-raised)',
+          ink:       'var(--ck-ink)',
+          accent:    'var(--ck-accent)',
+          secondary: 'var(--ck-secondary)',
+          muted:     'var(--ck-muted)',
+          line:      'var(--ck-line)',
         }
       },
-      boxShadow: {
-        'neo-sm': '4px 4px 0 0 #000',
-        'neo': '8px 8px 0 0 #000',
-        'neo-lg': '12px 12px 0 0 #000',
-        'neo-xl': '16px 16px 0 0 #000',
-      }
     },
   },
   plugins: [

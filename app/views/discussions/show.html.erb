@@ -1,30 +1,16 @@
 <%= turbo_stream_from @discussion %>
-
-<div class="ck-page overflow-hidden">
-  <div class="mb-6">
-    <%= link_to "Back to Discussions", discussions_path, class: "ck-btn-outline" %>
-  </div>
-
+<div class="px-4 py-6 sm:px-8 lg:px-12 lg:py-9">
   <%= render partial: "discussions/header", locals: { discussion: @discussion } %>
 
-  <section class="mt-8">
-    <div class="mb-4 flex items-center justify-between gap-3">
-      <div>
-        <div class="ck-meta mb-2">Posts</div>
-        <h2 class="text-4xl font-black uppercase leading-none">Replies from the floor</h2>
-      </div>
-      <span class="ck-chip"><%= @posts.size %> Posts</span>
-    </div>
+  <div id="posts" class="space-y-3 mt-4">
+    <%= render partial: "discussions/posts/post", collection: @posts %>
+  </div>
 
-    <div id="posts" class="space-y-5">
-      <%= render partial: "discussions/posts/post", collection: @posts %>
-    </div>
-  </section>
+  <div id="<%= dom_id(@new_post) %>" class="mt-6">
+    <%= render "discussions/posts/form", post: @new_post %>
+  </div>
 
-  <section id="<%= dom_id(@new_post) %>" class="mt-8">
-    <div class="ck-card ck-card--quiet bg-ck-secondary">
-      <div class="ck-meta mb-4">Add a Post</div>
-      <%= render "discussions/posts/form", post: @new_post %>
-    </div>
-  </section>
+  <div class="mt-6">
+    <%= link_to "← Back to Discussions", discussions_path, class: "ck-meta", style: "color: #a6d6ff;" %>
+  </div>
 </div>

@@ -1,9 +1,9 @@
 <a href="/users/<%= user.slug %>"
    id="<%= dom_id(user) %>"
-   class="ck-card group block <%= local_assigns[:index] && index.even? ? 'rotate-[-0.5deg]' : 'rotate-[0.5deg]' %>"
+   class="ck-card group block <%= local_assigns[:index] && index.even? ? ']' : ']' %>"
    style="text-decoration: none;">
   <div class="flex items-center gap-4">
-    <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-4 border-black bg-ck-muted text-base font-black">
+    <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-[0.5px] border-ck-line bg-ck-raised text-base font-semibold">
       <% if user.avatar.attached? %>
         <%= image_tag user.avatar, class: "h-full w-full rounded-full object-cover" %>
       <% else %>
@@ -11,7 +11,7 @@
       <% end %>
     </div>
     <div class="min-w-0 flex-1">
-      <div class="text-lg font-black uppercase leading-none text-ck-ink"><%= user.full_name %></div>
+      <div class="text-lg font-semibold  leading-none text-ck-ink"><%= user.full_name %></div>
       <div class="ck-meta mt-1">@<%= user.slug %></div>
     </div>
     <div class="shrink-0">

@@ -1,0 +1,54 @@
+<div class="ck-page">
+  <section class="mb-8 border-[0.5px] border-ck-line bg-ck-card p-5  sm:p-8 lg:p-10">
+    <div class="ck-sticker mb-5">Mock Results</div>
+    <h1 class="ck-heading"><%= @mock.paper.name %></h1>
+  </section>
+
+  <div class="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2">
+    <section class="ck-card ck-card--quiet border-[0.5px] border-ck-line bg-ck-card p-5 text-center  sm:p-8">
+      <div class="ck-meta mb-4">Solved</div>
+      <div class="mb-2 text-5xl font-semibold tabular-nums"><%= @results.solved_count %></div>
+      <div class="text-2xl font-semibold  leading-none">of <%= @results.total_count %></div>
+    </section>
+
+    <section class="ck-card ck-card--quiet border-[0.5px] border-ck-line bg-ck-card p-5 text-center  sm:p-8">
+      <div class="ck-meta mb-4">Time Taken</div>
+      <div class="text-5xl font-semibold tabular-nums"><%= clock(@results.time_taken) %></div>
+      <div class="ck-meta mt-4">Your Score: <span class="text-2xl font-semibold"><%= @results.score %></span></div>
+    </section>
+  </div>
+
+  <% if @results.is_personal_best? %>
+    <div class="mb-8 border-[0.5px] border-ck-line bg-ck-raised p-5 ">
+      <div class="text-center text-2xl font-semibold "><%= @results.personal_best_badge %></div>
+    </div>
+  <% end %>
+
+  <section class="ck-card ck-card--quiet mb-8 bg-ck-raised">
+    <div class="mb-6 text-xl font-semibold ">Challenge Breakdown</div>
+    <div class="space-y-3">
+      <% @mock_challenges.each do |mock_challenge| %>
+        <% challenge = mock_challenge.challenge %>
+        <div class="flex flex-col gap-3 border-[0.5px] border-ck-line bg-ck-card p-4  sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <div class="flex gap-3 items-center">
+              <span class="text-sm font-bold  text-gray-600">#<%= mock_challenge.position %></span>
+              <%= challenge_status_badge(challenge, solved_at: mock_challenge.solved_at) %>
+            </div>
+            <div class="text-lg font-semibold  leading-none mt-2"><%= link_to challenge.name, challenge_path(challenge), class: "text-ck-ink hover:underline" %></div>
+          </div>
+          <% if mock_challenge.solved? %>
+            <span class="ck-chip ck-chip--completed">Solved in <%= clock(mock_challenge.solved_at - @mock.started_at) %></span>
+          <% else %>
+            <span class="ck-chip ck-chip--outline">Not Solved</span>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+    <%= link_to "Try #{@mock.paper.name} again", mocks_path(paper: @mock.paper.key), method: :post, class: "ck-btn-primary" %>
+    <%= link_to "All Papers", mocks_path, class: "ck-btn-outline" %>
+  </div>
+</div>

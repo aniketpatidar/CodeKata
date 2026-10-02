@@ -3,7 +3,7 @@
      data-controller="notifications"
      data-public="<%= notification.to_global_id.to_s %>">
   <button data-action="click->notifications#read"
-          class="shrink-0 flex items-center justify-center border-4 border-black bg-white shadow-[3px_3px_0_0_#000] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-transform"
+          class="shrink-0 flex items-center justify-center border-[0.5px] border-ck-line bg-ck-card  hover:-translate-x-0.5 hover:-translate-y-0.5 transition-transform"
           style="min-height: 2rem; width: 2rem; padding: 0; cursor: pointer;"
           title="Mark as read">
     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -12,7 +12,7 @@
     <span class="sr-only">Mark as read</span>
   </button>
   <div class="min-w-0 flex-1">
-    <p class="text-sm font-black uppercase leading-tight text-ck-ink break-words">
+    <p class="text-sm font-semibold  leading-tight text-ck-ink break-words">
       <%= link_to notification.message,
             notification.url,
             style: "color: inherit; text-decoration: none;",

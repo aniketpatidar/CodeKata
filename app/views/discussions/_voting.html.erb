@@ -1,15 +1,23 @@
-<div id="<%= dom_id(discussion, :voting) %>" class="flex items-center gap-3 lg:flex-col">
-  <%= button_to "▲", upvote_discussion_path(discussion), method: :put,
+<div id="<%= dom_id(discussion, :voting) %>" class="flex flex-col items-center gap-1 pt-1">
+  <%= button_to upvote_discussion_path(discussion), method: :put,
       data: { turbo_stream: dom_id(discussion, :voting) },
-      class: "flex h-12 w-12 items-center justify-center border-4 border-black bg-ck-secondary text-2xl font-black leading-none shadow-[4px_4px_0_0_#000] transition-transform duration-100 hover:-translate-x-1 hover:-translate-y-1 #{upvote_icon(Current.user, discussion)}",
-      aria: { label: "Upvote discussion" } %>
+      class: "flex items-center justify-center w-8 h-8 rounded-lg transition-colors",
+      style: "background: transparent; border: none; cursor: pointer; color: var(--ck-muted);" do %>
+    <%= inline_svg "up-vote",
+        title: "upvote",
+        class: "fill-current w-5 h-5 #{upvote_icon(Current.user, discussion)}" %>
+  <% end %>
 
-  <span class="flex h-14 min-w-14 items-center justify-center border-4 border-black bg-white px-3 text-2xl font-black tabular-nums shadow-[4px_4px_0_0_#000]">
+  <span class="text-[14px] font-medium tabular-nums" style="color: var(--ck-ink);">
     <%= discussion.total_vote_count %>
   </span>
 
-  <%= button_to "▼", downvote_discussion_path(discussion), method: :put,
+  <%= button_to downvote_discussion_path(discussion), method: :put,
       data: { turbo_stream: dom_id(discussion, :voting) },
-      class: "flex h-12 w-12 items-center justify-center border-4 border-black bg-ck-accent text-2xl font-black leading-none shadow-[4px_4px_0_0_#000] transition-transform duration-100 hover:-translate-x-1 hover:-translate-y-1 #{downvote_icon(Current.user, discussion)}",
-      aria: { label: "Downvote discussion" } %>
+      class: "flex items-center justify-center w-8 h-8 rounded-lg transition-colors",
+      style: "background: transparent; border: none; cursor: pointer; color: var(--ck-muted);" do %>
+    <%= inline_svg "down-vote",
+        title: "downvote",
+        class: "fill-current w-5 h-5 #{downvote_icon(Current.user, discussion)}" %>
+  <% end %>
 </div>

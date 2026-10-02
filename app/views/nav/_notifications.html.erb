@@ -1,11 +1,13 @@
-<a href="<%= notifications_path %>" class="relative inline-flex h-11 w-11 items-center justify-center border-4 border-black bg-white text-ck-ink shadow-[3px_3px_0_0_#000] transition-transform duration-100 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[5px_5px_0_0_#000]">
-  <span class="sr-only">Notifications</span>
-  <%= inline_svg_tag('bell.svg', class: "h-5 w-5") %>
-  <% if user.notifications.unread.exists? %>
-    <div class="absolute -right-2 -top-2">
-      <div class="inline-flex h-6 min-w-6 items-center justify-center rounded-full border-4 border-black bg-ck-accent px-1 text-[10px] font-black leading-none text-ck-ink">
-        <%= user.notifications.unread.count %>
-      </div>
-    </div>
-  <% end %>
-</a>
+<% active = request.path.start_with?('/notifications') %>
+<% unread = user.notifications.unread.count %>
+<div id="notifications-container">
+  <a href="<%= notifications_path %>"
+     class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-colors <%= active ? 'border-l-2 border-[#a6d6ff] pl-[10px]' : '' %>"
+     style="color: <%= active ? '#a6d6ff' : 'var(--ck-muted)' %>; <%= active ? 'background: rgba(166,214,255,0.06);' : '' %>">
+    <%= inline_svg_tag('bell.svg', class: "w-4 h-4 shrink-0") %>
+    <span class="flex-1">Notifications</span>
+    <% if unread > 0 %>
+      <span class="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full text-[10px] font-semibold" style="background: #f87171; color: #0e0e10;"><%= unread %></span>
+    <% end %>
+  </a>
+</div>

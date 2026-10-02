@@ -1,0 +1,25 @@
+<section class="ck-card ck-card--quiet border-[0.5px] border-ck-line bg-ck-card p-5  sm:p-8">
+  <div class="mb-4 flex items-start justify-between">
+    <h2 class="text-2xl font-semibold  leading-none"><%= paper.name %></h2>
+    <span class="ck-chip"><%= clock(paper.duration) %></span>
+  </div>
+
+  <div class="mb-6">
+    <div class="ck-meta mb-2">Mix</div>
+    <div class="text-lg font-bold"><%= paper.mix_label %></div>
+  </div>
+
+  <% best_score = best_scores[paper.key] %>
+  <% if best_score.present? %>
+    <div class="mb-6 border-t-[0.5px] border-ck-line pt-4">
+      <div class="ck-meta mb-2">Best Score</div>
+      <div class="text-3xl font-semibold tabular-nums"><%= best_score %></div>
+    </div>
+  <% end %>
+
+  <% if locked %>
+    <%= button_to "Start", mocks_path, params: { paper: paper.key }, method: :post, disabled: true, class: "ck-btn-primary w-full opacity-50 cursor-not-allowed" %>
+  <% else %>
+    <%= button_to "Start", mocks_path, params: { paper: paper.key }, method: :post, class: "ck-btn-primary w-full" %>
+  <% end %>
+</section>

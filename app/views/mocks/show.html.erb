@@ -1,0 +1,59 @@
+<% challenge = @active.challenge %>
+
+<div class="ck-page"
+     data-controller="mock"
+     data-mock-deadline-value="<%= @mock.deadline_at.iso8601(3) %>"
+     data-mock-server-now-value="<%= Time.current.iso8601(3) %>"
+     data-mock-save-url-value="<%= mock_challenge_path(@mock, @active.position) %>"
+     data-mock-submit-url-value="<%= mock_submissions_path(@mock) %>"
+     data-mock-position-value="<%= @active.position %>"
+     data-mock-results-url-value="<%= mock_path(@mock) %>">
+
+  <section class="sticky top-0 z-20 mb-6 flex flex-col gap-3 border-[0.5px] border-ck-line bg-ck-raised p-4  sm:flex-row sm:items-center sm:justify-between">
+    <div class="flex items-center gap-3">
+      <span class="ck-sticker">Mock</span>
+      <span class="text-2xl font-semibold  leading-none"><%= @mock.paper.name %></span>
+    </div>
+    <div class="text-5xl font-semibold leading-none tabular-nums" data-mock-target="clock"><%= clock(@mock.seconds_left) %></div>
+    <div class="flex items-center gap-3">
+      <span class="text-lg font-semibold ">
+        Solved <span data-mock-target="solvedCount"><%= @mock.solved_count %></span>/<%= @mock_challenges.size %>
+      </span>
+      <%= button_to "Finish now", finish_mock_path(@mock), class: "ck-btn-danger",
+            form: { data: { turbo_confirm: "Finish and score this mock now?" } } %>
+    </div>
+  </section>
+
+  <div class="grid grid-cols-1 gap-6 xl:grid-cols-[220px_minmax(0,0.8fr)_minmax(0,1.2fr)]">
+    <nav class="space-y-3" aria-label="Mock challenges">
+      <% @mock_challenges.each do |mock_challenge| %>
+        <% active = mock_challenge == @active %>
+        <%= link_to mock_path(@mock, position: mock_challenge.position),
+              class: "flex items-center gap-3 border-[0.5px] border-ck-line p-3 font-semibold  #{active ? 'bg-ck-card' : 'bg-ck-card'}",
+              aria: { current: (active ? "step" : nil) } do %>
+          <span class="tabular-nums"><%= mock_challenge.position %>.</span>
+          <%= challenge_difficulty_badge(mock_challenge.challenge.difficulty) %>
+          <span class="ml-auto <%= 'hidden' unless mock_challenge.solved? %>" <%= 'data-mock-target=solvedMark' if active %>>✓</span>
+        <% end %>
+      <% end %>
+    </nav>
+
+    <aside class="ck-card ck-card--quiet bg-ck-card">
+      <div class="ck-meta mb-2">Challenge <%= @active.position %></div>
+      <h2 class="mb-4 text-3xl font-semibold  leading-none"><%= challenge.name %></h2>
+      <p class="whitespace-pre-line text-lg font-bold leading-relaxed text-ck-ink"><%= challenge.description %></p>
+    </aside>
+
+    <section class="space-y-6">
+      <div class="ck-card ck-card--quiet bg-ck-card">
+        <textarea class="w-full resize-none font-mono text-sm" data-mock-target="editor"><%= @active.starting_code %></textarea>
+        <button type="button" class="ck-btn-primary mt-5 w-full" data-mock-target="submit" data-action="click->mock#submit">Submit</button>
+      </div>
+
+      <div class="ck-card ck-card--quiet bg-ck-raised">
+        <div class="ck-meta mb-3">Output</div>
+        <pre class="min-h-[160px] overflow-auto border-[0.5px] border-ck-line bg-ck-card p-4 font-mono text-sm font-bold leading-relaxed text-ck-ink " data-mock-target="output">Submit to run the tests.</pre>
+      </div>
+    </section>
+  </div>
+</div>
