@@ -78,12 +78,15 @@ GEM
     acts_as_votable (0.10.0)
     addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
+    ast (2.4.3)
     base64 (0.2.0)
     bcrypt (3.1.20)
     bigdecimal (3.1.7)
     bindex (0.8.1)
     bootsnap (1.18.3)
       msgpack (~> 1.2)
+    brakeman (8.1.0)
+      racc
     builder (3.2.4)
     cable_ready (5.0.5)
       actionpack (>= 5.2)
@@ -161,12 +164,14 @@ GEM
       activemodel (>= 6.0.0)
       activesupport (>= 6.0.0)
       redis (>= 4.2, < 6)
+    language_server-protocol (3.17.0.6)
     launchy (3.1.1)
       addressable (~> 2.8)
       childprocess (~> 5.0)
       logger (~> 1.6)
     letter_opener (1.10.0)
       launchy (>= 2.2, < 4)
+    lint_roller (1.1.0)
     logger (1.7.0)
     loofah (2.22.0)
       crass (~> 1.0.2)
@@ -215,7 +220,12 @@ GEM
     orm_adapter (0.5.0)
     pagy (5.10.1)
       activesupport
+    parallel (1.28.0)
+    parser (3.3.12.0)
+      ast (~> 2.4.1)
+      racc
     pg (1.5.6)
+    prism (1.9.0)
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -262,6 +272,7 @@ GEM
       rake (>= 12.2)
       thor (~> 1.0, >= 1.2.2)
       zeitwerk (~> 2.6)
+    rainbow (3.1.1)
     rake (13.2.1)
     rdoc (6.6.3.1)
       psych (>= 4.0.0)
@@ -281,6 +292,37 @@ GEM
       actionpack (>= 5.2)
       railties (>= 5.2)
     rexml (3.2.6)
+    rubocop (1.69.0)
+      json (~> 2.3)
+      language_server-protocol (>= 3.17.0)
+      parallel (~> 1.10)
+      parser (>= 3.3.0.2)
+      rainbow (>= 2.2.2, < 4.0)
+      regexp_parser (>= 2.4, < 3.0)
+      rubocop-ast (>= 1.36.1, < 2.0)
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (>= 2.4.0, < 4.0)
+    rubocop-ast (1.50.0)
+      parser (>= 3.3.7.2)
+      prism (~> 1.7)
+    rubocop-minitest (0.37.0)
+      lint_roller (~> 1.1)
+      rubocop (>= 1.61, < 2.0)
+      rubocop-ast (>= 1.38.0, < 2.0)
+    rubocop-performance (1.23.1)
+      rubocop (>= 1.48.1, < 2.0)
+      rubocop-ast (>= 1.31.1, < 2.0)
+    rubocop-rails (2.29.1)
+      activesupport (>= 4.2.0)
+      rack (>= 1.1)
+      rubocop (>= 1.52.0, < 2.0)
+      rubocop-ast (>= 1.31.1, < 2.0)
+    rubocop-rails-omakase (1.0.0)
+      rubocop
+      rubocop-minitest
+      rubocop-performance
+      rubocop-rails
+    ruby-progressbar (1.13.0)
     ruby-vips (2.2.1)
       ffi (~> 1.12)
     ruby_llm (1.15.0)
@@ -344,6 +386,9 @@ GEM
       railties (>= 6.0.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    unicode-display_width (3.3.0)
+      unicode-emoji (~> 4.3)
+    unicode-emoji (4.3.0)
     uri (1.1.1)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -372,6 +417,7 @@ PLATFORMS
 DEPENDENCIES
   acts_as_votable (~> 0.10.0)
   bootsnap
+  brakeman
   capybara
   debug
   devise (~> 4.9)
@@ -390,6 +436,7 @@ DEPENDENCIES
   redis (>= 4.0.1)
   redis-session-store (~> 0.11.5)
   render_build_setup (~> 0.0.1)
+  rubocop-rails-omakase
   ruby_llm
   selenium-webdriver
   sprockets-rails

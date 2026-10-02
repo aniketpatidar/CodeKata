@@ -40,6 +40,16 @@ $ bin/rails server
 ```
 Then, open `http://localhost:3000` in your web browser.
 
+### Docker (alternative)
+
+`docker-compose.yml` runs the app, Postgres, and Redis as containers:
+
+```bash
+docker compose up -d
+```
+
+Postgres and Redis publish to `localhost:5432` and `localhost:6379`, so commands run on the host (`bin/rails test`, `bin/rails console`, etc.) can point `DATABASE_URL`/`REDIS_URL` at `localhost` rather than a container IP — container IPs are assigned dynamically and change on every restart.
+
 ## Configuration Options
 
 CodeKata uses environment variables for settings. You can find these in the `.env` file. Common options include:

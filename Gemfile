@@ -66,6 +66,10 @@ group :development do
   gem "pry"
 
   gem "letter_opener"
+
+  # Static code analysis
+  gem "rubocop-rails-omakase", require: false
+  gem "brakeman", require: false
 end
 
 group :test do
