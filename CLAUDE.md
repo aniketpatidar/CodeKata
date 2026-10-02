@@ -14,7 +14,7 @@ Single-context repo — one `CONTEXT.md` + `docs/adr/` at the root. See `docs/ag
 
 ### Design system
 
-Current visual design is "Direction B" — dark, thin borders, no shadows, no uppercase. Before touching any view or CSS, see `docs/design-system.md` for the tokens and conventions.
+Current visual design is "Dusk" — dark, thin borders, no shadows, no uppercase. Before touching any view or CSS, see `docs/design-system.md` for the tokens and conventions.
 
 ### Session notes
 

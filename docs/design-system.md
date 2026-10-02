@@ -1,6 +1,6 @@
-# Design System: Direction B
+# Design System: Dusk
 
-The current visual design, applied across every page. If a page looks visibly different from this (sharp corners, bold borders, heavy shadows, uppercase chunky type), it's the old **neo-brutalist** design and needs converting, not extending.
+The current visual design, applied across every page (internally this was called "Direction B" during the A/B exploration that picked it — "Dusk" is the real name going forward). If a page looks visibly different from this (sharp corners, bold borders, heavy shadows, uppercase chunky type), it's the old **neo-brutalist** design and needs converting, not extending.
 
 ## Tokens
 
@@ -41,4 +41,4 @@ Defined in `app/assets/stylesheets/application.tailwind.css` under `@layer compo
 
 ## Checking a page is converted
 
-A page is Direction B if it uses only `ck-*` classes/tokens for color and has no hardcoded hex colors, no `border-2`/`border-4`, no `shadow-[...]` with an offset, and no `uppercase`/`font-black`. `grep -rn "font-black\|uppercase\|border-4\|border-2" app/views` should return nothing outside archived/reference material.
+A page is Dusk-compliant if it uses only `ck-*` classes/tokens for color and has no hardcoded hex colors, no `border-2`/`border-4`, no `shadow-[...]` with an offset, and no `uppercase`/`font-black`. `grep -rn "font-black\|uppercase\|border-4\|border-2" app/views` should return nothing outside archived/reference material.
