@@ -1,0 +1,18 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Unmaintained Dependency",
+      "warning_code": 119,
+      "fingerprint": "d84924377155b41e094acae7404ec2e521629d86f97b0ff628e3d1b263f8101c",
+      "note": "Rails 7.1 EOL is a known, tracked upgrade — not a vulnerability introduced by this change. See rails-upgrade skill / separate upgrade effort."
+    },
+    {
+      "warning_type": "Unmaintained Dependency",
+      "warning_code": 119,
+      "fingerprint": "edf687f759ec9765bd5db185dbc615c80af77d6e7e19386fc42934e7a80307af",
+      "note": "Ruby 3.2 EOL is a known, tracked upgrade — not a vulnerability introduced by this change."
+    }
+  ],
+  "updated": "2026-10-02 23:33:10 +0530",
+  "brakeman_version": "8.1.0"
+}
